@@ -91,7 +91,7 @@ Typically you can place the API in a shared directory, so all compute nodes have
 
 ##Contents 
 
-/api/
+/api
 
     /matlab
 
