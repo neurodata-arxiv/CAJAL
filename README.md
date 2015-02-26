@@ -2,7 +2,7 @@
 
 This is the CAJAL3D API for MATLAB.  The API provides a simple to use interface with Open Connectome Project servers and provides RAMON Objects, unit tests, configuration scripts, and utilities.  For more information about the Open Connectome Project (OCP), see www.openconnecto.me.
 
-This software was developed at Johns Hopkins University Applied Physics Lab.  For more information about JHUAPL, visit TODO: www.jhuapl.edu/neuro.
+This software was developed at Johns Hopkins University Applied Physics Lab.  For more information about JHUAPL, visit [this site](http://www.jhuapl.edu/ourwork/red/an/default.asp)
 
 ##System Requirements 
 
@@ -13,13 +13,16 @@ Currently the MATLAB wrapper for LONI Pipline distributed computing requires Lin
 ##Installation  
 
 ```
-**NOTE:** If you have installed a version of the API prior to 1.1, your static classpath may have been edited.
-  This is no longer needed and should be removed. All required Java classes are now reliably loaded dynamically on most versions of MATLAB.
-  
-  You can do this by typing `which classpath.txt` in the command window and editing the indicated file.  Remove lines that reference the old API directory.
+*** NOTE: If you have installed a version of the API prior to 1.1, your static classpath
+ may have been edited.
+ This is no longer needed and should be removed. All required Java classes are 
+ now reliably loaded dynamically on most versions of MATLAB.
+
+ You can do this by typing `which classpath.txt` in the command window and editing 
+ the indicated file.  Remove lines that reference the old API directory.
 ```
 
-###Using the API on a single computer (NORMAL USE CASE) 
+####Using the API on a single computer (NORMAL USE CASE) 
 
 - Clone API to a local directory.
 - Set the MATLAB current folder to the directory where the API is now located
@@ -29,7 +32,7 @@ Currently the MATLAB wrapper for LONI Pipline distributed computing requires Lin
   - When pompted, you can ignore `testMatlabInit` if you have not configured your matlab exe location. This function is used when running on a cluster and can typically be ignored.
   - When pompted, you can ignore `testOCPDistributedSemaphore` if your Distributed Semaphore has not been configured.  Again, this is only used when operating on a large compute cluster.
 
-###Setting up the API at MATLAB startup
+####Setting up the API at MATLAB startup
 There is a script if you would like to have the API configured automatically when MATLAB starts.  The script edits your startup.m to run "cajal3D" when matlab loads.
   - Set the /tools/matlab_install directory as the current matlab directory
   - Type 'setupEnvironment' in the command window. 
@@ -60,6 +63,7 @@ Typically you can place the API in a shared directory, so all compute nodes have
     - Install an instance of Redis on your network (see www.redis.io)
     - Configure `/api/matlab/ocp/semaphore_settings.mat` to point to your server on the correct port.  semaphore_settings_example.mat can be used as a starting point and renamed. 
     - Open MATLAB, create a SemaphoreTool object, and execute the "configure" method:
+
     ```matlab
         s = SemaphoreTool;
         s.configure;
@@ -67,62 +71,77 @@ Typically you can place the API in a shared directory, so all compute nodes have
     - Set the desired values (50 read, 50 write is a decent place to start depending on your code)
     - This will then configure the server so any API client that connects will
       get its semaphore configured from the redis server.  To use the semaphore, create an OCP object like this:
+
           ```matlab
           oo = OCP('semaphore');
           ```
       
       The distributed semaphore will be ignored if you do omit the 'semaphore' tag:
+
           ```matlab
           oo = OCP()
           ```
 
   - Configuring LONI Pipeline (loni pipeline url:
-        - If you are using LONI Pipeline, you need to add CAJAL3D as a package and point it to the API location. TODO::::::DOUBLE CHECK WHAT NEEDS TO BE DONE HERE
+        - If you are using LONI Pipeline, you need to add CAJAL3D as a package
+        - Set the package location to the root directory of the API
+        - Set the package version to *
+        - Add the environment variables `PIPELINE_TEMP_DIR=temp_location_if_used` and `MATLAB_EXE_LOCATION=/location/of/matlab`
 
 
 ##Contents 
 
 /api/
+
     /matlab
+
         Most functions/classes have comments explaining individual usage.
 
         /ocp
-          Contains classes for interfacing with the OCP
-          image and annotation databases.  The OCP class
-          provides methods to upload and download annotation objects, cutouts, 
-          and download slices, and overlays.  For more information regarding OCP 
-          databases and the associated interfaces see: 
-          www.openconnecto.me.  
+        
+          Contains classes for interfacing with the OCP image and annotation databases.  The OCP class provides methods to upload and download annotation objects, cutouts, and download slices, and overlays.  For more information regarding OCP databases and the associated interfaces see: www.openconnecto.me.  
 
           eOCP* objects are enumerations to use with the OCP objects.
 
         /ramon 
+
           Contains all the RAMON annotation objects.  
-          Classes starting with RAMON* are annotation objects that you can create, manipulate, upload,
-          and download.  
+          
+          Classes starting with RAMON* are annotation objects that you can create, manipulate, upload, and download.  
+          
           If an object contains image or annotation data, the `image()` method has been overloaded with a simple view.  To use simply pass your RAMON object instance to the method - `h = image(myInstance)`
+          
           Objects starting with eRAMON* are enumerations used with RAMON objects.
 
         /wrapper 
+
           Contains funtions to wrap matlab code for use inside the LONI pipeline framework
 
 /examples
+
     Example scripts showing how to use the API
 
 /library
+
     LONI Pipeline modules for packages used in the JHU/APL connectomics pipeline
     that have been released with the API.
 
 /packages
+
     Software packages that contain algorithms used in the JHU/APL connectomics pipeline
     that have been released with the API. These are mainly utilites to help facilitate image processing at scale.
     
 /test
+
     Unit test software
+
     /matlab
+
         MATLAB unit test scripts accessible through the RUN_TESTS function.
         RUN_TESTS will run all test groups. RUN_TESTS('testname') will run a single group.
+
 /tools
+
     Scripts and tools for API support
 
 
