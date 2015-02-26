@@ -91,15 +91,19 @@ Typically you can place the API in a shared directory, so all compute nodes have
 
 ##Contents 
 
--api
-  - matlab
+- **api**
+  - **matlab**
+
     Most functions/classes have comments explaining individual usage.
-    - ocp
+
+    - **ocp**
+
       Contains classes for interfacing with the OCP image and annotation databases.  The OCP class provides methods to upload and download annotation objects, cutouts, and download slices, and overlays.  For more information regarding OCP databases and the associated interfaces see: www.openconnecto.me.  
 
       eOCP* objects are enumerations to use with the OCP objects.
 
-    - ramon 
+    - **ramon** 
+
       Contains all the RAMON annotation objects.  
           
       Classes starting with RAMON* are annotation objects that you can create, manipulate, upload, and download.  
@@ -108,34 +112,34 @@ Typically you can place the API in a shared directory, so all compute nodes have
       
       Objects starting with eRAMON* are enumerations used with RAMON objects.
 
-    - wrapper 
+    - **wrapper** 
 
       Contains funtions to wrap matlab code for use inside the LONI pipeline framework
 
-- examples
+- **examples**
 
     Example scripts showing how to use the API
 
-- library
+- **library**
 
     LONI Pipeline modules for packages used in the JHU/APL connectomics pipeline
     that have been released with the API.
 
-- packages
+- **packages**
 
     Software packages that contain algorithms used in the JHU/APL connectomics pipeline
     that have been released with the API. These are mainly utilites to help facilitate image processing at scale.
     
-- test
+- **test**
 
   Unit test software
 
-  - matlab
+  - **matlab**
 
     MATLAB unit test scripts accessible through the RUN_TESTS function.
     RUN_TESTS will run all test groups. RUN_TESTS('testname') will run a single group.
 
-- tools
+- **tools**
 
     Scripts and tools for API support
 
