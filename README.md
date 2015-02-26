@@ -91,19 +91,19 @@ Typically you can place the API in a shared directory, so all compute nodes have
 
 ##Contents 
 
-/ api
+\/ api
 
-    / matlab
+    \/ matlab
 
         Most functions/classes have comments explaining individual usage.
 
-        / ocp
+        \/ ocp
         
           Contains classes for interfacing with the OCP image and annotation databases.  The OCP class provides methods to upload and download annotation objects, cutouts, and download slices, and overlays.  For more information regarding OCP databases and the associated interfaces see: www.openconnecto.me.  
 
           eOCP* objects are enumerations to use with the OCP objects.
 
-        / ramon 
+        \/ ramon 
 
           Contains all the RAMON annotation objects.  
           
