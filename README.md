@@ -65,22 +65,22 @@ Typically you can place the API in a shared directory, so all compute nodes have
     - Open MATLAB, create a SemaphoreTool object, and execute the "configure" method:
 
     ```matlab
-        s = SemaphoreTool;
-        s.configure;
+    s = SemaphoreTool;
+    s.configure;
     ```
     - Set the desired values (50 read, 50 write is a decent place to start depending on your code)
     - This will then configure the server so any API client that connects will
       get its semaphore configured from the redis server.  To use the semaphore, create an OCP object like this:
 
-          ```matlab
-          oo = OCP('semaphore');
-          ```
+      ```
+      oo = OCP('semaphore');
+      ```
       
       The distributed semaphore will be ignored if you do omit the 'semaphore' tag:
 
-          ```matlab
-          oo = OCP()
-          ```
+      ```
+      oo = OCP()
+      ```
 
   - Configuring LONI Pipeline (loni pipeline url:
         - If you are using LONI Pipeline, you need to add CAJAL3D as a package

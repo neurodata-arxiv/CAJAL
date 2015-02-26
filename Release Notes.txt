@@ -1,0 +1,520 @@
+###########################################################################
+#########                CAJAL3D API Release Notes                #########
+###########################################################################
+
+### 2014-02-6 ### v1.7
+
+Release Notes: 
+ - Added propagation service support
+ - Added image data upload support
+
+Updates:
+
+Bug Fixes:
+
+Known Issues:
+ - channel names with hyphens break hdf5 parsing and are temporarily patched.
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+
+### 2014-12-20 ### v1.6
+
+Release Notes: 
+ - Updated OCP.m and OCPHdf.m to meet new OCP service interfaces
+
+Updates:
+
+Bug Fixes:
+
+Known Issues:
+ - channel names with hyphens break hdf5 parsing and are temporarily patched.
+ - block ID reservation service still drops 1 ID on the floor after each call.
+   This causes the unit test to currently fail, but is still usable.
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+
+### 2014-12-06 ### v1.5
+
+Release Notes: 
+
+Updates:
+ - Main updates to I2G software (to be migrated to separate repo)
+
+Bug Fixes:
+ - Minor bug fixes
+
+Known Issues:
+ - channel names with hyphens break hdf5 parsing and are temporarily patched.
+ - block ID reservation service still drops 1 ID on the floor after each call.
+   This causes the unit test to currently fail, but is still usable.
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+
+### 2014-10-13 ### v1.4
+
+Release Notes: 
+
+Updates:
+ - Added MatlabMonitor class.  This is used to monitor status from inside 
+   applications running in LONI Pipeline
+ - Added OCP.getPublicTokens(). Returns cell array of public tokens for the
+   current server.
+ - Added multichannel data support
+    - OCP.getChannelList returns cell array of channels in the current image
+      database, based on the image token
+    - OCPQuery.setChannels lets you set the channels to query. Use 
+      OCPQueryType.imageDense and set channels as a cell array
+    - OCP.query will return a cell array of RAMONVolume objects.  The name
+      field will be set to the channel name, and be in the same order as
+      the channels listed in the query.
+    - The viewer will support displaying a single 16-bit channel as an 
+      individual grayscale image by calling image() on the RAMONVolume
+    - NOTE: currently there is a temporary patch due to the names of certain
+      channels.  If the channel name includes a hyphen, when the API queries
+      the db for channel names it will replace hyphens with two underscores.
+      You will notice this in getPublicTokens. If the API detects a channel
+      name with two underscores in it, it will automatically replace with a 
+      hyphen when quering for data.  This is a temporary patch due to a
+      MATLAB issue that will be fixed in the future.
+
+Bug Fixes:
+ - Added temporary fix to require a default resolution when merging annotations
+ - Fixed bug in cubeCutout* that caused 'remainder' blocks to skip 1 pixel
+ - Fixed x/y bounds flip in block upload url.  Only effected edges of datasets
+
+Known Issues:
+ - channel names with hyphens break hdf5 parsing and are temporarily patched.
+ - block ID reservation service still drops 1 ID on the floor after each call.
+   This causes the unit test to currently fail, but is still usable.
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+### 2014-08-25 ### v1.3
+
+Release Notes: 
+ - The enumeration eRAMONUploadDataType has been depricated and should no longer
+   be used.  It has been replaced by eRAMONDataType
+ - When downloading data, the dataType property of the RAMON object will indicate
+   the type of data stored.  This is always based off the token used to download
+   the data.  When uploading, if the datatype is not specified, the project info
+   based on the appropriate annotation/image token will be used.
+
+Updates:
+ - Added block ID reservation service.  Useful for writing data in chunks and
+   pre-allocating IDs.
+ - Added RGBA32 data format support
+ - Updated built-in viewer to support RGBA32 data
+ - Changed eRAMONUploadDataType to eRAMONDataType to support new and future
+   features
+    
+
+Bug Fixes:
+ - Fixed backwards compatibility issue with "frameworkVersion" in cajal3d.m 
+ - Fixed bug in bugReport method
+ - Changed URL checking to use www.google.com and fixed associated bug in 
+   cajal3d.jar
+ - Fixed bug in HDF5 implementation to properly chunk and compress voxel data
+ - Adjusted "maximum annotation size", which is used to control auto annotation
+   chunking and the "large upload" warning to match server performance.  Set to
+   roughly 60MB uncompressed.
+
+
+
+Known Issues:
+ - block ID reservation service still drops 1 ID on the floor after each call.
+   This causes the unit test to currently fail, but is still usable.
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+
+### 2014-05-29 ### v1.2
+
+Release Notes: 
+
+Updates:
+ - Added RAMON merge interface
+ - Updated overlay service to support alpha level control
+ - Added performance enhancements and new features to the basic data viewer
+   including the ability to export animations
+ - Added probability map uploading
+    
+
+Bug Fixes:
+ - Fixed bug in SemaphoreTool where flushAll cleared all databases instead 
+   of just the current database
+ - Fixed bug that resulted in invalid URL generation when trying to cut out
+   probability maps as input data
+ - Added autosuppression of MATLAB:Java:DuplicateClass warning during loading
+   of the API.
+ - Fixed bug that made the OCP service URL sensitive to trailing slashes
+ - Fixed bug that was causing java heap overflows on large uploads again
+
+
+
+Known Issues:
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+
+### 2014-03-11 ### v1.1
+
+Release Notes: 
+
+Updates:
+ - Changed URLs to satisfy new interface based on /ocp/ca/ root service.
+ - Removed requirement to edit static class path for jar file includes. 
+   Should work with most versions of MATLAB but has only been tested on R2012a+
+ - Updated setupEnvironment tool to only edit the startup.m file
+ - Updated SemaphoreTool to use server-side configuration, cleaned up resets,
+   and added some new helper methods
+ - Updated OCP and OCPNetwork to optionally use distributed semaphore 
+   configuration from the redis server.  All that is required is the server
+   hostname and port be saved in /api/matlab/ocp/semaphore_settings.mat.
+   /api/matlab/ocp/semaphore_settings_example.mat is provided as a starting 
+   point for new installs. OCP('semaphore') will trigger config and enable 
+   the distributed semaphore.
+ - Added Cube Cutout Preprocess Cuboid Aligned which computes subcubes that
+   respect database cuboid boundaries for efficiency. Also adds ability to 
+   compute "merge" region blocks which are 2 voxel blocks around each 
+   interface plane
+    
+
+Bug Fixes:
+ - Fixed bug caused by class type checking in OCPQuery
+ - Fixed bug in java network library that resulted in crushing the heap on
+   big uploads.
+
+
+Known Issues:
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+### 2013-11-13 ### v1.0.1
+
+Release Notes: 
+
+Updates:
+ - Increased OcpUrl library read timeout to 5 minutes
+ - Added retry on network connectivity check when creating a OCPNetwork object
+ - Added increasing delay on write retries
+
+Bug Fixes:
+ - Fixed error in OCP class unit test that gave false failures for slice cutouts
+   when multiple users run the tests at the same time
+ - Fixed bug in presever write option test that gave false errors if run
+   multiple times
+ - Added check to add 'http://' if url string has it missing when setting server
+   location.
+
+Known Issues:
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+
+### 2013-08-20 ### v1.0.0
+
+Release Notes: First Public Release
+
+Updates:
+
+Bug Fixes:
+
+Known Issues:
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+
+### 2013-07-16 ### v0.9.4
+
+Release Notes:
+
+Updates:
+ - Replaced Hazelcast library with a custom distributed semaphore service
+   based around a centralized Redis database.  This should increase the 
+   scalability and stability of cluster usage.
+ - Added /tools/distributed_semaphore/SemaphoreTool to configure, monitor,
+   and reset the distributed semaphore
+ - Updated Transverse Synapse Detector (essentially a simple PSD detector)
+   to increase detection rate with some increase in false positive errors
+ - Added package to import and refine an externally generated soma mask
+ - Added modules to transverse synapse detector package to use the soma mask
+   and generate engineering data products
+ - Added toImageDenseQuery and toAnnoDenseQuery to RAMONVolume object to get
+   an OCPQuery object that will download a matching image or annotation volume
+   respectively
+ - Increased java interface library read timeout to 10min to support very 
+   large writes at load
+ - Added ability to save RAMONVolume objects as HDF5 files to OCPHdf
+ - Changed default OCP server location to braingraphdev1.cs.jhu.edu for
+   APL integration purposes(should be openconnecto.me in released software)
+ - Updated CubeCutout module to support hdf5 output
+ - Added .voxelCount method for RAMONVolume to return number of voxels
+ - Added the ability to convert RAMONVolume or subclass voxel representations
+   between cutout and voxel list
+ - Major update to OCP class to support more advanced uploading
+    - Batch interface supported on create and update
+    - Very large annotations are now chunked into multiple uploads
+ - Updated RAMON object .clone method to support a "voxeless" deep copy by
+   providing the 'novoxels' option
+ - Updated API to handle removal of the default resolution as part of the 
+   service.  Concept still maintained internally to the OCP class to aid
+   developers
+ - Added the skeleton for a basic, generic random forest classifier package
+ - Updated API to handle new id query interface.  Query ids by status, type,
+   and confidence. 
+ - Added 'reduce' overwrite option - use this to delete or shave voxels from 
+   existing annotations
+ - Added get/set field interface to existing annotations.  You can now get 
+   most fields and set single value field without downloading the annotation
+   or posting a new annotation.
+ - Added idListLimit property to OCPQuery.  This can be used in conjunction 
+   with RAMON Id List Queries to limit the number of objects returned.  This 
+   is useful in large databases when you only want a few things back.
+ - Added support for upload/download and get/set of RAMONOrganelle objects
+ - Added support for filtering annotation cutouts and slices by id
+
+Bug Fixes:
+ - Fixed bug in Cube cutout unit test.
+ - Fixed bug in testOCPQuery caused by previous bug fix
+ - Updated framework to be able to be run from a different working directory
+   than the cajal 3d framwork path, as long as the framework is on the matlab
+   search path (run cajal3d.setSearchPath)
+ - Fixed bug in RAMONVolumeObject.local2Global/global2Local to properly support an array
+   of points to convert
+ - Fixed bug in transverseSynapseDetector when no synapses are detected
+ - Fixed bug in RAMON object .clone method that can sometimes result in voxel
+   data getting incorrectly duplicated
+ - Fixed bug in HDF5 group indexing order that resulted in the returned 
+   database ids not matching up to the correct annotation
+ - Fixed bug in VolumeImageBox that prevented RAMONVolume object based annotations
+   from being displayed properly in overlay mode
+ - Fixed bug in OCPHdf cause by hdf5 library changes in MATLAB R2013
+ - Broke out distributed semaphore tests if installing software on a computer that
+   doesn't use the distributed semaphore
+ - Added missing centroid field in RAMONOrganelle
+ - Fixed bug that caused objects to be colored improperly using the data viewer
+ - Fixed bug in cajal3d.jar that prevented API from working with main OCP domain
+
+Known Issues:
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data to a bounding box
+   is not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS/RHEL
+
+
+
+### 2012-12-21 ### v0.9.3
+
+Release Notes:
+
+Updates:
+ - Created CubeCutoutPreprocess2 that dices a volume into blocks based on a
+   specified size and then computes the remainder sized blocks.  It is fully
+   compatible witht he CubeCutout Module for actually downloading data
+ - Added ability to specify the temp directory to be used by setting the
+   environment variable "PIPELINE_TEMP_DIR".  If the variable does not exist
+   the default temp location will be used
+ - Implemented a distributed semaphore to manage OCP server resources using
+   the Hazelcast library. Set the env var "HAZELCAST_XML" to the location of
+   the hazelcast.xml config file or default will be used.  The number of permits
+   available to read/write are set in the hazelcast.xml file.g
+ - Added an absolute approximate centriod to RAMONSynapse metadata in 
+   transverseSynDetect
+ - Added a python wrapper to group cutout and transverse syn detect into
+   a single module for distributed processing
+
+Bug Fixes:
+ - Fixed CLI bug in throttler and server daemon that resulted in validation 
+   sometimes failing server side.
+ - Increased cajal3d networking library to have 180 sec read timeout due to 
+   server latency when lots of workers are requesting data.
+ - Fixed bug that caused some metadata fields to get written improperly, 
+   corrupting the data without an exception
+ - Implemented some temporary workarounds to help with OCP server loading
+ - Added .clone method to all RAMON objects.  This performs a deep copy on 
+   the object giving you a new handle to a new object.
+ - Fixed bug in RAMONSynapse.setSegments
+ - Fixed bug in RAMONVolume.setRAMONVolumeProperties
+ - Fixed bug in OCPQuery that prevented you from cutting out data at the dataset
+   boundary
+ - Fixed bug in cubeCutoutPreProcess2 that resulted in incorrect cube coordinates
+   for types II-V
+ - Fixed OCPHdf to throw warning when voxel data is not return when expected
+   for all types of RAMON queries
+ - Fixed bugs in hazelcast implementation that resulted in an increasing number
+   of permits to be generated
+
+Known Issues:
+ - Some parts of the API still require you to have the MATLAB current folder
+   set to the framework root directory.  This will be fixed in future releases.
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data between cutout
+   format and voxel list format not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS
+
+
+### 2012-11-13 ### Beta Release 3 ### v0.9.2
+
+Release Notes:
+ - Released to collaborators
+
+Updates:
+ - Added RAMONOrganelle object
+ - Added scripts for developer team to help build and maintain releases
+ - Added error messages for Windows users trying to use unsupported local database
+   interface and matlab wrapper m files.
+ - Updated cajal3d class to set the dynamic java class path on Windows systems
+ - Added capability to set write conflict options on creation of an annotation
+ - Created 'throttler' module to temporarily work around server load issues
+
+Bug Fixes:
+ - Adjusted cajal3d networking library to have 60 sec read timeout
+ - Fixed bug due to windows file seperators being interpreted as bad escape characters
+   in OCPNetwork and cubeCutoutPreprocess
+ - Updated RUN_TESTS to filter out unsupported tests on Windows
+ - Updated setupEnvironment to work with Windows and create work around script if
+   user has older version of MATLAB that has unreliable dynamic java class path
+   performance
+ - Fixed issue with data not getting properly inserted into the hdf5 format
+   which resulted in rotated annotations in the database.
+
+Known Issues:
+ - Some parts of the API still require you to have the MATLAB current folder
+   set to the framework root directory.  This will be fixed in future releases.
+ - RAMONNonNeuron and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data between cutout
+   format and voxel list format not yet supported.
+ - Local database resource only available to Linux and OSX users currently
+ - Matlab wrapper only supported by Linux/OSX.  This is OK for now since it is 
+   intended for use with the LONI Pipeline server which should be running on CentOS
+
+
+### 2012-10-22 ### Beta Release 2 ### v0.9.1
+
+Release Notes:
+ - 
+
+Updates:
+ - Added ability to query for a list of all ids (no predicates)
+ - Added bounding box query
+ - Added Cube Cutout package for batch sub-cube download from a larger volume
+ - Added voxel ID based on XYZ coordinate query
+ - Added ability to load token files from a file
+ - Changed isCutout property to dataFormat in RAMONVolume.  This enables
+   proper support of bounding box queries and can potentially effect existing
+   software that used the old convention.
+ - Changed startCAJAL3D script to more useful cajal3d utility class
+ - Updated reference pipeline stubs and server daemon modules to latest
+   framework version.
+ - Refactored some classes to enhance usability
+    - eRAMONAnnotationType -> eRAMONAnnoType
+    - eRAMONAnnotationStatus -> eRAMONAnnoStatus
+    - eRAMONAnnoType.RAMON* -> eRAMONAnnoType.*
+    - eConflictOption -> eOCPConflictOption
+    - ePredicates -> eOCPPredicate
+    - eQueryType -> eOCPQueryType
+    - eSlicePlane -> eOCPSlicePlane
+ - Added scripts for developer team to help build and maintain releases
+
+Bug Fixes:
+ - Fixed error when doing a tight cutout of an object that does not contain voxel
+   data.
+ - Added getters for tokens in OCP class so tokens are not automatically 
+   printed to the command window.
+ - Fixed multiple issues with install script 'setupEnvironment'
+ - Fixed query validation to issue warning when cutout args are populated in a
+   voxel list query.
+ - Fixed problem with restricting RAMON dense queries to a cutout
+
+Known Issues:
+ - Possible issue with annotations getting rotated somewhere between upload/download
+ - RAMONOrganelle and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data between cutout
+   format and voxel list format not yet supported.
+ - Database write exceptions not supported yet.  All writes default to overwrite
+   mode.
+   
+   
+   
+   
+
+### 2012-09-25 ### Beta Release 1 ### v0.9.0
+
+Release Notes:
+ - This is the first Beta Release of the CAJAL3D API.  Only MATLAB API and 
+   associated resources are included.  No Python API, packages, or library
+   items are included.
+
+Updates:
+ - None: Initial release
+
+Bug Fixes:
+ - None: Initial release
+
+Known Issues:
+ - Querying a cutout or voxel list on an annotation that does not have voxel
+   data throws a server 500 error.  This will be fixed and a warning will be
+   issued in next release.
+ - Query to get voxel ID based on X,Y, Z location not implemented in the
+   API (still available manually server side).
+ - Ability to load tokens from file not yet supported (coming soon with
+   online db management)
+ - RAMONOrganelle and RAMONAttributedRegion not yet supported in API or
+   server side.
+ - Converting a RAMONVolume (and subclasses) voxel data between cutout
+   format and voxel list format not yet supported.

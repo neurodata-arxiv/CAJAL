@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline version=".1">
+        <moduleGroup id="basicWrapperModuleTemplate_1" name="basicWrapperModuleTemplate" posX="0" posY="0" sourceCode="">
+                <module id="ModuleTemplate_1" name="Module Template" package="CAJAL3D" version="1.0" description="Enter your discription here!&#xA;&#xA;Make sure to add and update:&#xA;Author info&#xA;Module info&#xA;Tags&#xA;Arguments" posX="510" posY="297" sourceCode="" location="pipeline://darkhelmet.jhuapl.edu/api/matlab/wrapper/basicWrapper.py" executableVersion="1.0">
+                        <authors>
+                                <author fullName="Dean Kleissas" email="dean.kleissas@jhuapl.edu" website="www.jhuapl.edu" />
+                        </authors>
+                        <metadata>
+                                <data key="__creationDateKey" value="Fri May 11 12:38:03 EDT 2012" />
+                        </metadata>
+                        <input id="ModuleTemplate_1.FunctionName" name="Function Name" description="This is the relative path to MATLAB function you want to execute in relation to the CAJAL3D framework root.  Once it is set it does not need to be changed.  (ex. &quot;/api/matlab/cubeGen/cubeGenCutout.m&quot;)&#xA;&#xA;The location of the CAJAL3D framework root should be set as an environment variable for the CAJAL3DMAT package.  &#xA;ex. CAJAL3D_LOCATION=/usr/pipeline/tools/CAJAL3D&quot;&#xA;&#xA;" required="true" enabled="true" order="0">
+                                <format type="String" cardinality="1" />
+                                <values>
+                                        <value>test/matlab/api/matlabInitTFunction.m</value>
+                                </values>
+                        </input>
+                        <input id="ModuleTemplate_1.TestDouble" name="Test Double" description="An example of a numerical argument" required="true" enabled="true" order="1" prefix="-d" prefixSpaced="true" prefixAllArgs="false">
+                                <format type="Number" cardinality="1" />
+                                <values>
+                                        <value>345</value>
+                                </values>
+                        </input>
+                        <input id="ModuleTemplate_1.DebugMode" name="Debug Mode" description="This flag controls the debug mode included in the matlabInit wrapper.&#xA;If enabled(1) a breakpoint will be placed before the function call and an editor and workspace manager will be opened.  You can then step through execution.  You must VNC into the remote machine if running on a cluster to see the windows." required="false" enabled="true" order="5" prefix="-b" prefixSpaced="true" prefixAllArgs="false">
+                                <format type="Enumerated" cardinality="1">
+                                        <enumeration>0</enumeration>
+                                        <enumeration>1</enumeration>
+                                </format>
+                                <values>
+                                        <value>0</value>
+                                </values>
+                        </input>
+                        <input id="ModuleTemplate_1.TestString" name="Test String" description="An example of a string argument&#xA;NOTE: CURRENTLY STRINGS WITH SPACES ARE NOT SUPPORTED" required="true" enabled="true" order="2" prefix="-s" prefixSpaced="true" prefixAllArgs="false">
+                                <format type="String" cardinality="1" />
+                                <values>
+                                        <value>testStringHERE</value>
+                                </values>
+                        </input>
+                        <input id="ModuleTemplate_1.TestMatrix" name="Test Matrix" description="An example of a matrix argument" required="true" enabled="true" order="3" prefix="-m" prefixSpaced="true" prefixAllArgs="false">
+                                <format type="String" cardinality="1" />
+                                <values>
+                                        <value>[1,2;3,4]</value>
+                                </values>
+                        </input>
+                        <input id="ModuleTemplate_1.TestBoolean" name="Test Boolean" description="An example of a boolean argument" required="true" enabled="true" order="4" prefix="-l" prefixSpaced="true" prefixAllArgs="false">
+                                <format type="Enumerated" cardinality="1">
+                                        <enumeration>true</enumeration>
+                                        <enumeration>false</enumeration>
+                                </format>
+                                <values>
+                                        <value>true</value>
+                                </values>
+                        </input>
+                        <executableAuthors>
+                                <author fullName="Dean Kleissas" email="dean.kleissas@jhuapl.edu" website="www.jhuapl.edu" />
+                        </executableAuthors>
+                </module>
+                <annotations visible="true">
+                        <annotation width="200" height="217" posX="215" posY="188" background="102,102,204,51" foreground="0,0,0,255" expanded="true" type="text" name="- Use this module as a starting point for wrapping MATLAB code to run in the pipeline.  &#xA;&#xA;- An example of each type of supported MATLAB argument is given. &#xA;&#xA;- Set the first variable to the path to the m-file you want to run relative to the CAJAL3D framework root&#xA;&#xA;- The debug flag is optional but should be given as an option on all modules&#xA;">
+                                <styles>
+                                        <style name="- Use this module as a starting point for wrapping MATLAB code to run in the pipeline.  &#xA;&#xA;- An example of each type of supported MATLAB argument is given. &#xA;&#xA;- Set the first variable to the path to the m-file you want to run relative to the CAJAL3D framework root&#xA;&#xA;- The debug flag is optional but should be given as an option on all modules&#xA;$0" fontSize="11" />
+                                </styles>
+                        </annotation>
+                </annotations>
+        </moduleGroup>
+</pipeline>
+
