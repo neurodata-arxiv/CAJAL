@@ -862,7 +862,7 @@ classdef OCP < handle
                 end
                 
                   % Set datatype to that of the database
-                ramonObj.setDataType(eRAMONDataType(oo.imageInfo.PROJECT.TYPE));
+                ramonObj.setDataType(eRAMONDataType(this.imageInfo.PROJECT.TYPE));
                 
                 % Compute chunked blocks by slice to make it easy for now.
                 % TODO: make this smarter if needed to deal with massive
