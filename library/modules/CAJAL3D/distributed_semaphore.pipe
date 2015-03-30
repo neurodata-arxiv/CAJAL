@@ -18,7 +18,7 @@
                         <input id="DistributedSemaphore_1.FunctionName" name="Function Name" description="This is the relative path to MATLAB function you want to execute in relation to the CAJAL3D framework root.  Once it is set it does not need to be changed.  (ex. &quot;/api/matlab/cubeGen/cubeGenCutout.m&quot;)&#xA;&#xA;The location of the CAJAL3D framework root should be set as an environment variable for the CAJAL3DMAT package.  &#xA;ex. CAJAL3D_LOCATION=/usr/pipeline/tools/CAJAL3D&quot;&#xA;&#xA;" required="true" enabled="true" order="1">
                                 <format type="String" cardinality="1" />
                                 <values>
-                                        <value>tools/distributed_semaphore/dynamic_semaphore.m</value>
+                                        <value>packages/utilities/dynamic_semaphore.m</value>
                                 </values>
                         </input>
                         <input id="DistributedSemaphore_1.Value" name="Value" description="If changing read or write permits, the number to use.  If reset, ignored." required="false" enabled="true" order="3" prefix="-d" prefixSpaced="true" prefixAllArgs="false">

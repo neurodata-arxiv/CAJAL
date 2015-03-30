@@ -181,7 +181,7 @@ classdef VolumeImageBox < handle
                         % inputs are annoSlice and img
                         
                         %if  length(unique(annoSlice))  > 5 %TODO
-                            this.overlayColors = round(255*jet(this.nColors));% Array containing color info (id,r,g,b)
+                            this.overlayColors = round(255*brewermap(this.nColors,'Spectral'));% Array containing color info (id,r,g,b)
                        % else
                             this.overlayColors(1:5,:) = 255*[1 1 0; 0 1 0; 0 0 1; 1 0 0; 1 1 0];
                        % end
@@ -221,7 +221,7 @@ classdef VolumeImageBox < handle
                             end
                             
                             % get color
-                            this.overlayColors = jet(16);% Array containing color info (id,r,g,b)
+                            this.overlayColors = brewermap(16,'Spectral');% Array containing color info (id,r,g,b)
                             
                             colors = round(this.overlayColors(mod(ids(cc),15)+1,1:3)*255);
                             
