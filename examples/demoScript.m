@@ -41,8 +41,11 @@ oo.setServerLocation('http://openconnecto.me/');
 oo.setImageToken('kasthuri11cc');
 
 % Set the image token.  This is the database for image data reading. You
-% can also read this from a file using setAnnoTokenFile.
+% can also read this from a file using setAnnoTokenFile. Also update 
+% propagate status to make the annotation project writeable.
+% Note: We do not propagate in the demo script.
 oo.setAnnoToken('api_demo_project');
+oo.makeAnnoWritable();
 
 % Information about the databases are accessible
 oo.annoInfo.DATASET
@@ -119,7 +122,7 @@ id1 = oo.createAnnotation(s1);
 %% Download a Synapse
 % The server can't get objects that don't exist
 % THIS LINE SHOULD THROW AN EXCEPTION AS AN EXAMPLE
-sbad = oo.query(OCPQuery(eOCPQueryType.RAMONDense,4565564531));
+% sbad = oo.query(OCPQuery(eOCPQueryType.RAMONDense,4565564531));
 
 % Download the synapse we just uploaded. s1 and s2 should now contain the
 % same data, but s2 has been spatially aligned to the backend storage cuboids and has
