@@ -5,7 +5,7 @@ function test_suite= testMatlabInit%#ok<STOUT>
     
     % Init the test suite
     global gtestMatlabPath 
-    gtestMatlabPath = '/Applications/MATLAB_R2013a.app/bin/matlab';
+    gtestMatlabPath = '/Applications/MATLAB_R2014b.app/bin/matlab';
     
     initTestSuite;       
 end

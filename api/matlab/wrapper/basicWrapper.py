@@ -1,5 +1,4 @@
-#!/usr/bin/python
-
+#!/usr/bin/env python
 ## Template for a basic matlab wrapper for the LONI Pipeline##
 
 ## It is assumed that the matlab function that is being called does not create files internally and that any
@@ -65,7 +64,6 @@ else:
         raise Exception('You must set the CAJAL3D_LOCATION environment variable so the wrapper knows where the framework is!')
     mfile = frameworkRoot + os.sep + params[0]
 
-
 # Parse arguments and build command string
 cmdStr = '-nodesktop -nosplash -nodisplay -r "matlabInit(' + '\'' + mfile + '\''    + ','
 del params[0]
@@ -91,7 +89,9 @@ for ind in doubleQuotes:
 cmdStr=''.join(cmdStr)
 
 # call matlab
+
 process = Popen([matLoc, cmdStr], stdout=PIPE, stderr=PIPE)
+print([matLoc, cmdStr])
 output = process.communicate()
 matError = output[1]
 output = output[0]
