@@ -635,7 +635,7 @@
                                         <value>{minSize3D}</value>
                                 </values>
                         </input>
-                        <input id="ContextSynapseDetectObjectification_1.connComp" name="connComp" description="0: Don't do conncomp - leave annotations as is&#xA;1: Do connected components analysis on data&#xA;" required="false" enabled="true" order="6" prefix="-d" prefixSpaced="true" prefixAllArgs="false">
+                        <input id="ContextSynapseDetectObjectification_1.doEdgeCrop" name="doEdgeCrop" description="0: Don't do edgeCrop - leave annotations as is&#xA;1: Drop synapses on edges of volume (useful for block merge)" required="false" enabled="true" order="6" prefix="-d" prefixSpaced="true" prefixAllArgs="false">
                                 <format type="Enumerated" cardinality="1">
                                         <enumeration>0</enumeration>
                                         <enumeration>1</enumeration>
@@ -1078,7 +1078,7 @@
                         <variable name="membraneToken" order="0">kasthuri11_ac3_membranes</variable>
                         <variable name="serverBase" order="3">openconnecto.me</variable>
                         <variable name="imageToken" order="2">kasthuri11cc</variable>
-                        <variable name="uploadToken" order="21">testObjDetect1</variable>
+                        <variable name="uploadToken" order="21">testObjDetect2</variable>
                         <variable name="maxSize2D" order="18">5000</variable>
                         <variable name="xSpan" order="10">1024</variable>
                         <variable name="tempdir" order="24">/mnt/tmp</variable>

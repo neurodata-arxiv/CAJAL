@@ -2,9 +2,10 @@
 % W. Gray Roncal
 
 % In this standalone (non-LONI) paradigm, many defaults have to be defined.
-%  We use a helper function
+%  We use a helper function, get_ac3_data
 
-% 
+% Note that results here won't exactly equal the LONI version because of
+% cropping effects. (TODO)
 
 %% BLOCK COMPUTE AND CUBE CUTOUT STANDALONE REPLACEMENT
 
