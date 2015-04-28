@@ -63,7 +63,7 @@ function matlabInit(varargin)
             error('MatlabInit:FunctionNotFound','The function %s is not found on the MATLAB search path',varargin{1});
         end
         
-        if ~strcmp(which(name),varargin{1})
+        if ~strcmp(which(name),which(varargin{1})) %TODO: relative path fix
             error('MatlabInit:FunctionHidden','Another function appears to be hidding the method are are attempting to execute on the MATLAB search path.  Please verify.  Result of which: %s',which(name));
         end
         

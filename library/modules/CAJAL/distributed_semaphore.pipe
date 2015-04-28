@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipeline version=".2">
+        <icons>
+                <icon id="0" value="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&#xA;joEa0P8A4gcxO+uBJhIAAAAASUVORK5CYII=" />
+        </icons>
+        <moduleGroup id="distributed_semaphore_1" name="distributed_semaphore" posX="0" posY="0" sourceCode="">
+                <module id="DistributedSemaphore_1" name="Distributed Semaphore" package="CAJAL" version="1.0" description="This module manipulates the distributed semaphore for large scale OCP processing.&#xA;&#xA;You can temporarily change the number of read or write permits, or reset back to server defaults." icon="0" posX="281" posY="167" sourceCode="" location="pipeline://localhost//mnt/pipeline/tools/CAJAL/api/matlab/wrapper/basicWrapper.py" executableVersion="1.0">
+                        <authors>
+                                <author fullName="Dean Kleissas" email="dean.kleissas@jhuapl.edu" website="www.jhuapl.edu" />
+                        </authors>
+                        <tag>semaphore</tag>
+                        <tag>redis</tag>
+                        <tag>distributed</tag>
+                        <uri>www.openconnecto.me</uri>
+                        <metadata>
+                                <data key="__creationDateKey" value="Fri May 11 12:38:03 EDT 2012" />
+                        </metadata>
+                        <input id="DistributedSemaphore_1.FunctionName" name="Function Name" description="This is the relative path to MATLAB function you want to execute in relation to the CAJAL3D framework root.  Once it is set it does not need to be changed.  (ex. &quot;/api/matlab/cubeGen/cubeGenCutout.m&quot;)&#xA;&#xA;The location of the CAJAL3D framework root should be set as an environment variable for the CAJAL3DMAT package.  &#xA;ex. CAJAL3D_LOCATION=/usr/pipeline/tools/CAJAL3D&quot;&#xA;&#xA;" required="true" enabled="true" order="1">
+                                <format type="String" cardinality="1" />
+                                <values>
+                                        <value>packages/utilities/dynamic_semaphore.m</value>
+                                </values>
+                        </input>
+                        <input id="DistributedSemaphore_1.Value" name="Value" description="If changing read or write permits, the number to use.  If reset, ignored." required="false" enabled="true" order="3" prefix="-d" prefixSpaced="true" prefixAllArgs="false">
+                                <format type="Number" cardinality="1" />
+                        </input>
+                        <input id="DistributedSemaphore_1.Operation" name="Operation" description="The operation you'd like to perform&#xA;read - change the number of read permits&#xA;write - change the number of write permits&#xA;reset - reset to server defaults" required="true" enabled="true" order="2" prefix="-s" prefixSpaced="true" prefixAllArgs="false">
+                                <format type="Enumerated" cardinality="1">
+                                        <enumeration>read</enumeration>
+                                        <enumeration>write</enumeration>
+                                        <enumeration>reset</enumeration>
+                                </format>
+                                <values>
+                                        <value>read</value>
+                                </values>
+                        </input>
+                        <input id="DistributedSemaphore_1.InFlowControl" name="In Flow Control" required="false" enabled="true" order="0">
+                                <format type="Flow Control" cardinality="1" />
+                        </input>
+                        <output id="DistributedSemaphore_1.OutFlowControl" name="Out Flow Control" required="false" enabled="true" order="4">
+                                <format type="Flow Control" cardinality="1" />
+                        </output>
+                        <executableAuthors>
+                                <author fullName="Dean Kleissas" email="dean.kleissas@jhuapl.edu" website="www.jhuapl.edu" />
+                        </executableAuthors>
+                </module>
+                <variables>
+                        <variable name="node_truth_token">cshl_baseline_ac4_segments_truth</variable>
+                        <variable name="edge_truth_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="project_dir">/mnt/pipeline/scratch/image2graph_v3</variable>
+                        <variable name="edge_truth_token">cshl_baseline_ac4_synapse_truth</variable>
+                        <variable name="img_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="syn_anno_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="mebrane_token">kasthuri11_final_membranes</variable>
+                        <variable name="img_token">kasthuri11cc</variable>
+                        <variable name="rhoana_anno_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="syn_prob_token">cajal3d_inscribedSynapseProb4</variable>
+                        <variable name="node_truth_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="syn_prob_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="membrane_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="cutout_file">cutout.mat</variable>
+                </variables>
+        </moduleGroup>
+</pipeline>
+

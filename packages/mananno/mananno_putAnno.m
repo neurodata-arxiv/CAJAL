@@ -23,4 +23,4 @@ ANNO.setCutout(anno);
 ANNO.setResolution(query.resolution);
 ANNO.setXyzOffset([query.xRange(1),query.yRange(1),query.zRange(1)]);
 
-ocp_upload_dense(server,token,ANNO,protoRAMON,useSemaphore)
+cubeUploadDense(server,token,ANNO,protoRAMON,useSemaphore)
