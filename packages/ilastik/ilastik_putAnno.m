@@ -7,10 +7,13 @@ anno = nii.img;
 anno = permute(rot90(anno,2),[2,1,3]);
 
 if doConnComp
-anno = anno > 0;
-cc = bwconncomp(anno,26);
-anno = labelmatrix(cc);
+    anno = anno > 0;
+    cc = bwconncomp(anno,26);
+    anno = labelmatrix(cc);
 end
+
+% TODO: We'll call ilastik_runIlastik() here. After doing some
+%       magic. Stay tuned, folks.
 
 load(queryFile)
 
