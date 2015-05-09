@@ -249,6 +249,7 @@ function testUploadDownloadAnnoBlockCutout %#ok<*DEFNU>
     g1.setResolution(1);
     g1.setDataType(eRAMONDataType.anno32);
     
+    oo.makeAnnoWritable()
     oo.createAnnotation(g1);
     
     % download annotation - cutout
