@@ -295,20 +295,74 @@ classdef OCP < handle
         
         function this = setAnnoToken(this,token)
             % This method sets the annotation database token to be used
+            % It also clears the AnnoChannel field 
+            
+            this.annoChannel = [];
+            
             % Get DB Info
             this.annoInfo = this.queryDBInfo(token);
             
-            % Verify it is a writable DB
-            if this.annoInfo.PROJECT.READONLY == 1
-                warning('OCP:ReadOnlyAnno','The current Annotation DB Token is for a READ ONLY database.');
+            % set the token
+            this.annoToken = token;
+            
+            % Search for a default channel and set if we found one
+            channelNames = fieldnames(this.annoInfo.CHANNELS);
+            for i = 1:numel(channelNames)
+                if this.annoInfo.CHANNELS.(channelNames{i}).DEFAULT == 1
+                    this.setAnnoChannel(channelNames{i});
+                    msg = sprintf('Using default anno channel: %s\n Set using setAnnoChannel().', channelNames{i});
+                    warning('OCP:DefaultAnnoChannel',msg)
+                    break
+                end
             end
             
-            this.annoToken = token;
+            if numel(this.annoChannel) == 0
+                msg = sprintf('No default anno channel. Set anno channel before running queries.');
+                warning('OCP:NoDefaultAnnoChannel',msg)
+            end
+            
+            % ABTODO should check readonly for all channels (and all
+            % tokens?)
+            % right now READONLY is only included for channels 
+            % Verify it is a writable DB
+            %if this.annoInfo.PROJECT.READONLY == 1
+            %    warning('OCP:ReadOnlyAnno','The current Annotation DB Token is for a READ ONLY database.');
+            %end
+            
+            
         end
         function token = getAnnoToken(this)
             % This method gets the anno database token to be used
             
             token = this.annoToken;
+        end
+        
+        function setAnnoChannel(this, channel)
+            % This method sets the annotation database channel to be used
+            
+            this.annoChannel = [];
+            
+            if numel(this.annoToken) == 0
+                ex = MException('OCP:NoAnnoToken','Cannot set AnnoChannel without first setting AnnoToken.');
+                throw(ex);  
+            end
+            channelNames = fieldnames(this.annoInfo.CHANNELS);
+            for i = 1:numel(channelNames)
+                if strcmpi(channelNames{i}, channel) == 1
+                    this.annoChannel = channel; 
+                    break;
+                end
+            end 
+            
+            if numel(this.imageChannel) == 0
+                ex = MException('OCP:InvalidAnnoChannel','AnnoChannel does not exist for this token.');
+                throw(ex)
+            end
+            
+        end
+        function channel = getAnnoChannel(this)
+            % This method gets the annotation database channel to be used
+            channel = this.annoChannel;
         end
         
         function this = setImageTokenFile(this,file)
