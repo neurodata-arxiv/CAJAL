@@ -875,7 +875,7 @@ classdef OCPQuery < handle
                             valid = false;
                             msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
                         end
-                        if this.zRange(2) > dbInfo.DATASET.SLICERANGE(2)
+                        if this.zRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
                             valid = false;
                             msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
                         end
@@ -954,7 +954,7 @@ classdef OCPQuery < handle
                                     msg = sprintf('%s[W] Since resolution not specified X and Y coordinates could not be checked against the database.\n',msg);
                                 end
                                 
-                                if this.cIndex < dbInfo.DATASET.SLICERANGE(1) || this.cIndex > dbInfo.DATASET.SLICERANGE(2)
+                                if this.cIndex < dbInfo.DATASET.SLICERANGE(1) || this.cIndex > (dbInfo.DATASET.SLICERANGE(2) + 1)
                                     valid = false;
                                     msg = sprintf('%s[E] cIndex (Z dim) out of valid dataset range.\n',msg);
                                 end
@@ -975,7 +975,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Lower B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(2) > dbInfo.DATASET.SLICERANGE(2)
+                                    if this.bRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
@@ -1004,7 +1004,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Lower B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(2) > dbInfo.DATASET.SLICERANGE(2)
+                                    if this.bRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
@@ -1085,7 +1085,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
                             end
-                            if this.zRange(2) > dbInfo.DATASET.SLICERANGE(2)
+                            if this.zRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
                                 valid = false;
                                 msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
                             end
@@ -1140,7 +1140,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
                             end
-                            if this.zRange(2) > dbInfo.DATASET.SLICERANGE(2)
+                            if this.zRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
                                 valid = false;
                                 msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
                             end
@@ -1184,7 +1184,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
                             end
-                            if this.zRange(2) > dbInfo.DATASET.SLICERANGE(2)
+                            if this.zRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
                                 valid = false;
                                 msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
                             end
@@ -1226,7 +1226,7 @@ classdef OCPQuery < handle
                             valid = false;
                             msg = sprintf('%s[E] z coord out of valid dataset range.\n',msg);
                         end
-                        if this.xyzCoord(3) > dbInfo.DATASET.SLICERANGE(2)
+                        if this.xyzCoord(3) > (dbInfo.DATASET.SLICERANGE(2) + 1) 
                             valid = false;
                             msg = sprintf('%s[E] Z coord out of valid dataset range.\n',msg);
                         end

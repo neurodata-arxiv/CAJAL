@@ -65,8 +65,8 @@ classdef cajal3d
     end
     
     properties(Constant = true)
-        version = '1.7';
-        POC = 'dean.kleissas@jhuapl.edu';
+        version = '1.7.1 (beta)';
+        POC = 'ocp-support@googlegroups.com';
     end
     
     methods
