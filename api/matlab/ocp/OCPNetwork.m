@@ -248,8 +248,8 @@ classdef OCPNetwork < handle
         
         %% test URL
         function testUrl(this,urlStrBase)
-            % urlStr already has a trailing / 
-            urlStr = strcat(urlStrBase, 'ocp/accounts/login/');
+            % urlStr does NOT have a trailing /  
+            urlStr = strcat(urlStrBase, '/ocp/accounts/login/');
             try
                 % Get the data
                 responseCode = this.jUrl.read(urlStr,false);

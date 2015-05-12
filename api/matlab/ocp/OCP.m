@@ -35,7 +35,7 @@ classdef OCP < handle
     % See the License for the specific language governing permissions and
     % limitations under the License.
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     properties(SetAccess = 'private', GetAccess = 'public')
         %% Properties - Server Info
         %Url to server root
@@ -57,7 +57,8 @@ classdef OCP < handle
         
     end
     
-    properties(SetAccess = 'private', GetAccess = 'private')
+    % AB TODO change back to private 
+    properties(SetAccess = 'private', GetAccess = 'public')
         %% Properties - Private
         lastQuery = [];
         lastUrl = []
@@ -65,8 +66,10 @@ classdef OCP < handle
         
         %Token for Image Database
         imageToken = []
+        imageChannel = []
         %Token for Annotation Database
         annoToken = []
+        annoChannel = []
         
         %% Properties - Utility Classes
         net = [];
@@ -137,6 +140,9 @@ classdef OCP < handle
         
         %% Methods - General - Setters/Getters
         function channel_cell_array = getChannelList(this)
+           % All tokens are multichannel databases. Return cell array
+           % listing channels.
+           
            % If the image token is a multichannel database then return
            % a cell array listing the available channels
            if (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
@@ -202,9 +208,12 @@ classdef OCP < handle
                 if isempty(ind)
                     val = sprintf('http://%s',val);
                 end
-                %Make sure url ends with /
-                if strcmpi(val(end),'/') == 0
-                    val = sprintf('%s/',val);
+                % AB changed -- seems like the API prefers not ending with
+                % /?
+                %Make sure url does not end with /
+                if strcmpi(val(end),'/') ~= 0
+                    %val = sprintf('%s/',val);
+                    val(end) = '';
                 end
                 
                 this.net.testUrl(val);
@@ -215,7 +224,7 @@ classdef OCP < handle
                     rethrow(err2);
                 end
                 
-                ex = MException('OCP:ServerConnFail','Failed to resolve server.  Check server url');
+                ex = MException('OCP:ServerConnFail',err2.message);
                 throw(ex);
             end
             
@@ -224,17 +233,64 @@ classdef OCP < handle
         
         function this = setImageToken(this,token)
             % This method sets the image database token to be used
+            % It also clears the Image Channel field 
+            this.imageChannel = [];
             
             % Get DB Info
             this.imageInfo = this.queryDBInfo(token);
             
+            % set the token
             this.imageToken = token;
+            
+            % Search for a default channel and set if we found one
+            channelNames = fieldnames(this.imageInfo.CHANNELS);
+            for i = 1:numel(channelNames)
+                if this.imageInfo.CHANNELS.(channelNames{i}).DEFAULT == 1
+                    this.setImageChannel(channelNames{i});
+                    msg = sprintf('Using default image channel: %s\n Set using setImageChannel().', channelNames{i});
+                    warning('OCP:DefaultImageChannel',msg)
+                    break
+                end
+            end
+            if numel(this.imageChannel) == 0
+                msg = sprintf('No default image channel. Set image channel before running queries.');
+                warning('OCP:NoDefaultImageChannel',msg);
+            end
+            
             
         end
         function token = getImageToken(this)
             % This method gets the image database token to be used
             
             token = this.imageToken;
+        end
+        
+        function setImageChannel(this, channel)
+            % This method sets the image database channel to be used
+            
+            this.imageChannel = [];
+            
+            if numel(this.imageToken) == 0
+                ex = MException('OCP:NoImageToken','Cannot set ImageChannel without first setting ImageToken.');
+                throw(ex);  
+            end
+            channelNames = fieldnames(this.imageInfo.CHANNELS);
+            for i = 1:numel(channelNames)
+                if strcmpi(channelNames{i}, channel) == 1
+                    this.imageChannel = channel; 
+                    break;
+                end
+            end 
+            
+            if numel(this.imageChannel) == 0
+                ex = MException('OCP:InvalidImageChannel','ImageChannel does not exist for this token.');
+                throw(ex)
+            end
+            
+        end
+        function channel = getImageChannel(this)
+            % This method gets the image database channel to be used
+            channel = this.imageChannel;
         end
         
         function this = setAnnoToken(this,token)
@@ -1224,7 +1280,27 @@ classdef OCP < handle
             % returns information about that database.  The return
             % structure is:
             %
-            % TODO: document
+            % info.CHANNELS
+            %   <<CHAN_NAME>>
+            %       DATATYPE
+            %       NAME
+            %       PROPAGATE
+            %       RESOLUTION
+            %       TYPE
+            %       WINDOWRANGE
+            % info.PROJECT
+            %   HOST
+            %   NAME
+            %   OCP_VERSION
+            %   SCHEMA_VERSION
+            % info.DATASET
+            %   CUBE_DIMENSION
+            %   IMAGE_SIZE
+            %   NAME 
+            %   OFFSET
+            %   RESOLUTIONS
+            %   TIMERANGE
+            %   VOXELRES
             
             url = sprintf('%s/ocp/ocpca/%s/projinfo/',this.serverLocation,token);
             this.lastUrl = url;
