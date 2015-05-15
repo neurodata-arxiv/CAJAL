@@ -253,7 +253,6 @@ classdef OCPNetwork < handle
             try
                 % Get the data
                 responseCode = this.jUrl.read(urlStr,false);
-                % allow 404 response code, means a web server exists 
                 if responseCode ~= 200
                     % Server errored
                     errorMessage = sprintf('Server Response %d - %s \n Error Page: <a href="%s">%s</a>\n',...
