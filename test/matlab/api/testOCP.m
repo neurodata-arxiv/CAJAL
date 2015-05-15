@@ -8,6 +8,12 @@ function test_suite = testOCP %#ok<STOUT>
     ocp_force_local = false;
     % You should leave this set to false unless you know what you are doing.
     
+    global target_server
+    
+    % Holds the server location target for the test suite. 
+    % Default is 'http://openconnecto.me' 
+    target_server = 'http://brainviz1.cs.jhu.edu';
+    
     %% Init the test suite
     initTestSuite;
     
@@ -16,6 +22,10 @@ function test_suite = testOCP %#ok<STOUT>
     warning('off','OCP:RAMONResolutionEmpty');
     warning('off','OCP:MissingInitQuery');
     warning('off','OCP:CustomKVPair');
+    warning('off','OCP:DefaultImageChannel');
+    warning('off','OCP:NoDefaultImageChannel');
+    warning('off','OCP:DefaultAnnoChannel');
+    warning('off','OCP:NoDefaultAnnoChannel');
     
     % May need to update class since it looks like global use has
     % changed in new version of matlab...only really need this for unit 
@@ -33,11 +43,13 @@ function testInit %#ok<*DEFNU>
     % database bad
     assertExceptionThrown(@() oo.setServerLocation('http://openconnectooo.me'), 'OCP:ServerConnFail'); %#ok<*NODEF>
     
-    % database good
-    oo.setServerLocation('www.google.com');
-    assertEqual(oo.serverLocation,'http://www.google.com/');
-    oo.setServerLocation('http://openconnecto.me/') ;    
-    %oo.setServerLocation('http://braingraph1dev.cs.jhu.edu') ;
+    % database good    
+    oo.setServerLocation('openconnecto.me/') ;  
+    assertEqual(oo.serverLocation,'http://openconnecto.me');
+
+    % set server location 
+    global target_server 
+    oo.setServerLocation(target_server) ;
     
     % image token
     assertEqual(isempty(oo.imageInfo),true);
@@ -47,7 +59,8 @@ function testInit %#ok<*DEFNU>
  
     % test token loading from a file
     oo.setAnnoTokenFile(fullfile(fileparts(which('cajal3d')),'test','matlab','api','data','myToken.token'));
-    assertEqual(oo.getAnnoToken(),'apiUnitTestKasthuri');
+    assertEqual(oo.getAnnoToken(),'apiUnitTests');
+    % TODO test channel 
     assertEqual(isempty(oo.annoInfo),false);    
 end
 
@@ -55,8 +68,10 @@ end
 function testNoToken %#ok<*DEFNU>   
     global oo    
     global ocp_force_local
+    global target_server
     
     oo = OCP();    
+    oo.setServerLocation(target_server);
     
     % image token
     oo.setImageToken('kasthuri11');
@@ -68,12 +83,18 @@ function testNoToken %#ok<*DEFNU>
     if ocp_force_local == true
         oo.setAnnoToken('apiUnitTestKasthuriLocal');
     else
-        oo.setAnnoToken('apiUnitTestKasthuri');
+        oo.setAnnoToken('apiUnitTests');
     end
     
     % Set default resolutino
     oo.setDefaultResolution(1);
 end
+
+% AB TODO -- testChannel (try and set channel that does not exist, set
+% channel and ensure it exists) 
+
+% AB TODO -- testNoChannel (try and run a query without a channel) 
+
 
 
 %% Volume Cutouts Bad Queries
