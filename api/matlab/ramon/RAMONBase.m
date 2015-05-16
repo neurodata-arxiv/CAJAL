@@ -24,6 +24,7 @@ classdef RAMONBase < handle
     
     properties(SetAccess = 'private', GetAccess = 'public')
         id                  % Unique 32bit ID value assigned by OCP database
+        channel             % Name of the channel corresponding to this object (for creating HDF5 files)
         confidence          % Value 0-1 indicating confidence in annotation
         dynamicMetadata     % A flexible, unspecified collection key-value pairs
         status              % Status of annotation in database
@@ -120,6 +121,16 @@ classdef RAMONBase < handle
             end
             
             this.author = value;
+        end
+                 
+        function this = setChannel(this,name)
+            % Sets the channel name (str) 
+            if isa(name, 'char')
+                this.channel = name;
+            else
+                ex = MException('RAMONVolume:ChannelNameTypeError','Channel name field must be a character string.');
+                throw(ex);
+            end
         end
         
         function this = setStatus(this,value)
