@@ -154,6 +154,8 @@ classdef OCPHdf < handle
             data_type = h5read(this.filename,'/DATATYPE');      
             
             % Based on datatype grab the data
+            % AB TODO -- determine what it is reading and adjust datatypes
+            % in switch statement below 
             switch data_type  
                 % image8,anno32,prob32,bitmask,anno64,image16
                 % single channel data
@@ -162,35 +164,38 @@ classdef OCPHdf < handle
                     volumeObj = RAMONVolume();
 
                     % Load data
-                    cube = h5read(this.filename,'/CUTOUT');
+                    % AB TODO -- need to use a channel name here, not cutout
+                    % Can get it from the query object -- !!TODO!!
+                    name = sprintf('/%s','CUTOUT');
+                    cube = h5read(this.filename,name);
                     cube = permute(cube, [2 1 3]);
-                    n = 'Cutout';
+                    %n = 'Cutout';
 
                     % Populate object
                     volumeObj = volumeObj.setCutout(cube);
                     volumeObj = volumeObj.setXyzOffset([this.query.xRange(1) this.query.yRange(1) this.query.zRange(1)]);
                     volumeObj = volumeObj.setResolution(this.query.resolution);
-                    volumeObj = volumeObj.setName(n);
+                    volumeObj = volumeObj.setName(channel);
                     
-                case {3,4}
-                    % channels16,channels8
-                    % multichannel data
-                    volumeObj = cell(1,length(this.query.channels));
-
-                    % create cell array of volume objects!
-                    for ii = 1:length(this.query.channels)                    
-                        v = RAMONVolume();
-
-                        ch = strrep(this.query.channels{ii},'__','-');
-                        cube = h5read(this.filename,['/CUTOUT/' ch]);
-                        cube = permute(cube, [2 1 3]);
-
-                        v = v.setCutout(cube);
-                        v = v.setXyzOffset([this.query.xRange(1) this.query.yRange(1) this.query.zRange(1)]);
-                        v = v.setResolution(this.query.resolution);
-                        v = v.setName(ch);
-                        volumeObj{ii} = v;
-                    end      
+%                 case {3,4}
+%                     % channels16,channels8
+%                     % multichannel data
+%                     volumeObj = cell(1,length(this.query.channels));
+% 
+%                     % create cell array of volume objects!
+%                     for ii = 1:length(this.query.channels)                    
+%                         v = RAMONVolume();
+% 
+%                         ch = strrep(this.query.channels{ii},'__','-');
+%                         cube = h5read(this.filename,['/CUTOUT/' ch]);
+%                         cube = permute(cube, [2 1 3]);
+% 
+%                         v = v.setCutout(cube);
+%                         v = v.setXyzOffset([this.query.xRange(1) this.query.yRange(1) this.query.zRange(1)]);
+%                         v = v.setResolution(this.query.resolution);
+%                         v = v.setName(ch);
+%                         volumeObj{ii} = v;
+%                     end      
                     
                 case {9,10}
                     % rgba32,rgba64
@@ -198,6 +203,7 @@ classdef OCPHdf < handle
                     volumeObj = RAMONVolume();
 
                     % Load data
+                    % !!TODO!! see above
                     cube = h5read(this.filename,'/CUTOUT');
 
                     % handle RGBA data
@@ -629,30 +635,32 @@ classdef OCPHdf < handle
                         else
                             % Trying to block style upload  
                             switch ramonObj.dataType
-                                case eRAMONDataType.prob32
-                                    % Create HDF5 file
-                                    h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');            
-                                    % Probability Map                                    
-                                    OCPHdf.addBlockData(h5Handle, single(ramonObj.data), 'H5T_IEEE_F32LE','H5T_IEEE_F32LE');
-
-                                case eRAMONDataType.anno32
+                                case eRAMONChannelDataType.uint32
+                                    switch ramonObj.dbType 
+                                        case eRAMONChannelType.probmap 
+                                            % Create HDF5 file
+                                            h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');            
+                                            % Probability Map                                    
+                                            OCPHdf.addBlockData(h5Handle, ramonObj.channel, single(ramonObj.data), 'H5T_IEEE_F32LE','H5T_IEEE_F32LE');
+                                        case eRAMONChannelType.annotation
+                                            % Create HDF5 file
+                                            h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');
+                                            % 32Bit annotations
+                                            OCPHdf.addBlockData(h5Handle, ramonObj.channel, uint32(ramonObj.data), 'H5T_STD_U32LE','H5T_NATIVE_INT');  
+                                    end   
+                                    
+                                case eRAMONDataType.uint16
                                     % Create HDF5 file
                                     h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');     
                                     % 32Bit annotations                                
-                                    OCPHdf.addBlockData(h5Handle, uint32(ramonObj.data), 'H5T_STD_U32LE','H5T_NATIVE_INT');
-                                   
-                                case eRAMONDataType.image16
-                                    % Create HDF5 file
-                                    h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');     
-                                    % 32Bit annotations                                
-                                    OCPHdf.addBlockData(h5Handle, uint16(ramonObj.data), 'H5T_STD_U16LE','H5T_STD_U16LE');
+                                    OCPHdf.addBlockData(h5Handle, ramonObj.channel, uint16(ramonObj.data), 'H5T_STD_U16LE','H5T_STD_U16LE');
                                     
                                     
-                                case eRAMONDataType.image8
+                                case eRAMONDataType.uint8
                                     % Create HDF5 file
                                     h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');     
                                     % 32Bit annotations                                
-                                    OCPHdf.addBlockData(h5Handle, uint8(ramonObj.data), 'H5T_STD_U8LE','H5T_STD_U8LE');
+                                    OCPHdf.addBlockData(h5Handle, ramonObj.channel, uint8(ramonObj.data), 'H5T_STD_U8LE','H5T_STD_U8LE');
                                     
                                 
 %                                 case eRAMONDataType.image8
@@ -896,6 +904,8 @@ classdef OCPHdf < handle
                 % if no value don't add field
                 return;
             end
+            
+            % TODO check to see if channel is set (if not warn) 
                      
             switch ramonObj.dataFormat
                 case eRAMONDataFormat.dense
@@ -971,7 +981,9 @@ classdef OCPHdf < handle
                     
                     
                     % Write unsigned int labeled voxel data
-                    dset = H5D.create(h5Handle, sprintf('/%d/CUTOUT',ramonId), 'H5T_STD_U32LE', space, dcpl);
+                    % AB TODO -- do we want the name CUTOUT or the channel
+                    % name here? 
+                    dset = H5D.create(h5Handle, sprintf('/%d/%s',ramonId,ramonObj.channel), 'H5T_STD_U32LE', space, dcpl);
                     H5D.write (dset, 'H5T_NATIVE_INT', 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', uint32(data));
                     H5D.close (dset);
                     H5S.close (space);
@@ -1026,7 +1038,7 @@ classdef OCPHdf < handle
         
         
         % Method for adding voxel data
-        function addBlockData(h5Handle, data, createType,writeType)
+        function addBlockData(h5Handle, channel, data, createType,writeType)
 
             % Write Voxel Data                    
             data = permute(data,[2 1 3]);
@@ -1087,7 +1099,8 @@ classdef OCPHdf < handle
 
 
             % Write unsigned int labeled voxel data
-            dset = H5D.create(h5Handle, '/CUTOUT', createType, space, dcpl);
+            dsetName = sprintf('/%s', channel); 
+            dset = H5D.create(h5Handle, dsetName, createType, space, dcpl);
             H5D.write(dset, writeType, 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', data);
             H5D.close(dset);
             H5S.close(space);

@@ -935,7 +935,8 @@ classdef OCPQuery < handle
                             case eOCPSlicePlane.xy
                                 if ~isempty(this.resolution)
                                     imgDims = dbInfo.DATASET.IMAGE_SIZE(this.resolution);
-                                    if this.aRange(1) < 0
+                                    imgOffsets = dbInfo.DATASET.OFFSET(this.resolution);
+                                    if this.aRange(1) < imgOffsets(1)
                                         valid = false;
                                         msg = sprintf('%s[E] Lower A Range (X dim) out of valid dataset range.\n',msg);
                                     end
@@ -943,7 +944,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Upper A Range (X dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(1) < 0
+                                    if this.bRange(1) < imgOffsets(2)
                                         valid = false;
                                         msg = sprintf('%s[E] Lower B Range (Y dim) out of valid dataset range.\n',msg);
                                     end
@@ -951,13 +952,16 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Upper B Range (Y dim) out of valid dataset range.\n',msg);
                                     end
+                                    if this.cIndex < imgOffsets(3)
+                                        valid = false;
+                                        msg = sprintf('%s[E] C Index (Z dim) lower than valid dataset range.\n',msg);
+                                    end
+                                    if this.cIndex > imgDims(3)
+                                        valid = false;
+                                        msg = sprintf('%s[E] C Index (Z dim) lower than valid dataset range.\n',msg);
+                                    end
                                 else
                                     msg = sprintf('%s[W] Since resolution not specified X and Y coordinates could not be checked against the database.\n',msg);
-                                end
-                                
-                                if this.cIndex < dbInfo.DATASET.SLICERANGE(1) || this.cIndex > (dbInfo.DATASET.SLICERANGE(2) + 1)
-                                    valid = false;
-                                    msg = sprintf('%s[E] cIndex (Z dim) out of valid dataset range.\n',msg);
                                 end
                                 
                                 
@@ -1020,33 +1024,33 @@ classdef OCPQuery < handle
                                 
                         end
                         
-                        % Check if channels are listed and valid for
-                        % multichannel queries
-                        if (dbInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
-                                (dbInfo.PROJECT.TYPE == eRAMONDataType.channels8)
-                            
-                            % Check that channels requested are in DB
-                            channel_cell_array = fieldnames(dbInfo.CHANNELS);
-                            
-                            if isa(this.channels, 'cell')
-                                % Collection of channels
-                                for jj = 1:length(this.channels)                                    
-                                    ch_matches(jj) = any(strcmp(this.channels{jj},channel_cell_array));  %#ok<AGROW>
-                                end
-                                
-                                if all(ch_matches) == 0
-                                    valid = false;
-                                    bad_ind = find(ch_matches == 0);
-                                    msg = sprintf('%s[E] Channels not found in database: ',msg);
-                                    tmsg = sprintf('%s,',this.channels{bad_ind}); %#ok<FNDSB>
-                                    msg = sprintf('%s%s\n',msg, tmsg(1:end-1));
-                                   return
-                                end
-                            end
-                        else
-                            % not multichannel
-                            msg = sprintf('%s[W] channels ignored with non-multichannel data.\n',msg);
-                        end
+%                         % Check if channels are listed and valid for
+%                         % multichannel queries
+%                         if (dbInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
+%                                 (dbInfo.PROJECT.TYPE == eRAMONDataType.channels8)
+%                             
+%                             % Check that channels requested are in DB
+%                             channel_cell_array = fieldnames(dbInfo.CHANNELS);
+%                             
+%                             if isa(this.channels, 'cell')
+%                                 % Collection of channels
+%                                 for jj = 1:length(this.channels)                                    
+%                                     ch_matches(jj) = any(strcmp(this.channels{jj},channel_cell_array));  %#ok<AGROW>
+%                                 end
+%                                 
+%                                 if all(ch_matches) == 0
+%                                     valid = false;
+%                                     bad_ind = find(ch_matches == 0);
+%                                     msg = sprintf('%s[E] Channels not found in database: ',msg);
+%                                     tmsg = sprintf('%s,',this.channels{bad_ind}); %#ok<FNDSB>
+%                                     msg = sprintf('%s%s\n',msg, tmsg(1:end-1));
+%                                    return
+%                                 end
+%                             end
+%                         else
+%                             % not multichannel
+%                             msg = sprintf('%s[W] channels ignored with non-multichannel data.\n',msg);
+%                         end
                         
                         
                         
