@@ -12,7 +12,8 @@ function test_suite = testOCP %#ok<STOUT>
     
     % Holds the server location target for the test suite. 
     % Default is 'http://openconnecto.me' 
-    target_server = 'http://brainviz1.cs.jhu.edu';
+    %target_server = 'http://brainviz1.cs.jhu.edu';
+    target_server = 'http://localhost:8000';
     
     %% Init the test suite
     initTestSuite;
@@ -84,6 +85,7 @@ function testNoToken %#ok<*DEFNU>
         oo.setAnnoToken('apiUnitTestKasthuriLocal');
     else
         oo.setAnnoToken('apiUnitTests');
+        oo.setAnnoChannel('apiUnitTestKasthuri');
     end
     
     % Set default resolutino
@@ -94,7 +96,6 @@ end
 % channel and ensure it exists) 
 
 % AB TODO -- testNoChannel (try and run a query without a channel) 
-
 
 
 %% Volume Cutouts Bad Queries
@@ -212,9 +213,11 @@ end
 
 %% RAMON - Volume/block style uploads
 function testUploadDownloadProbMapCutout %#ok<*DEFNU>
-    global ocp_force_local
-    
-    oo2 = OCP();    
+    global ocp_force_local   
+    global target_server
+
+    oo2 = OCP(); 
+    oo2.setServerLocation(target_server);
     % image token
     oo2.setImageToken('kasthuri11');    
     
@@ -239,8 +242,9 @@ function testUploadDownloadProbMapCutout %#ok<*DEFNU>
     g1.setCutout(d);
     g1.setXyzOffset([2560 1000 64]);
     g1.setResolution(1);
-    g1.setDataType(eRAMONDataType.prob32);
-        
+    g1.setDataType(eRAMONChannelDataType.uint32);
+    g1.setDBType(eRAMONChannelType.probmap);
+    
     oo2.createAnnotation(g1);
         
     % download annotation - cutout
@@ -268,7 +272,9 @@ function testUploadDownloadAnnoBlockCutout %#ok<*DEFNU>
     g1.setCutout(d);
     g1.setXyzOffset([2560 1000 128]);
     g1.setResolution(1);
-    g1.setDataType(eRAMONDataType.anno32);
+    g1.setDataType(eRAMONChannelDataType.uint32);
+    g1.setDBType(eRAMONChannelType.annotation);
+    g1.setChannel(oo.getAnnoChannel());
     
     oo.makeAnnoWritable()
     oo.createAnnotation(g1);
@@ -3214,5 +3220,9 @@ function cleanup
     warning('on','OCP:RAMONResolutionEmpty');    
     warning('on','OCP:MissingInitQuery');
     warning('on','OCP:CustomKVPair');
+    warning('on','OCP:DefaultImageChannel');
+    warning('on','OCP:NoDefaultImageChannel');
+    warning('on','OCP:DefaultAnnoChannel');
+    warning('on','OCP:NoDefaultAnnoChannel');
 end
 
