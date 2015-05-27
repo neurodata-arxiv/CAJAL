@@ -134,11 +134,15 @@ classdef OCPHdf < handle
         end
         
         %% Methods - HDF5 to RAMONVolume type
-        function volumeObj = toRAMONVolume(this)
+        function volumeObj = toRAMONVolume(this,groupName)
             % Method to take a cutout and put it into a RAMON volume
             % object. This is useful for viewing and compatibility between
             % programs.  Also it provides additional information about the
             % cutout compared to a simple MATLAB matrix.
+            
+            if nargin == 1
+                groupName = '';
+            end
             
             if isempty(this.filename)
                 ex = MException('OCPHdf:FilenameMissing','HDF5 file required to create RAMONVolume');
@@ -150,24 +154,40 @@ classdef OCPHdf < handle
                 throw(ex);
             end
             
-            % Get data type
-            data_type = h5read(this.filename,'/DATATYPE');      
+            if isempty(groupName)
+                % Get data type
+                data_type = h5read(this.filename,'/DATATYPE');     
+            else 
+                dtpath = sprintf('/%s/DATATYPE', groupName);
+                data_type = h5read(this.filename, dtpath);
+            end
+            
+%             if ~isa(data_type{1}, 'eRAMONChanelDataType')
+%                 error('OCPHdf:toRAMONVolume','Unsupported datatype: %s',data_type{1});
+%             end
             
             % Based on datatype grab the data
-            % AB TODO -- determine what it is reading and adjust datatypes
-            % in switch statement below 
-            switch data_type  
+
+            % AB TODO -- this is a stupid and broken way to do this. do it
+            % better. 
+            switch eRAMONChannelDataType.(data_type{1})
                 % image8,anno32,prob32,bitmask,anno64,image16
                 % single channel data
-                case {1,2,5,6,7,8}
+                case {eRAMONChannelDataType.uint8,...
+                        eRAMONChannelDataType.uint16,...
+                        eRAMONChannelDataType.uint32,...
+                        eRAMONChannelDataType.uint64,...
+                        eRAMONChannelDataType.float32}
                     % Create object
                     volumeObj = RAMONVolume();
 
                     % Load data
-                    % AB TODO -- need to use a channel name here, not cutout
-                    % Can get it from the query object -- !!TODO!!
-                    name = sprintf('/%s','CUTOUT');
-                    cube = h5read(this.filename,name);
+                    if isempty(groupName)
+                        ctpath = sprintf('/CUTOUT');
+                    else
+                        ctpath = sprintf('/%s/CUTOUT',groupName);
+                    end
+                    cube = h5read(this.filename,ctpath);
                     cube = permute(cube, [2 1 3]);
                     %n = 'Cutout';
 
@@ -175,7 +195,7 @@ classdef OCPHdf < handle
                     volumeObj = volumeObj.setCutout(cube);
                     volumeObj = volumeObj.setXyzOffset([this.query.xRange(1) this.query.yRange(1) this.query.zRange(1)]);
                     volumeObj = volumeObj.setResolution(this.query.resolution);
-                    volumeObj = volumeObj.setName(channel);
+                    volumeObj = volumeObj.setName(groupName);
                     
 %                 case {3,4}
 %                     % channels16,channels8
@@ -203,8 +223,12 @@ classdef OCPHdf < handle
                     volumeObj = RAMONVolume();
 
                     % Load data
-                    % !!TODO!! see above
-                    cube = h5read(this.filename,'/CUTOUT');
+                    if isempty(groupName)
+                        ctpath = sprintf('/CUTOUT');
+                    else
+                        ctpath = sprintf('/%s/CUTOUT',groupName);
+                    end
+                    cube = h5read(this.filename,ctpath);
 
                     % handle RGBA data
                     cube = permute(cube, [2 1 3 4]);
@@ -215,9 +239,10 @@ classdef OCPHdf < handle
                     volumeObj = volumeObj.setXyzOffset([this.query.xRange(1) this.query.yRange(1) this.query.zRange(1)]);
                     volumeObj = volumeObj.setResolution(this.query.resolution);
                     volumeObj = volumeObj.setName(n);
-                    
                 otherwise
-                    error('OCPHdf:toRAMONVolume','Unsupported datatype: %d',datatype);
+                    error('OCPHdf:toRAMONVolume','Unsupported datatype: %s',data_type{1});
+                    
+
             end
         end
         
@@ -645,6 +670,8 @@ classdef OCPHdf < handle
                                         case eRAMONChannelType.annotation
                                             % Create HDF5 file
                                             h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');
+                                            % add group 
+                                            gid = H5G.create(h5Handle,ramonObj.channel,'H5P_DEFAULT','H5P_DEFAULT','H5P_DEFAULT');
                                             % 32Bit annotations
                                             OCPHdf.addBlockData(h5Handle, ramonObj.channel, uint32(ramonObj.data), 'H5T_STD_U32LE','H5T_NATIVE_INT');  
                                     end   
@@ -1099,7 +1126,7 @@ classdef OCPHdf < handle
 
 
             % Write unsigned int labeled voxel data
-            dsetName = sprintf('/%s', channel); 
+            dsetName = sprintf('/%s/CUTOUT', channel); 
             dset = H5D.create(h5Handle, dsetName, createType, space, dcpl);
             H5D.write(dset, writeType, 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', data);
             H5D.close(dset);
