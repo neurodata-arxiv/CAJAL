@@ -47,7 +47,7 @@ classdef RAMONVolume < RAMONBase
         % autodetecting this is unreliable.  This is automatically synced automatically with
         % the database project type when possible.
         dataType = [] % eRAMONChannelDataType
-        dbType = [] % eRAMONDataType 
+        channelType = [] % eRAMONChannelType 
     end
     
     methods
@@ -212,9 +212,9 @@ classdef RAMONVolume < RAMONBase
                 
             else
                 % Is not of type eRAMONDataType
-                validateattributes(type,{'numeric'},{'finite','nonnegative','integer','nonnan','real'});
+                %validateattributes(type,{'numeric'},{'finite','nonnegative','integer','nonnan','real'});
                 try
-                    type = eRAMONChannelDataType(type);
+                    type = eRAMONChannelDataType.(type);
                 catch ME
                     rethrow(ME);
                 end
@@ -230,18 +230,8 @@ classdef RAMONVolume < RAMONBase
                         
             if isa(type, 'eRAMONChannelType')
                 % Is of Type eRAMONChannelType
-                
-            else
-                % Is not of type eRAMONDataType
-                validateattributes(type,{'numeric'},{'finite','nonnegative','integer','nonnan','real'});
-                try
-                    type = eRAMONChannelType(type);
-                catch ME
-                    rethrow(ME);
-                end
+                this.channelType = type;
             end
-            
-            this.dbType = type;
         end
 
         function handle = clone(this,option)

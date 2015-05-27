@@ -1,5 +1,5 @@
 classdef eRAMONChannelType
-    %eRAMONDataType Enumeration of types of channels in the OCP Database 
+    %eRAMONChannelType Enumeration of types of channels in the OCP Database 
     %
     %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
