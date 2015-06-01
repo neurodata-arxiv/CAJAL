@@ -1,5 +1,7 @@
 ##Overview
 
+[![Join the chat at https://gitter.im/openconnectome/cajal](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/openconnectome/cajal?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is the CAJAL3D API for MATLAB.  The API provides a simple to use interface with Open Connectome Project servers and provides RAMON Objects, unit tests, configuration scripts, and utilities.  For more information about the Open Connectome Project (OCP), see www.openconnecto.me.
 
 This software was developed at Johns Hopkins University Applied Physics Lab.  For more information about JHUAPL, visit [this site](http://www.jhuapl.edu/ourwork/red/an/default.asp)
