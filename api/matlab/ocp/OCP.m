@@ -148,8 +148,8 @@ classdef OCP < handle
            
            % If the image token is a multichannel database then return
            % a cell array listing the available channels
-           if (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
-                   (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels8)
+           if (this.imageChanInfo.TYPE == eRAMONDataType.channels16) || ...
+                   (this.imageChanInfo.TYPE == eRAMONDataType.channels8)
                channel_cell_array = fieldnames(this.imageInfo.CHANNELS);               
            else
                % not multichannel
@@ -336,7 +336,7 @@ classdef OCP < handle
             % tokens?)
             % right now READONLY is only included for channels 
             % Verify it is a writable DB
-            %if this.annoInfo.PROJECT.READONLY == 1
+            %if this.annoChanInfo.READONLY == 1
             %    warning('OCP:ReadOnlyAnno','The current Annotation DB Token is for a READ ONLY database.');
             %end
             
@@ -502,11 +502,11 @@ classdef OCP < handle
                     if isa(response, 'cell')
                         % multichannel cutout
                         for kk = 1:length(response)
-                            response{kk}.setDataType(this.imageInfo.PROJECT.TYPE);
+                            response{kk}.setDataType(this.imageChanInfo.TYPE);
                         end
                     else
                         % normal
-                        response.setDataType(this.imageInfo.PROJECT.TYPE);
+                        response.setDataType(this.imageChanInfo.TYPE);
                     end
                     
                 case eOCPQueryType.imageSlice
@@ -600,7 +600,7 @@ classdef OCP < handle
                     % Convert to RAMONVolume
                     response = hdfFile.toRAMONVolume(this.annoChannel());
                     % Set DBType
-                    response.setDBType(this.annoChanInfo.TYPE{1});
+                    response.setChannelType(this.annoChanInfo.TYPE{1});
                     % set DataType
                     response.setDataType(this.annoChanInfo.DATATYPE{1});
                     
@@ -706,10 +706,10 @@ classdef OCP < handle
                     % Set dataType (support batch interface)
                     if iscell(response) == 1
                         for ii = 1:length(response)
-                            response{ii}.setDataType(this.annoInfo.PROJECT.TYPE);
+                            response{ii}.setDataType(this.annoChanInfo.DATATYPE);
                         end
                     else
-                        response.setDataType(this.annoInfo.PROJECT.TYPE);
+                        response.setDataType(this.annoChanInfo.DATATYPE);
                     end
                     
                 case eOCPQueryType.RAMONMetaOnly
@@ -982,13 +982,13 @@ classdef OCP < handle
             
             % Make sure you are writing to a database that is properly
             % setup for image upload
-            if this.imageInfo.PROJECT.EXCEPTIONS == 1
+            if this.imageChanInfo.EXCEPTIONS == 1
                 warning('OCP:ProjectOpts','Exceptions are enabled for the image database. This is non-optimal and unnessary for image data databases');
             end
             
             % Make sure you are writing to an Image datatype
-            if this.imageInfo.PROJECT.TYPE ~= 1 && ...
-                    this.imageInfo.PROJECT.TYPE ~= 8
+            if this.imageChanInfo.TYPE ~= 1 && ...
+                    this.imageChanInfo.TYPE ~= 8
                 
                 ex = MException('OCP:ProjectOpts',...
                     'The current imageToken is for a non-grayscale datatype database.  Only grayscale 8 or 16bit is supported. Contact OCP support of uploading multichannel data');
@@ -1010,7 +1010,7 @@ classdef OCP < handle
                 end
                 
                   % Set datatype to that of the database
-                ramonObj.setDataType(eRAMONDataType(this.imageInfo.PROJECT.TYPE));
+                ramonObj.setDataType(eRAMONDataType(this.imageChanInfo.TYPE));
                 
                 % Compute chunked blocks by slice to make it easy for now.
                 % TODO: make this smarter if needed to deal with massive
@@ -1056,7 +1056,7 @@ classdef OCP < handle
                 end
             else     
                 % Set datatype to that of the database
-                ramonObj.setDataType(eRAMONDataType(this.imageInfo.PROJECT.TYPE));
+                ramonObj.setDataType(eRAMONDataType(this.imageChanInfo.TYPE));
 
                 % Block style upload
                 this.writeBlockImageData(ramonObj, conflictOption)        
@@ -1093,10 +1093,19 @@ classdef OCP < handle
                 throw(ex);
             end
             
+            % Set the DataType and ChannelType for the ramonObj based on
+            % the channel info (this.annoChanInfo)
+            chanDataType = this.annoChanInfo.DATATYPE;
+            ramonObj.setDataType(eRAMONChannelDataType.(chanDataType{1}));
+            
+            chanType = this.annoChanInfo.TYPE;
+            ramonObj.setChannelType(eRAMONChannelType.(chanType{1}));
+            
+            
             % Make sure you can write to db
             % TODO: For now this is only for anno32 and anno64 type
             % databases
-            if (this.annoChanInfo.TYPE == eRAMONChannelType.annotation)
+            if (ramonObj.channelType == eRAMONChannelType.annotation)
                 if (this.getAnnoPropagateStatus() ~= eOCPPropagateStatus.inconsistent)
                     ex = MException('OCP:DbLocked',...
                         'Annotation DB is locked due to propagation. Must wait for db to be consistent, then make writable');
@@ -1303,7 +1312,7 @@ classdef OCP < handle
             end
             
             % Send DELETE request
-            urlStr = sprintf('%s/ocp/ocpca/%s/%s/',this.serverLocation,this.annoToken,idStr);
+            urlStr = sprintf('%s/ocp/ocpca/%s/%s/%s/',this.serverLocation,this.annoToken,this.annoChannel,idStr);
             this.lastUrl = urlStr;
             response = this.net.deleteRequest(urlStr);
         end
@@ -1362,7 +1371,7 @@ classdef OCP < handle
             %     val = oo.getField(2834,'author');
             
             % Build URL
-            url = sprintf('%s/ocp/ocpca/%s/%d/getField/%s/',this.serverLocation,this.annoToken,id,field);
+            url = sprintf('%s/ocp/ocpca/%s/%s/%d/getField/%s/',this.serverLocation,this.annoToken,this.annoChannel,id,field);
             this.lastUrl = url;            
             
             % Call URL
@@ -1751,15 +1760,17 @@ classdef OCP < handle
             % Build URL
             if updateFlag == false
                 % Create Annotation
-                urlStr = sprintf('%s/ocp/ocpca/%s/%s/',...
+                urlStr = sprintf('%s/ocp/ocpca/%s/%s/%s/',...
                     this.serverLocation,...
                     this.annoToken,...
+                    this.annoChannel,...
                     char(conflictOption));
             else
                 % Update Annotation                
-                urlStr = sprintf('%s/ocp/ocpca/%s/update/%s/',...
+                urlStr = sprintf('%s/ocp/ocpca/%s/%s/update/%s/',...
                     this.serverLocation,...
                     this.annoToken,...
+                    this.annoChannel,...
                     char(conflictOption));            
             end 
             this.lastUrl = urlStr;
@@ -1837,10 +1848,10 @@ classdef OCP < handle
             end
             
             % If upload type doesn't match database type fail            
-            if (strcmpi(this.annoChanInfo.TYPE{1}, char(ramonVol.dbType) == 0))
+            if (strcmpi(this.annoChanInfo.TYPE{1}, char(ramonVol.channelType) == 0))
                 error('OCP:DBTypeMismatch',...
                     'The RAMONVolume DBtype does not match the database you are trying to upload to. Project: %s - Database: %s',...
-                    this.annoChanInfo.TYPE{1},char(ramonVol.dbType));
+                    this.annoChanInfo.TYPE{1},char(ramonVol.channelType));
             end            
                   
             % Create HDF5 file
@@ -1906,10 +1917,10 @@ classdef OCP < handle
             end
             
             % If upload type doesn't match database fail
-            if ((this.imageInfo.PROJECT.TYPE) ~= uint32(ramonVol.dataType))
+            if ((this.imageChanInfo.TYPE) ~= uint32(ramonVol.dataType))
                 error('OCP:DataTypeMismatch',...
                     'The RAMONVolume type does not match the database you are trying to upload to. Project: %d - Database: %d',...
-                    this.annoInfo.PROJECT.TYPE,uint32(ramonVol.dataType));
+                    this.annoChanInfo.TYPE,uint32(ramonVol.dataType));
             end
                   
             % Create HDF5 file
@@ -1957,8 +1968,8 @@ classdef OCP < handle
                     channel = this.imageChannel;
                     qObj.setFilterIds([]);
                     % AB TODO -- kill this, (I think)
-%                     if (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
-%                         (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels8)
+%                     if (this.imageChanInfo.TYPE == eRAMONDataType.channels16) || ...
+%                         (this.imageChanInfo.TYPE == eRAMONDataType.channels8)
 %                         isMulti = true;
 %                     end
                 case eOCPQueryType.annoDense
@@ -2060,8 +2071,8 @@ classdef OCP < handle
                     token = this.imageToken;
                     channel = this.imageChannel;
                     qObj.setFilterIds([]);
-                    if (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
-                        (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels8)
+                    if (this.imageChanInfo.TYPE{1} == eRAMONDataType.channels16) || ...
+                        (this.imageChanInfo.TYPE{1} == eRAMONDataType.channels8)
                         isMulti = true;
                     end
                 case eOCPQueryType.annoSlice
@@ -2240,15 +2251,19 @@ classdef OCP < handle
                 case eOCPQueryType.RAMONDense
                     option = 'cutout';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 case eOCPQueryType.RAMONVoxelList
                     option = 'voxels';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 case eOCPQueryType.RAMONMetaOnly
                     option = 'nodata';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 case eOCPQueryType.RAMONBoundingBox
                     option = 'boundingbox';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 otherwise
                     ex = MException('OCP:NotRAMON','Query is not a RAMON type.  Cannot build url.');
                     throw(ex);
@@ -2270,9 +2285,10 @@ classdef OCP < handle
                     isempty(qObj.yRange) && ...
                     isempty(qObj.zRange)
                 % Add resolution
-                url = sprintf('%s/ocp/ca/%s/%s/%s/%d/',...
+                url = sprintf('%s/ocp/ca/%s/%s/%s/%s/%d/',...
                     this.serverLocation,...
                     token,...
+                    channel,...
                     idStr,...
                     option,...
                     qObj.resolution);
@@ -2281,9 +2297,10 @@ classdef OCP < handle
                     ~isempty(qObj.yRange) && ...
                     ~isempty(qObj.zRange)
                 % Add resolution
-                url = sprintf('%s/ocp/ca/%s/%s/%s/%d/%d,%d/%d,%d/%d,%d/',...
+                url = sprintf('%s/ocp/ca/%s/%s/%s/%s/%d/%d,%d/%d,%d/%d,%d/',...
                     this.serverLocation,...
                     token,...
+                    channel,...
                     idStr,...
                     option,...
                     qObj.resolution,...
@@ -2292,9 +2309,10 @@ classdef OCP < handle
                     qObj.zRange(1),qObj.zRange(2));
             else
                 % Don't
-                url = sprintf('%s/ocp/ca/%s/%s/%s/',...
+                url = sprintf('%s/ocp/ca/%s/%s/%s/%s/',...
                     this.serverLocation,...
                     token,...
+                    channel,...
                     idStr,...
                     option);
             end
@@ -2533,13 +2551,13 @@ classdef OCP < handle
                     
                     if ~isempty(data_object{ii}.dataType)
                         % check that types match
-                        if uint32(data_object{ii}.dataType) ~= this.annoInfo.PROJECT.TYPE
+                        if uint32(data_object{ii}.dataType) ~= this.annoChanInfo.TYPE
                             error('OCP:CheckSetDataType','Data type mismatch between project (%d) and object (%d)',...
-                                this.annoInfo.PROJECT.TYPE,data_object{ii}.dataType)
+                                this.annoChanInfo.TYPE,data_object{ii}.dataType)
                         end
                     else
                         % set data type to db value
-                        data_object{ii}.setDataType(this.annoInfo.PROJECT.TYPE);
+                        data_object{ii}.setDataType(this.annoChanInfo.DATATYPE);
                     end 
                 end
 
@@ -2549,13 +2567,14 @@ classdef OCP < handle
                 if any([classes{:}]) == 1 
                     if ~isempty(data_object.dataType)
                         % check that types match
-                        if uint32(data_object.dataType) ~= this.annoInfo.PROJECT.TYPE
-                            error('OCP:CheckSetDataType','Data type mismatch between project (%d) and object (%d)',...
-                                this.annoInfo.PROJECT.TYPE,data_object.dataType)
+                        chanType = this.annoChanInfo.DATATYPE{1};
+                        if data_object.dataType ~= eRAMONChannelDataType.(chanType)
+                            error('OCP:CheckSetDataType','Data type mismatch between project (%s) and object (%s)',...
+                                data_object.dataType,chanType)
                         end
                     else
                         % set data type to db value
-                        data_object.setDataType(this.annoInfo.PROJECT.TYPE);
+                        data_object.setDataType(this.annoChanInfo.DATATYPE);
                     end
                 end
             end
