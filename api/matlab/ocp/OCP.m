@@ -496,8 +496,8 @@ classdef OCP < handle
                     % Query DB and get HDF5 File
                     hdfFile = OCPHdf(this.net.readCached(url),qObj);
                     this.lastHdfFile = hdfFile.filename;
-                    % Convert to RAMONVolume
-                    response = hdfFile.toRAMONVolume();
+                    % Convert to RAMONVolume 
+                    response = hdfFile.toRAMONVolume(this.imageChannel);
                     % Set dataType
                     if isa(response, 'cell')
                         % multichannel cutout
@@ -506,7 +506,8 @@ classdef OCP < handle
                         end
                     else
                         % normal
-                        response.setDataType(this.imageChanInfo.TYPE);
+                        response.setDataType(this.imageChanInfo.DATATYPE);
+                        response.setChannelType(this.imageChanInfo.TYPE);
                     end
                     
                 case eOCPQueryType.imageSlice
@@ -980,6 +981,13 @@ classdef OCP < handle
                 throw(ex);
             end
             
+            % If the imageChannel hasn't been set stop
+            if isempty(this.imageChannel)
+                ex = MException('OCP:MissingImageChannel',...
+                    'You must specify the image database to write to by setting both the "imageToken" and "imageChannel" properties.');
+                throw(ex);
+            end
+            
             % Make sure you are writing to a database that is properly
             % setup for image upload
             if this.imageChanInfo.EXCEPTIONS == 1
@@ -987,11 +995,19 @@ classdef OCP < handle
             end
             
             % Make sure you are writing to an Image datatype
-            if this.imageChanInfo.TYPE ~= 1 && ...
-                    this.imageChanInfo.TYPE ~= 8
-                
+            imgDataType = this.imageChanInfo.DATATYPE{1};
+            if eRAMONChannelDataType.(imgDataType) ~= eRAMONChannelDataType.uint8 && ...
+                    eRAMONChannelDataType.(imgDataType) ~= eRAMONChannelDataType.uint16           
                 ex = MException('OCP:ProjectOpts',...
                     'The current imageToken is for a non-grayscale datatype database.  Only grayscale 8 or 16bit is supported. Contact OCP support of uploading multichannel data');
+                throw(ex);
+            end
+            
+            % Make sure this is an image channel type.
+            imgChannelType = this.imageChanInfo.TYPE{1};
+            if eRAMONChannelType.(imgChannelType) ~= eRAMONChannelType.image
+                ex = Exception('OCP:ProjectOpts',...
+                    'The current imageToken is not for an image database!');
                 throw(ex);
             end
             
@@ -1056,7 +1072,8 @@ classdef OCP < handle
                 end
             else     
                 % Set datatype to that of the database
-                ramonObj.setDataType(eRAMONDataType(this.imageChanInfo.TYPE));
+                imageDataType = this.imageChanInfo.DATATYPE{1};
+                ramonObj.setDataType(eRAMONChannelDataType.(imageDataType));
 
                 % Block style upload
                 this.writeBlockImageData(ramonObj, conflictOption)        
@@ -1841,19 +1858,21 @@ classdef OCP < handle
             end
             
             % If upload datatype doesn't match database datatype fail
-            if (strcmpi(this.annoChanInfo.DATATYPE, char(ramonVol.dataType) == 0))
+            annoDataType = this.annoChanInfo.DATATYPE{1};
+            if eRAMONChannelDataType.(annoDataType) ~= ramonVol.dataType
                 error('OCP:DataTypeMismatch',...
-                    'The RAMONVolume datatype does not match the database you are trying to upload to. Project: %s - Database: %s',...
-                    this.annoChanInfo.DATATYPE{1},char(ramonVol.dataType));
+                    'The RAMONVolume data type does not match the database you are trying to upload to. Project: %s - Database: %s',...
+                    this.annoChanInfo.DATATYPE,ramonVol.dataType);
             end
-            
-            % If upload type doesn't match database type fail            
-            if (strcmpi(this.annoChanInfo.TYPE{1}, char(ramonVol.channelType) == 0))
-                error('OCP:DBTypeMismatch',...
-                    'The RAMONVolume DBtype does not match the database you are trying to upload to. Project: %s - Database: %s',...
-                    this.annoChanInfo.TYPE{1},char(ramonVol.channelType));
-            end            
-                  
+
+            % If upload type doesn't match database type fail     
+            annoChanType = this.annoChanInfo.TYPE{1};
+            if eRAMONChannelType.(annoChanType) ~= ramonVol.channelType
+                error('OCP:DataTypeMismatch',...
+                    'The RAMONVolume type does not match the database you are trying to upload to. Project: %s - Database: %s',...
+                    this.annoChanInfo.TYPE,ramonVol.channelType);
+            end
+
             % Create HDF5 file
             hdfFile = OCPHdf(ramonVol);
                         
@@ -1916,20 +1935,22 @@ classdef OCP < handle
                     'XYZ Offset empty in RAMONVolume.  You must set this before uploading block style data!');
             end
             
-            % If upload type doesn't match database fail
-            if ((this.imageChanInfo.TYPE) ~= uint32(ramonVol.dataType))
+            % If data type doesn't match database fail
+            imgDataType = this.imageChanInfo.DATATYPE{1};
+            if eRAMONChannelDataType.(imgDataType) ~= ramonVol.dataType
                 error('OCP:DataTypeMismatch',...
-                    'The RAMONVolume type does not match the database you are trying to upload to. Project: %d - Database: %d',...
-                    this.annoChanInfo.TYPE,uint32(ramonVol.dataType));
+                    'The RAMONVolume type does not match the database you are trying to upload to. Project: %s - Database: %s',...
+                    this.imageChanInfo.DATATYPE,ramonVol.dataType);
             end
                   
             % Create HDF5 file
             hdfFile = OCPHdf(ramonVol);                        
                     
             % Build URL           
-            urlStr = sprintf('%s/ocp/ca/%s/hdf5/%d/%d,%d/%d,%d/%d,%d/%s/',...
+            urlStr = sprintf('%s/ocp/ca/%s/%s/hdf5/%d/%d,%d/%d,%d/%d,%d/%s/',...
                             this.serverLocation,...
                             this.imageToken,...
+                            this.imageChannel,...
                             ramonVol.resolution,...
                             ramonVol.xyzOffset(1), ramonVol.xyzOffset(1) + ramonVol.size(2),...
                             ramonVol.xyzOffset(2),ramonVol.xyzOffset(2) + ramonVol.size(1),...
