@@ -1,4 +1,4 @@
-classdef eRAMONChannelType
+classdef eRAMONChannelType 
     %eRAMONChannelType Enumeration of types of channels in the OCP Database 
     %
     %
@@ -22,11 +22,10 @@ classdef eRAMONChannelType
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     enumeration
-        image
-        annotation
-        probmap
-        rgb
-        timeseries 
+        image   
+        annotation 
+        probmap 
+        timeseries  
     end
     
 end

@@ -1,4 +1,4 @@
-classdef eRAMONChannelDataType
+classdef eRAMONChannelDataType 
     %eRAMONChannelDataType Enumeration of types of channels in the OCP Database 
     %
     %
@@ -22,10 +22,10 @@ classdef eRAMONChannelDataType
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     enumeration
-        uint8
-        uint16
-        uint32
-        uint64
+        uint8 
+        uint16 
+        uint32 
+        uint64 
         float32 
     end
     
