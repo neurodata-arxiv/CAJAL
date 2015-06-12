@@ -225,8 +225,9 @@ function testUploadDownloadProbMapCutout %#ok<*DEFNU>
     if ocp_force_local == true
         oo2.setAnnoToken('apiUnitTestKasthuriProbLocal');
     else
-        oo2.setAnnoToken('apiUnitTestKasthuriProb');
-    end
+        oo2.setAnnoToken('apiUnitTests');
+        oo2.setAnnoChannel('apiUnitTestKasthuriProb');
+     end
     
     % Set default resolutino
     oo2.setDefaultResolution(1);
@@ -242,9 +243,9 @@ function testUploadDownloadProbMapCutout %#ok<*DEFNU>
     g1.setCutout(d);
     g1.setXyzOffset([2560 1000 64]);
     g1.setResolution(1);
-    g1.setDataType(eRAMONChannelDataType.uint32);
-    g1.setDBType(eRAMONChannelType.probmap);
-    
+    g1.setDataType(eRAMONChannelDataType.float32);
+    g1.setChannelType(eRAMONChannelType.probmap);
+    g1.setChannel(oo2.getAnnoChannel());
     oo2.createAnnotation(g1);
         
     % download annotation - cutout
@@ -273,7 +274,7 @@ function testUploadDownloadAnnoBlockCutout %#ok<*DEFNU>
     g1.setXyzOffset([2560 1000 128]);
     g1.setResolution(1);
     g1.setDataType(eRAMONChannelDataType.uint32);
-    g1.setDBType(eRAMONChannelType.annotation);
+    g1.setChannelType(eRAMONChannelType.annotation);
     g1.setChannel(oo.getAnnoChannel());
     
     oo.makeAnnoWritable()
@@ -670,7 +671,7 @@ function testDeleteRemovesVoxels %#ok<*DEFNU>
     assertEqual(length(id_anno), 1);
     assertEqual(id_anno, uint32(id));
         
-    % Delete
+    % Delete (didn't work -- KL TODO) 
     oo.deleteAnnotation(id); 
     
     % Download and make sure there is no paint    
@@ -2969,118 +2970,131 @@ end
 
 
 %% Test rgba32 data reads
-function testCutoutRGBA %#ok<*DEFNU>
-    global oo
- 
-    % Setup OCP object
-    oo.setImageToken('mitra14N777');
 
-    % Build query
-    q = OCPQuery();
-    q.setType(eOCPQueryType.imageDense);
-    q.setCutoutArgs([10000,10250],[10000,10250],[150,155],0);
-    
-    % Cutout Data
-    img = oo.query(q);
-    
-    % Load saved file
-    load(fullfile(cajal3d.getRootDir,'test','matlab','api','data','rgba.mat'));
-    
-    assertEqual(img.data,saved_img.data);  
-    assertEqual(img.xyzOffset,saved_img.xyzOffset); 
-    assertEqual(img.resolution,saved_img.resolution);  
-    assertEqual(img.dataType,saved_img.dataType);  
-    
-    % Reset image token
-    oo.setImageToken('kasthuri11');
-end
+% Currenty unsupported. 
+
+% function testCutoutRGBA %#ok<*DEFNU>
+%     global oo
+%  
+%     % Setup OCP object
+%     oo.setImageToken('mitra14N777');
+% 
+%     % Build query
+%     q = OCPQuery();
+%     q.setType(eOCPQueryType.imageDense);
+%     q.setCutoutArgs([10000,10250],[10000,10250],[150,155],0);
+%     
+%     % Cutout Data
+%     img = oo.query(q);
+%     
+%     % Load saved file
+%     load(fullfile(cajal3d.getRootDir,'test','matlab','api','data','rgba.mat'));
+%     
+%     assertEqual(img.data,saved_img.data);  
+%     assertEqual(img.xyzOffset,saved_img.xyzOffset); 
+%     assertEqual(img.resolution,saved_img.resolution);  
+%     assertEqual(img.dataType,saved_img.dataType);  
+%     
+%     % Reset image token
+%     oo.setImageToken('kasthuri11');
+% end
 
 
 %% Test mutlichannel data reads
-function testCutoutMultichannel %#ok<*DEFNU>
-    global oo
-    
-    % check not multi channel
-    oo.setImageToken('kasthuri11');
-    assertEqual(oo.getChannelList,[]); 
-    % Check multi channel channel list
-    warning('off','OCPHdf:BadFieldChar')
-    oo.setImageToken('Ex10R55');
-    warning('on','OCPHdf:BadFieldChar')
 
-    % Build query
-    q = OCPQuery(eOCPQueryType.imageDense);
-    q.setCutoutArgs([1000 1200],[1000 1200],[50 60],0);  
-    q.setChannels({'Synapsin1__2'});    
-    
-    % Get 1 channel 
-    img = oo.query(q);
-    img = img{:};
-    
-    % Load saved file
-    load(fullfile(cajal3d.getRootDir,'test','matlab','api','data','multich1.mat'));
-    
-    assertEqual(img.data,savedImg.data);   %#ok<USENS>
-    assertEqual(img.xyzOffset,savedImg.xyzOffset); 
-    assertEqual(img.resolution,savedImg.resolution);  
-    assertEqual(img.dataType,savedImg.dataType);  
-    assertEqual(img.name,savedImg.name); 
-    
-      
-    % Get Multiple channels     
-    q.setChannels({'DAPI__3','Synapsin1__2'});
-    img = oo.query(q);    
-   
-    % Load saved file
-    load(fullfile(cajal3d.getRootDir,'test','matlab','api','data','multich2.mat'));
-    
-    assertEqual(img{1}.data,savedImg{1}.data);  
-    assertEqual(img{1}.xyzOffset,savedImg{1}.xyzOffset); 
-    assertEqual(img{1}.resolution,savedImg{1}.resolution);  
-    assertEqual(img{1}.dataType,savedImg{1}.dataType);  
-    assertEqual(img{1}.name,savedImg{1}.name);     
-    
-    assertEqual(img{2}.data,savedImg{2}.data);  
-    assertEqual(img{2}.xyzOffset,savedImg{2}.xyzOffset); 
-    assertEqual(img{2}.resolution,savedImg{2}.resolution);  
-    assertEqual(img{2}.dataType,savedImg{2}.dataType);  
-    assertEqual(img{2}.name,savedImg{2}.name); 
-    
-    % Reset image token
-    oo.setImageToken('kasthuri11');
-end
+% This release of CAJAL doesn't support simultaneous multiple channel
+% queries.
 
-function testSliceMultichannel %#ok<*DEFNU>  
-    global oo
-    
-    % Check multi channel channel list
-    warning('off','OCPHdf:BadFieldChar')
-    oo.setImageToken('Ex10R55');
-    warning('on','OCPHdf:BadFieldChar')
+% function testCutoutMultichannel %#ok<*DEFNU>
+%     global oo
+%     
+%     % check not multi channel
+%     oo.setImageToken('kasthuri11');
+%     assertEqual(oo.getChannelList,[]); 
+%     % Check multi channel channel list
+%     warning('off','OCPHdf:BadFieldChar')
+%     oo.setImageToken('Ex10R55');
+%     warning('on','OCPHdf:BadFieldChar')
+% 
+%     % Build query
+%     q = OCPQuery(eOCPQueryType.imageDense);
+%     q.setCutoutArgs([1000 1200],[1000 1200],[50 60],0);  
+%     q.setChannels({'Synapsin1__2'});    
+%     
+%     % Get 1 channel 
+%     img = oo.query(q);
+%     img = img{:};
+%     
+%     % Load saved file
+%     load(fullfile(cajal3d.getRootDir,'test','matlab','api','data','multich1.mat'));
+%     
+%     assertEqual(img.data,savedImg.data);   %#ok<USENS>
+%     assertEqual(img.xyzOffset,savedImg.xyzOffset); 
+%     assertEqual(img.resolution,savedImg.resolution);  
+%     assertEqual(img.dataType,savedImg.dataType);  
+%     assertEqual(img.name,savedImg.name); 
+%     
+%       
+%     % Get Multiple channels     
+%     q.setChannels({'DAPI__3','Synapsin1__2'});
+%     img = oo.query(q);    
+%    
+%     % Load saved file
+%     load(fullfile(cajal3d.getRootDir,'test','matlab','api','data','multich2.mat'));
+%     
+%     assertEqual(img{1}.data,savedImg{1}.data);  
+%     assertEqual(img{1}.xyzOffset,savedImg{1}.xyzOffset); 
+%     assertEqual(img{1}.resolution,savedImg{1}.resolution);  
+%     assertEqual(img{1}.dataType,savedImg{1}.dataType);  
+%     assertEqual(img{1}.name,savedImg{1}.name);     
+%     
+%     assertEqual(img{2}.data,savedImg{2}.data);  
+%     assertEqual(img{2}.xyzOffset,savedImg{2}.xyzOffset); 
+%     assertEqual(img{2}.resolution,savedImg{2}.resolution);  
+%     assertEqual(img{2}.dataType,savedImg{2}.dataType);  
+%     assertEqual(img{2}.name,savedImg{2}.name); 
+%     
+%     % Reset image token
+%     oo.setImageToken('kasthuri11');
+% end
 
-    % Build query
-    q = OCPQuery(eOCPQueryType.imageSlice);
-    q.setARange([1000,1500]);
-    q.setBRange([1000,1500]);
-    q.setCIndex(55);
-    q.setSlicePlane(eOCPSlicePlane.xy);
-    q.setResolution(0);
-    q.setChannels({'Synapsin1__2','GluR4__8','vGAT__6'});    
-    
-    % Get 1 channel 
-    img = oo.query(q);
-        
-    load(fullfile(cajal3d.getRootDir,'test','matlab','api','data','multislice1.mat'));    
-    assertEqual(img,savedImg); 
-    
-     % Reset image token
-    oo.setImageToken('kasthuri11');
-end
+% function testSliceMultichannel %#ok<*DEFNU>  
+%     global oo
+%     
+%     % Check multi channel channel list
+%     warning('off','OCPHdf:BadFieldChar')
+%     oo.setImageToken('Ex10R55');
+%     warning('on','OCPHdf:BadFieldChar')
+% 
+%     % Build query
+%     q = OCPQuery(eOCPQueryType.imageSlice);
+%     q.setARange([1000,1500]);
+%     q.setBRange([1000,1500]);
+%     q.setCIndex(55);
+%     q.setSlicePlane(eOCPSlicePlane.xy);
+%     q.setResolution(0);
+%     q.setChannels({'Synapsin1__2','GluR4__8','vGAT__6'});    
+%     
+%     % Get 1 channel 
+%     img = oo.query(q);
+%         
+%     load(fullfile(cajal3d.getRootDir,'test','matlab','api','data','multislice1.mat'));    
+%     assertEqual(img,savedImg); 
+%     
+%      % Reset image token
+%     oo.setImageToken('kasthuri11');
+% end
 
 function testImageDataUpload %#ok<*DEFNU> 
     global oo;
     oo2 = OCP();
-    oo2.setImageToken('apiUnitTestImageUpload');
+    
+    % set server location 
+    global target_server 
+    oo2.setServerLocation(target_server) ;
+    
+    oo2.setImageToken('apiUnitTests');
+    oo2.setImageChannel('apiUnitTestImageUpload');
     
     % Check db is empty
     q = OCPQuery(eOCPQueryType.imageDense);
@@ -3121,6 +3135,11 @@ end
 
 function testPropagate %#ok<*DEFNU>   
     oo2 = OCP();
+    
+    % set server location 
+    global target_server 
+    oo2.setServerLocation(target_server) ;
+    
     oo2.setImageToken('kasthuri11');
     oo2.setAnnoToken('apiUnitTestPropagate');
     oo2.makeAnnoWritable();
