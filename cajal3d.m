@@ -65,7 +65,7 @@ classdef cajal3d
     end
     
     properties(Constant = true)
-        version = '1.8.0 (beta)';
+        version = '1.8.0 RC1';
         POC = 'ocp-support@googlegroups.com';
     end
     
