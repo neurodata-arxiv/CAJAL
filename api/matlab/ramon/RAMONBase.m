@@ -276,35 +276,50 @@ classdef RAMONBase < handle
             % information could be lost. If there is a mismatch between the
             % database data type (specified by the token) and the upload
             % type the upload will fail.
-                        
-            if isa(type, 'eRAMONChannelDataType')
-                % Is of Type eRAMONChannelDataType
-                
-            else
-                % Is not of type eRAMONDataType
-                %validateattributes(type,{'numeric'},{'finite','nonnegative','integer','nonnan','real'});
-                try
-                    if ischar(type)
-                        type = eRAMONChannelDataType.(type);
-                    else
-                        type = eRAMONChannelDataType.(char(type));
-                    end
-                catch ME
-                    rethrow(ME);
-                end
-            end
             
-            this.dataType = type;
+            % ignore for non-volume objects
+            if (strcmpi(class(this),'RAMONVolume'))
+                
+                if isempty(type)
+                    ex = MException('RAMONBase:EmptyDataType',sprintf('Supplied data type is empty!'));
+                    throw(ex);
+                end
+
+                if isa(type, 'eRAMONChannelDataType')
+                    % Is of Type eRAMONChannelDataType
+
+                else
+                    % Is not of type eRAMONDataType
+                    %validateattributes(type,{'numeric'},{'finite','nonnegative','integer','nonnan','real'});
+                    try
+                        if ischar(type)
+                            type = eRAMONChannelDataType.(type);
+                        else
+                            type = eRAMONChannelDataType.(char(type));
+                        end
+                    catch ME
+                        rethrow(ME);
+                    end
+                end
+
+                this.dataType = type;
+            end
         end
 
         function this = setChannelType(this,type)        
             % This member function sets the volume object database type field.
             % This specifies types like annotation, probmap, etc. See
             % eRAMONChannelType.
-                        
-            if isa(type, 'eRAMONChannelType')
-                % Is of Type eRAMONChannelType
-                this.channelType = type;
+            if strcmpi(class(this),'RAMONVolume')
+                
+                if isempty(type)
+                    ex = MException('RAMONBase:EmptyChannelType',sprintf('Supplied channel type is empty!'));
+                    throw(ex);
+                end                        
+                if isa(type, 'eRAMONChannelType')
+                    % Is of Type eRAMONChannelType
+                    this.channelType = type;
+                end
             end
         end
 
@@ -351,6 +366,8 @@ classdef RAMONBase < handle
             ramonObj.setDynamicMetadata(this.dynamicMetadata);
             ramonObj.setStatus(this.status);
             ramonObj.setAuthor(this.author);
+            ramonObj.setDataType(this.dataType);
+            ramonObj.setChannelType(this.channelType);
         end 
        
         function metadataConstructHelper(this,var)
@@ -378,6 +395,8 @@ classdef RAMONBase < handle
             handle.setDynamicMetadata(this.dynamicMetadata);
             handle.setStatus(this.status);
             handle.setAuthor(this.author); 
+            handle.setDataType(this.dataType);
+            handle.setChannelType(this.channelType);
         end
     end
     

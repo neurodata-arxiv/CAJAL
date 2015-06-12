@@ -1112,23 +1112,25 @@ classdef OCP < handle
             
             % Set the DataType and ChannelType for the ramonObj based on
             % the channel info (this.annoChanInfo)
-            chanDataType = this.annoChanInfo.DATATYPE{1};
-            ramonObj.setDataType(eRAMONChannelDataType.(chanDataType));
-            
-            chanType = this.annoChanInfo.TYPE{1};
-            ramonObj.setChannelType(eRAMONChannelType.(chanType));
+%             chanDataType = this.annoChanInfo.DATATYPE{1};
+%             ramonObj.setDataType(eRAMONChannelDataType.(chanDataType));
+%             
+%             chanType = this.annoChanInfo.TYPE{1};
+%             ramonObj.setChannelType(eRAMONChannelType.(chanType));
             
             
             % Make sure you can write to db
             % TODO: For now this is only for anno32 and anno64 type
             % databases
-            if (ramonObj.channelType == eRAMONChannelType.annotation)
-                if (this.getAnnoPropagateStatus() ~= eOCPPropagateStatus.inconsistent)
-                    ex = MException('OCP:DbLocked',...
-                        'Annotation DB is locked due to propagation. Must wait for db to be consistent, then make writable');
-                    throw(ex);
-                end
-            end
+            % AB TODO -- this will break in batch mode, need to put
+            % elsewhere
+%             if (ramonObj.channelType == eRAMONChannelType.annotation)
+%                 if (this.getAnnoPropagateStatus() ~= eOCPPropagateStatus.inconsistent)
+%                     ex = MException('OCP:DbLocked',...
+%                         'Annotation DB is locked due to propagation. Must wait for db to be consistent, then make writable');
+%                     throw(ex);
+%                 end
+%             end
             
             % Set default conflict option default (overwrite) if needed
             if ~exist('conflictOption','var')
@@ -1157,7 +1159,7 @@ classdef OCP < handle
                 batchIds = [];
                 for ii = 1:size(batchIndex,1)
                     % Set datatype
-                    ramonObj_batch = this.checkSetDataType(ramonObj(batchIndex{ii}));
+                    ramonObj_batch = this.checkSetTypes(ramonObj(batchIndex{ii}));
                     
                     batchIds = cat(2,batchIds,...
                         this.writeRamonObject(ramonObj_batch,false,conflictOption));
@@ -1169,7 +1171,7 @@ classdef OCP < handle
                     chunkCollections = this.createAnnoChunks(ramonObj(chunkIndex));
                     
                     % Set datatype
-                    chunkCollections = this.checkSetDataType(chunkCollections);
+                    chunkCollections = this.checkSetTypes(chunkCollections);
                                         
                     chunkIds = this.writeRamonChunks(chunkCollections,false,conflictOption);                    
                 end
@@ -1192,7 +1194,7 @@ classdef OCP < handle
                         end
                         
                         % Set datatype
-                        ramonObj = this.checkSetDataType(ramonObj);
+                        ramonObj = this.checkSetTypes(ramonObj);
                     
                         this.writeBlockData(ramonObj, conflictOption)
                         id = [];
@@ -1201,7 +1203,7 @@ classdef OCP < handle
                         chunkCollection = this.createAnnoChunks(ramonObj);
                         
                         % Set datatype
-                        chunkCollection = this.checkSetDataType(chunkCollection);
+                        chunkCollection = this.checkSetTypes(chunkCollection);
 
                         % Upload the chunked annotation
                         id = this.writeRamonChunks(chunkCollection,false,conflictOption);
@@ -1210,14 +1212,14 @@ classdef OCP < handle
                     % Single annotation to upload
                     if strcmpi(class(ramonObj),'RAMONVolume')
                         % Set datatype
-                        ramonObj = this.checkSetDataType(ramonObj);
+                        ramonObj = this.checkSetTypes(ramonObj);
                         
                         % Block style upload
                         this.writeBlockData(ramonObj, conflictOption)
                         id = [];
                     else
                         % Set datatype
-                        ramonObj = this.checkSetDataType(ramonObj);
+                        ramonObj = this.checkSetTypes(ramonObj);
                         
                         % Standard RAMON Object upload
                         id = this.writeRamonObject(ramonObj, false, conflictOption);  
@@ -1862,7 +1864,7 @@ classdef OCP < handle
             if eRAMONChannelDataType.(annoDataType) ~= ramonVol.dataType
                 error('OCP:DataTypeMismatch',...
                     'The RAMONVolume data type does not match the database you are trying to upload to. Project: %s - Database: %s',...
-                    this.annoChanInfo.DATATYPE,ramonVol.dataType);
+                    annoDataType,char(ramonVol.dataType));
             end
 
             % If upload type doesn't match database type fail     
@@ -1870,7 +1872,7 @@ classdef OCP < handle
             if eRAMONChannelType.(annoChanType) ~= ramonVol.channelType
                 error('OCP:DataTypeMismatch',...
                     'The RAMONVolume type does not match the database you are trying to upload to. Project: %s - Database: %s',...
-                    this.annoChanInfo.TYPE,ramonVol.channelType);
+                    annoChanType,char(ramonVol.channelType));
             end
 
             % Create HDF5 file
@@ -2577,7 +2579,8 @@ classdef OCP < handle
         
         %% Private Method - Build set dataType on annotation create
         
-        function data_object = checkSetDataType(this, data_object)
+        function data_object = checkSetTypes(this, data_object)
+            % checks and sets both the ChannelDataType and the ChannelType
             if iscell(data_object) == 1
                 % Check all cell objects
                 for ii = 1:length(data_object)
@@ -2588,33 +2591,64 @@ classdef OCP < handle
                         break
                     end
                     
+                    % set DataType
+                    chanDataType = this.annoChanInfo.DATATYPE{1};
                     if ~isempty(data_object{ii}.dataType)
                         % check that types match
-                        if uint32(data_object{ii}.dataType) ~= this.annoChanInfo.TYPE
-                            error('OCP:CheckSetDataType','Data type mismatch between project (%d) and object (%d)',...
-                                this.annoChanInfo.TYPE,data_object{ii}.dataType)
+                        if uint32(data_object{ii}.dataType) ~= eRAMONChannelDataType.(chanDataType)
+                            error('OCP:CheckSetDataType','Data type mismatch between project (%s) and object (%s)',...
+                                chanDataType,data_object{ii}.dataType)
                         end
                     else
                         % set data type to db value
-                        data_object{ii}.setDataType(this.annoChanInfo.DATATYPE);
-                    end 
+                        data_object{ii}.setDataType(eRAMONChannelDataType.(chanDataType));
+                    end
+                    
+                    % set ChannelType
+                    chanType = this.annoChanInfo.TYPE{1};
+                    if ~isempty(data_object{ii}.channelType)
+                        % check that types match
+                        if uint32(data_object{ii}.channelType) ~= eRAMONChannelType.(chanType)
+                            error('OCP:CheckSetDataType','Channel type mismatch between project (%s) and object (%s)',...
+                                chanType,data_object{ii}.channelType)
+                        end
+                    else
+                        % set channel type to db value
+                        data_object{ii}.setChannelType(eRAMONChannelType.(chanType));
+                    end                     
                 end
 
             else
                 % Single object
                 classes = strfind(superclasses(data_object),'RAMONVolume');
                 if any([classes{:}]) == 1 
+                    
+                    % set DataType
+                    chanDataType = this.annoChanInfo.DATATYPE{1};
                     if ~isempty(data_object.dataType)
                         % check that types match
-                        chanType = this.annoChanInfo.DATATYPE{1};
-                        if data_object.dataType ~= eRAMONChannelDataType.(chanType)
+                        if uint32(data_object.dataType) ~= eRAMONChannelDataType.(chanDataType)
                             error('OCP:CheckSetDataType','Data type mismatch between project (%s) and object (%s)',...
-                                data_object.dataType,chanType)
+                                chanDataType,data_object.dataType)
                         end
                     else
                         % set data type to db value
-                        data_object.setDataType(this.annoChanInfo.DATATYPE);
+                        data_object.setDataType(eRAMONChannelDataType.(chanDataType));
                     end
+                    
+                    % set ChannelType
+                    chanType = this.annoChanInfo.TYPE{1};
+                    if ~isempty(data_object.channelType)
+                        % check that types match
+                        if uint32(data_object.channelType) ~= eRAMONChannelType.(chanType)
+                            error('OCP:CheckSetDataType','Channel type mismatch between project (%s) and object (%s)',...
+                                chanType,data_object.channelType)
+                        end
+                    else
+                        % set channel type to db value
+                        data_object.setChannelType(eRAMONChannelType.(chanType));
+                    end
+                    
                 end
             end
         end
