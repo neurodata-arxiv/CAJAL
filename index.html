@@ -80,7 +80,6 @@
               <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sphinx/local_config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/ocp.html">OCP</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sphinx/ocp.html#contributing">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sphinx/ocp.html#style-guides">Style Guides</a></li>
@@ -88,15 +87,29 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/basic_usage.html">Basic Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#train-protocol">Train Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#deploy-protocol">Deploy Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#usage-notes">Usage Notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#example">Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#validation">Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#advanced-topics-future-functionality">Advanced Topics/Future Functionality</a></li>
 </ul>
-</li>
+<p class="caption"><span class="caption-text">RAMON Data Model</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ramon/ramon_intro.html">RAMON Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ramon/ramon_types.html">RAMON Types</a></li>
+</ul>
+<p class="caption"><span class="caption-text">CAJAL Toolbox</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_intro.html">CAJAL Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_local_config.html">CAJAL Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_basic_usage.html">CAJAL Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_usecases.html">CAJAL Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_functions.html">CAJAL Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_modules.html">CAJAL Modules</a></li>
+</ul>
+<p class="caption"><span class="caption-text">LONI and OCP</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_intro.html">LONI Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_local_config.html">LONI Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_basic_usage.html">LONI Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_usecases.html">LONI Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_functions.html">LONI Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_modules.html">LONI Modules</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Further Reading</span></p>
 <ul>
@@ -141,7 +154,7 @@
 </div>
           <div role="main" class="document">
             
-  <h1>RAMON: The OCP data model for collaborative neuroscience.  CAJAL:  The OCP Matlab Toolbox that implements RAMON.</h1>
+  <h2>RAMON: The OCP data model for collaborative neuroscience <br> CAJAL:  The OCP Matlab Toolbox that implements RAMON</h2>
 <br><p>An significant challenge in the connectomics field is annotation representation and its impact on software and institution-level interoperability. As the field grows and data volumes increase, the sharing of data through remote and programmatic interfaces and the application of community developed algorithms and software will become common.  Answering this challenge requires scene parsing, rather than simply segmentation; the rich semantic annotations are critical to inferring graph structure and understanding the function and structure of neuronal circuits. We developed a standard for annotation metadata, which we call the Reusable Annotation Markup for Open coNnectomes (RAMON).</p>
 <p>The CAJAL toolbox (or API) provides functionality to interact with the Open Connectome Project image and annotation databases, including querying raw image data, annotation data, and RAMON objects. Complex HTTP queries are wrapped in easy to use Matlab code - helper functions and example files are provided.</p>
 <div class="figure align-center">
@@ -160,10 +173,37 @@
 <p class="caption"><span class="caption-text">Documentation</span><a class="headerlink" href="#documentation" title="Permalink to this toctree">¶</a></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sphinx/local_config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/ocp.html">OCP</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/basic_usage.html">Basic Usage</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="ramon-data-model">
+<p class="caption"><span class="caption-text">RAMON Data Model</span><a class="headerlink" href="#ramon-data-model" title="Permalink to this toctree">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ramon/ramon_intro.html">RAMON Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ramon/ramon_types.html">RAMON Types</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="cajal-toolbox">
+<p class="caption"><span class="caption-text">CAJAL Toolbox</span><a class="headerlink" href="#cajal-toolbox" title="Permalink to this toctree">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_intro.html">CAJAL Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_local_config.html">CAJAL Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_basic_usage.html">CAJAL Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_usecases.html">CAJAL Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_functions.html">CAJAL Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cajal/cajal_modules.html">CAJAL Modules</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="loni-and-ocp">
+<p class="caption"><span class="caption-text">LONI and OCP</span><a class="headerlink" href="#loni-and-ocp" title="Permalink to this toctree">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_intro.html">LONI Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_local_config.html">LONI Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_basic_usage.html">LONI Basic Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_usecases.html">LONI Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_functions.html">LONI Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loni/loni_modules.html">LONI Modules</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound" id="further-reading">

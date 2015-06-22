@@ -6,7 +6,7 @@
 
 .. raw:: html
 
-	<h1>RAMON: The OCP data model for collaborative neuroscience.  CAJAL:  The OCP Matlab Toolbox that implements RAMON.</h1>
+	<h2>RAMON: The OCP data model for collaborative neuroscience <br> CAJAL:  The OCP Matlab Toolbox that implements RAMON</h2>
 	<br>
 
 An significant challenge in the connectomics field is annotation representation and its impact on software and institution-level interoperability. As the field grows and data volumes increase, the sharing of data through remote and programmatic interfaces and the application of community developed algorithms and software will become common.  Answering this challenge requires scene parsing, rather than simply segmentation; the rich semantic annotations are critical to inferring graph structure and understanding the function and structure of neuronal circuits. We developed a standard for annotation metadata, which we call the Reusable Annotation Markup for Open coNnectomes (RAMON).
@@ -32,22 +32,49 @@ The CAJAL toolbox (or API) provides functionality to interact with the Open Conn
 .. sidebar:: CAJAL Contact Us 
    
    If you have questions about RAMON or CAJAL, or have data to analyze, let us know:  ocp-support@googlegroups.com
-   
+
 .. toctree::
    :maxdepth: 1
    :caption: Documentation
 
    sphinx/introduction
-   sphinx/local_config
    sphinx/ocp
    sphinx/faq
-   tutorials/basic_usage
+   
+  
+.. toctree::
+   :maxdepth: 1
+   :caption: RAMON Data Model
+   
+   ramon/ramon_intro
+   ramon/ramon_types
+
+.. toctree::
+   :maxdepth: 1
+   :caption: CAJAL Toolbox
+   
+   cajal/cajal_intro
+   cajal/cajal_local_config
+   cajal/cajal_basic_usage
+   cajal/cajal_usecases
+   cajal/cajal_functions
+   cajal/cajal_modules
+
+.. toctree::
+   :maxdepth: 1
+   :caption: LONI and OCP
+   
+   loni/loni_intro
+   loni/loni_local_config
+   loni/loni_basic_usage
+   loni/loni_usecases
+   loni/loni_functions
+   loni/loni_modules
 
 .. toctree::
    :maxdepth: 1
    :caption: Further Reading
 
-   api/functions
    Gitter chatroom <https://gitter.im/openconnectome/CAJAL>
    Mailing List <https://groups.google.com/forum/#!forum/ocp-support/> 
    Github repo <https://github.com/openconnectome/CAJAL>
