@@ -14,8 +14,8 @@ An significant challenge in the connectomics field is annotation representation 
 The CAJAL toolbox (or API) provides functionality to interact with the Open Connectome Project image and annotation databases, including querying raw image data, annotation data, and RAMON objects. Complex HTTP queries are wrapped in easy to use Matlab code - helper functions and example files are provided.
 
 
-.. figure:: images/CAJAL_itk_example.jpg
-    :width: 300px
+.. figure:: images/cajal_pipeline.jpg
+    :width: 800px
     :align: center
 
 
