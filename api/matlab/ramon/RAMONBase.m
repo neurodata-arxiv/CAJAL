@@ -310,8 +310,7 @@ classdef RAMONBase < handle
             % This member function sets the volume object database type field.
             % This specifies types like annotation, probmap, etc. See
             % eRAMONChannelType.
-            if strcmpi(class(this),'RAMONVolume')
-                
+            if (strcmpi(class(this),'RAMONVolume'))
                 if isempty(type)
                     ex = MException('RAMONBase:EmptyChannelType',sprintf('Supplied channel type is empty!'));
                     throw(ex);
@@ -319,7 +318,18 @@ classdef RAMONBase < handle
                 if isa(type, 'eRAMONChannelType')
                     % Is of Type eRAMONChannelType
                     this.channelType = type;
+                else
+                    try
+                        if ischar(type)
+                            type = eRAMONChannelType.(type);
+                        else
+                            type = eRAMONChannelType.(char(type));
+                        end
+                    catch ME
+                        rethrow(ME);
+                    end
                 end
+                this.channelType = type;
             end
         end
 

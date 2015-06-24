@@ -1073,8 +1073,10 @@ classdef OCP < handle
             else     
                 % Set datatype to that of the database
                 imageDataType = this.imageChanInfo.DATATYPE{1};
+                imageChannelType = this.imageChanInfo.TYPE{1};
                 ramonObj.setDataType(eRAMONChannelDataType.(imageDataType));
-
+                ramonObj.setChannelType(eRAMONChannelType.(imageChannelType));
+                ramonObj.setChannel(this.imageChannel)
                 % Block style upload
                 this.writeBlockImageData(ramonObj, conflictOption)        
             end             
