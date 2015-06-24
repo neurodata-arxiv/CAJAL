@@ -1354,7 +1354,7 @@ classdef OCP < handle
             merge_str = [merge_str sprintf(',%d',children)];          
 
             % Send request
-            urlStr = sprintf('%s/ocp/ca/%s/merge/%s/global/%d/',this.serverLocation,this.annoToken,merge_str,this.defaultResolution);
+            urlStr = sprintf('%s/ocp/ca/%s/%s/merge/%s/global/%d/',this.serverLocation,this.annoToken,this.annoChannel,merge_str,this.defaultResolution);
             this.lastUrl = urlStr;
             response = this.net.read(urlStr);
         end
@@ -1450,8 +1450,8 @@ classdef OCP < handle
             validateattributes(num_ids,{'numeric'},{'scalar','integer','finite','nonnegative','nonnan','real'});
             
             % Build URL
-            url = sprintf('%s/ocp/ca/%s/reserve/%d/', ...
-                            this.serverLocation,this.annoToken,num_ids);
+            url = sprintf('%s/ocp/ca/%s/%s/reserve/%d/', ...
+                            this.serverLocation,this.annoToken,this.annoChannel,num_ids);
             this.lastUrl = url; 
             
             % Query DB            
@@ -2475,7 +2475,7 @@ classdef OCP < handle
             end
                  
             % Build URL
-            url = sprintf('%s/ocp/ca/%s/%s/%d/setField/%s/%s/',...
+            url = sprintf('%s/ocp/ca/%s/%s/setField/%d/%s/%s/',...
                 this.serverLocation,this.annoToken,this.annoChannel,id,field,strVal);
             
             
