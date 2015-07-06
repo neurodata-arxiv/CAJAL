@@ -38,6 +38,3 @@ The annotation databases must be initialized. To do so, run the unit tests after
 ```
 (to uncomment a line in Matlab, remove the `%` character from the start of the line. Note that the code editor in the Matlab UI has an uncomment button)
 
-Running the unit tests for the first time will also initialize the image database. It is normal to see errors on the first unit test run. Errors on subsequent runs indicate problems, either with your OCP installation or your CAJAL files.
-
-
