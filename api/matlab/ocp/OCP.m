@@ -892,11 +892,31 @@ classdef OCP < handle
                     
                     % Verify query
                     qObj.setCIndex(qObj.cIndex + 1);
-                    [tf, msg] = qObj.validate(this.annoInfo);
-                    if tf == 0
-                        ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
-                        throw(ex);
+                    if this.lastQuery.type == eOCPQueryType.annoSlice
+                        [tf, msg] = qObj.validate(this.annoInfo);
+                        if tf == 0
+                            ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
+                            throw(ex);
+                        end
+                    elseif this.lastQuery.type == eOCPQueryType.imageSlice
+                        [tf, msg] = qObj.validate(this.imageInfo);
+                        if tf == 0
+                            ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
+                            throw(ex);
+                        end
+                    else % eOCPQueryType.overlaySlice
+                        [tf, msg] = qObj.validate(this.imageInfo);
+                        if tf == 0
+                            ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
+                            throw(ex);
+                        end
+                        [tf, msg] = qObj.validate(this.annoInfo);
+                        if tf == 0
+                            ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
+                            throw(ex);
+                        end
                     end
+                    
                     % Build URL
                     url = this.buildSliceUrl(qObj);
                     this.lastUrl = url;
@@ -1392,7 +1412,7 @@ classdef OCP < handle
             %     val = oo.getField(2834,'author');
             
             % Build URL
-            url = sprintf('%s/ocp/ocpca/%s/%s/%d/getField/%s/',this.serverLocation,this.annoToken,this.annoChannel,id,field);
+            url = sprintf('%s/ocp/ocpca/%s/%s/getField/%d/%s/',this.serverLocation,this.annoToken,this.annoChannel,id,field);
             this.lastUrl = url;            
             
             % Call URL
