@@ -156,10 +156,13 @@ classdef OCPHdf < handle
             
             if isempty(groupName)
                 % Get data type
-                data_type = h5read(this.filename,'/DATATYPE');     
+                data_type = h5read(this.filename,'/DATATYPE');    
+                channel_type = h5read(this.filename, '/CHANNELTYPE');
             else 
                 dtpath = sprintf('/%s/DATATYPE', groupName);
                 data_type = h5read(this.filename, dtpath);
+                ctpath = sprintf('/%s/CHANNELTYPE', groupName);
+                channel_type = h5read(this.filename, ctpath);
             end
             
 %             if ~isa(data_type{1}, 'eRAMONChanelDataType')
@@ -188,7 +191,14 @@ classdef OCPHdf < handle
                         ctpath = sprintf('/%s/CUTOUT',groupName);
                     end
                     cube = h5read(this.filename,ctpath);
-                    cube = permute(cube, [2 1 3]);
+                    % AB Note: Do not need to permute image cubes
+                    switch eRAMONChannelType.(channel_type{1})
+                        case {eRAMONChannelType.annotation,...
+                                eRAMONChannelType.probmap,...
+                                eRAMONChannelType.timeseries}
+                                
+                            cube = permute(cube, [2 1 3]);
+                    end
                     %n = 'Cutout';
 
                     % Populate object

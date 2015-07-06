@@ -12,8 +12,8 @@ function test_suite = testOCP %#ok<STOUT>
     
     % Holds the server location target for the test suite. 
     % Default is 'http://openconnecto.me' 
-    %target_server = 'http://brainviz1.cs.jhu.edu';
-    target_server = 'http://localhost:8000';
+    target_server = 'http://brainviz1.cs.jhu.edu';
+    %target_server = 'http://localhost:8000';
     
     %% Init the test suite
     initTestSuite;
@@ -76,6 +76,7 @@ function testNoToken %#ok<*DEFNU>
     
     % image token
     oo.setImageToken('kasthuri11');
+    oo.setImageChannel('images');
     
     s1 = RAMONSeed([10000 10000 50],eRAMONCubeOrientation.pos_z,124,14,[],.89,eRAMONAnnoStatus.locked,{'test',23});
     assertExceptionThrown(@() oo.createAnnotation(s1), 'OCP:MissingAnnoToken');
@@ -1995,7 +1996,6 @@ function testConflictWriteOptions %#ok<*DEFNU>
     qId.setXyzCoord([4010 4010 1450]);
     idOrig = oo.query(qId);
     
-    
     % upload annotation
     d = ones(100,100);
     
@@ -2009,6 +2009,9 @@ function testConflictWriteOptions %#ok<*DEFNU>
     assertFalse(idOrig == idDefaultQuery);
     assertEqual(idDefault,idDefaultQuery);
     
+    qIdOutside = OCPQuery(eOCPQueryType.voxelId);
+    qIdOutside.setXyzCoord([4115 4115 1450]);
+    idPreserveQueryOutside = oo.query(qIdOutside);   
     
     % upload bigger anno with perserve
     d = ones(150,150);
@@ -2017,15 +2020,13 @@ function testConflictWriteOptions %#ok<*DEFNU>
         {'tester',1212},'testuser');
     idPreserve = oo.createAnnotation(s1,eOCPConflictOption.preserve);
 
-    
-    qIdOutside = OCPQuery(eOCPQueryType.voxelId);
-    qIdOutside.setXyzCoord([4115 4115 1450]);
-    idPreserveQueryOutside = oo.query(qIdOutside);
+    % Make sure the outside ID is still the same
+    idPreserveQueryOutsideSecondary = oo.query(qIdOutside);
     
     % make sure it didn't over write
     idPreserveQueryMiddle = oo.query(qId);
     assertEqual(idPreserveQueryMiddle,idDefaultQuery);
-    assertEqual(idPreserveQueryOutside,idPreserve);
+    assertEqual(idPreserveQueryOutside,idPreserveQueryOutsideSecondary); 
     
     
     % test exception
@@ -3106,10 +3107,16 @@ function testImageDataUpload %#ok<*DEFNU>
     d = ones(size(k_data.data));
     sum_total = sum(d(:));
     
-    % Make sure the image upload DB is empty to start
-    start_data = oo2.query(q);
-    assertEqual(sum_total,sum(start_data.data(:)));
+        
+    % reset db if necessary:
+%     blank_data = k_data.clone;
+%     blank_data.setCutout(d);
+%     oo2.uploadImageData(blank_data);
     
+    % Make sure the image upload DB is empty to start
+    start_data = oo2.query(q); 
+    assertEqual(sum_total,sum(start_data.data(:)));
+     
     % Upload data
     oo2.uploadImageData(k_data);
     

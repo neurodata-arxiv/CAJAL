@@ -1,4 +1,4 @@
-function test_suite = testOCP %#ok<STOUT>
+function test_suite = testOCPsingle %#ok<STOUT>
     %% TESTOCP Unit Test suite for the OCP api class
     global ocp_force_local
     
@@ -12,8 +12,8 @@ function test_suite = testOCP %#ok<STOUT>
     
     % Holds the server location target for the test suite. 
     % Default is 'http://openconnecto.me' 
-    %target_server = 'http://brainviz1.cs.jhu.edu';
-    target_server = 'http://localhost:8000';
+    target_server = 'http://brainviz1.cs.jhu.edu';
+    %target_server = 'http://localhost:8000';
     
     %% Init the test suite
     initTestSuite;
@@ -94,6 +94,58 @@ end
 
 %% ###### COPY AND PASTE SINGLE UNIT TESTS BELOW ######
 
+function testImageDataUpload %#ok<*DEFNU> 
+    global oo;
+    oo2 = OCP();
+    
+    % set server location 
+    global target_server 
+    oo2.setServerLocation(target_server) ;
+    
+    oo2.setImageToken('apiUnitTests');
+    oo2.setImageChannel('apiUnitTestImageUpload');
+    
+    % Check db is empty
+    q = OCPQuery(eOCPQueryType.imageDense);
+    q.setCutoutArgs([3000,3250],[4000,4250],[500,505]);
+    q.setResolution(1);
+    
+    % Cutout some kasthuri11 data
+    k_data = oo.query(q);
+    d = ones(size(k_data.data));
+    sum_total = sum(d(:));
+    
+    % reset db if necessary:
+    blank_data = k_data.clone;
+    blank_data.setCutout(d);
+    oo2.uploadImageData(blank_data);
+    
+    % Make sure the image upload DB is empty to start
+    start_data = oo2.query(q);
+    assertEqual(sum_total,sum(start_data.data(:)));
+     
+    % Upload data
+    oo2.uploadImageData(k_data);
+    
+    % Cutout newly uploaded data
+    new_data = oo2.query(q);
+    
+    % Check that it matches
+    % TODO: They don't straight match for some reason. Need to figure
+    % out why this is happening.
+    assertEqual(k_data.xyzOffset,new_data.xyzOffset);
+    assertEqual(k_data.resolution,new_data.resolution);
+    assertEqual(sum(k_data.data(:) - new_data.data(:)),0);
+
+    % Clear out newly uploaded data
+    blank_data = new_data.clone;
+    blank_data.setCutout(d);
+    oo2.uploadImageData(blank_data);
+    
+    % Check it's empty
+    cleared_data = oo2.query(q);
+    assertEqual(sum_total,sum(cleared_data.data(:)));
+end
 
 
 %% Clean up
