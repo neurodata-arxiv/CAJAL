@@ -191,14 +191,16 @@ classdef OCPHdf < handle
                         ctpath = sprintf('/%s/CUTOUT',groupName);
                     end
                     cube = h5read(this.filename,ctpath);
-                    % AB Note: Do not need to permute image cubes
-                    switch eRAMONChannelType.(channel_type{1})
-                        case {eRAMONChannelType.annotation,...
-                                eRAMONChannelType.probmap,...
-                                eRAMONChannelType.timeseries}
-                                
-                            cube = permute(cube, [2 1 3]);
-                    end
+                    % AB Note: Seems like we need to permute everything
+                    % after all
+%                     switch eRAMONChannelType.(channel_type{1})
+%                         case {eRAMONChannelType.annotation,...
+%                                 eRAMONChannelType.probmap,...
+%                                 eRAMONChannelType.timeseries}
+%                                 
+%                             cube = permute(cube, [2 1 3]);
+%                     end
+                    cube = permute(cube, [2 1 3]);
                     %n = 'Cutout';
 
                     % Populate object

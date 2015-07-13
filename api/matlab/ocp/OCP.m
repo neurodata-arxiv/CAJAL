@@ -242,6 +242,12 @@ classdef OCP < handle
             % Get DB Info
             this.imageInfo = this.queryDBInfo(token);
             
+            % Check the version
+            if (str2num(this.imageInfo.PROJECT.SCHEMA_VERSION{1}) < 0.7)
+                msg = sprintf('This version of CAJAL may not be compatible with the OCP schema specified (OCP schema version %.2f)', str2num(this.imageInfo.PROJECT.OCP_VERSION{1})); 
+                warning('OCP:IncompatibleVersion',msg)
+            end
+                
             % set the token
             this.imageToken = token;
             
@@ -313,6 +319,11 @@ classdef OCP < handle
             % Get DB Info
             this.annoInfo = this.queryDBInfo(token);
             
+            % Check the version
+            if (str2num(this.annoInfo.PROJECT.SCHEMA_VERSION{1}) < 0.7)
+                msg = sprintf('This version of CAJAL may not be compatible with the OCP schema specified (OCP schema version %.2f)', str2num(this.annoInfo.PROJECT.OCP_VERSION{1})); 
+                warning('OCP:IncompatibleVersion',msg)
+            end   
             % set the token
             this.annoToken = token;
             
