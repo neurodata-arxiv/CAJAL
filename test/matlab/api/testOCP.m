@@ -27,7 +27,7 @@ function test_suite = testOCP %#ok<STOUT>
     warning('off','OCP:NoDefaultImageChannel');
     warning('off','OCP:DefaultAnnoChannel');
     warning('off','OCP:NoDefaultAnnoChannel');
-    warning('off','OCP:IncompatibleVersion')
+    warning('off','OCP:IncompatibleVersion');
     
     % May need to update class since it looks like global use has
     % changed in new version of matlab...only really need this for unit 

@@ -2,6 +2,27 @@
 #########                CAJAL Release Notes                #########
 ###########################################################################
 
+### 2015-07-13 ### v1.8.0 RC2
+Release Notes:
+ - Updated all queries to reflect change in OCP schema. All projects now have an associated token and associated channels. To get data, a token and channel must be specified.
+ - Updated all query checks to use new isotropic database format. This essentially means we treat X, Y, and Z the same way when checking bounds. 
+ - Added a README to the test directory to guide users through running unit tests.
+ - Added a single unit test driver (testOCPsingle.m)
+
+Bug Fixes:
+ - getFields and setFields queries fixed.
+ - ramonVol Offset Indexing bug fixed.
+ - Read channel type from HDF5 files 
+ - UploadImageData test fixed and passes against all servers.
+
+Known Issues:
+ - multichannel cutouts are currently not supported. To perform a multichannel cutout, run the same query multiple times, changing the image or anno channel between each run. Supporting multichannel cutouts would require more major changes to CAJAL. 
+ - RGBa data support has changed in the new OCP. CAJAL RGBa functions have been disabled.  
+ - The imageSlice and imageDense Download tests fail because the kasthuri11 z-indices on current dev servers don't seem to match the previous z-indices. It seems like the z-offset should be 1 instead of 0. Waiting on data migration in main OCP datastore to confirm. 
+
+Compatibility:
+ - Open Connectome Schema v0.7, Open Connectome Server v0.7
+
 ### 2015-06-12 ### v1.8.0 RC1
 Release Notes:
  - Updated all queries to reflect change in OCP schema. All projects now have an associated token and associated channels. To get data, a token and channel must be specified.
