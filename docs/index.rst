@@ -1,0 +1,86 @@
+.. meta::
+   :description: Official documentation for RAMON and CAJAL
+   :keywords: annotation, tracing, neuroscience, object detection
+.. title::
+   RAMON Data Standard and CAJAL API
+
+.. raw:: html
+
+	<h2>RAMON: The OCP data model for collaborative neuroscience <br> CAJAL:  The OCP Matlab Toolbox that implements RAMON</h2>
+	<br>
+
+An significant challenge in the connectomics field is annotation representation and its impact on software and institution-level interoperability. As the field grows and data volumes increase, the sharing of data through remote and programmatic interfaces and the application of community developed algorithms and software will become common.  Answering this challenge requires scene parsing, rather than simply segmentation; the rich semantic annotations are critical to inferring graph structure and understanding the function and structure of neuronal circuits. We developed a standard for annotation metadata, which we call the Reusable Annotation Markup for Open coNnectomes (RAMON).
+
+The CAJAL toolbox (or API) provides functionality to interact with the Open Connectome Project image and annotation databases, including querying raw image data, annotation data, and RAMON objects. Complex HTTP queries are wrapped in easy to use Matlab code - helper functions and example files are provided.
+
+
+.. figure:: images/cajal_pipeline.jpg
+    :width: 800px
+    :align: center
+
+
+.. raw:: html
+ 
+  <div>
+    <img style="width:30px;height:30px;vertical-align:middle">
+    <span style=""></span>
+    <IMG SRC="_static/GitHub.png" height="50" width="50"> <a href="https://github.com/openconnectome/CAJAL/zipball/master"> [ZIP]   </a>  
+    <a image="_static/GitHub.png" href="https://github.com/openconnectome/CAJAL/tarball/master">[TAR.GZ] </a></p>
+  </div>
+
+
+.. sidebar:: CAJAL Contact Us 
+   
+   If you have questions about RAMON or CAJAL, or have data to analyze, let us know:  ocp-support@googlegroups.com
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Documentation
+
+   sphinx/introduction
+   sphinx/ocp
+   sphinx/faq
+   
+  
+.. toctree::
+   :maxdepth: 1
+   :caption: RAMON Data Model
+   
+   ramon/ramon_intro
+   ramon/ramon_types
+
+.. toctree::
+   :maxdepth: 1
+   :caption: CAJAL Toolbox
+   
+   cajal/cajal_intro
+   cajal/cajal_local_config
+   cajal/cajal_basic_usage
+   cajal/cajal_usecases
+   cajal/cajal_functions
+   cajal/cajal_modules
+
+.. toctree::
+   :maxdepth: 1
+   :caption: LONI and OCP
+   
+   loni/loni_intro
+   loni/loni_local_config
+   loni/loni_basic_usage
+   loni/loni_usecases
+   loni/loni_functions
+   loni/loni_modules
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Further Reading
+
+   Gitter chatroom <https://gitter.im/openconnectome/CAJAL>
+   Mailing List <https://groups.google.com/forum/#!forum/ocp-support/> 
+   Github repo <https://github.com/openconnectome/CAJAL>
+   Release Notes <https://github.com/openconnectome/CAJAL/releases/>
+
+.. If you use CAJAL or its data derivatives, please cite:
+..   W Gray Roncal, ZH Koterba, D Mhembere, DM Kleissas, JT Vogelstein, R Burns, AR Bowles, DK Donavos, S Ryman, RE Jung, L Wu, V Calhoun, RJ Vogelstein. MIGRAINE: MRI Graph Reliability Analysis and Inference for Connectomics. GlobalSIP, 2013 `arXiv <http://arxiv.org/abs/1312.4875>`_ `bibtex <http://openconnecto.me/data/public/MR/MIGRAINE_v1_0/migraine.bib>`_
+
+  
