@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration &mdash; CAJAL v1.0 documentation</title>
+  <title>Configuration &mdash; manno v1.0 documentation</title>
   
 
   
@@ -32,7 +32,7 @@
   
 
   
-    <link rel="top" title="CAJAL v1.0 documentation" href="../index.html"/>
+    <link rel="top" title="manno v1.0 documentation" href="../index.html"/>
         <link rel="next" title="OCP" href="ocp.html"/>
         <link rel="prev" title="Introduction" href="introduction.html"/> 
 
@@ -51,7 +51,7 @@
         
 
         
-          <a href="../index.html" class="icon icon-home"> CAJAL
+          <a href="../index.html" class="icon icon-home"> manno
         
 
         
@@ -88,21 +88,20 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions (FAQ)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/basic_usage.html">Basic Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#train-protocol">Train Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#deploy-protocol">Deploy Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#protocol">Protocol</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#usage-notes">Usage Notes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#example">Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#validation">Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#advanced-topics-future-functionality">Advanced Topics/Future Functionality</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">Further Reading</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/CAJAL">Gitter chatroom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">manno Functions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/manno">Gitter chatroom</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/ocp-support/">Mailing List</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL">Github repo</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL/releases/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno/releases/">Release Notes</a></li>
 </ul>
 
           
@@ -116,7 +115,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">CAJAL</a>
+        <a href="../index.html">manno</a>
       </nav>
 
 
@@ -146,11 +145,12 @@
 <blockquote>
 <div><ul class="simple">
 <li><a class="reference external" href="http://github.com/openconnectome/cajal">CAJAL Toolbox</a></li>
-<li><a class="reference external" href="http://www.ilastik.org/">Ilastik v1.15+</a></li>
+<li><a class="reference external" href="http://www.mathworks.com/matlabcentral/fileexchange/8797-tools-for-nifti-and-analyze-image">NIFTI Tools (distributed as part of CAJAL)</a></li>
+<li><a class="reference external" href="http://www.itksnap.org/">ITK-Snap v 3.x</a></li>
 <li>A recent version of MATLAB</li>
 </ul>
 </div></blockquote>
-<p><em>This tool uses Ilastik for training and classification, and ocp-ilastik+CAJAL to pull and push data appropriately.  It is not necessary for all annotators to use MATLAB and CAJAL, as long as they have a mechanism (such as a grad student) to help pull and push data.  Machine learners need only to be able to develop and deploy classifiers within ilastik.</em></p>
+<p><em>This tool uses ITK-Snap for annotating, and MANNO+CAJAL to pull and push data appropriately.  It is not necessary for all annotators to use MATLAB and CAJAL, as long as they have a mechanism (such as a grad student) to help pull and push data.  Annotators only need to be able to load, annotate, and save within ITK Snap.</em></p>
 </div>
 
 
