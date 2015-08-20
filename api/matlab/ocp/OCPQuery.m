@@ -851,7 +851,8 @@ classdef OCPQuery < handle
                         if ~isempty(this.resolution)
                             % Make sure x,y,z are good
                             imgDims = dbInfo.DATASET.IMAGE_SIZE(this.resolution);
-                            if this.xRange(1) < 0
+                            imgOffsets = dbInfo.DATASET.OFFSET(this.resolution);
+                            if this.xRange(1) < imgOffsets(1)
                                 valid = false;
                                 msg = sprintf('%s[E] Lower X Range out of valid dataset range.\n',msg);
                             end
@@ -859,7 +860,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Upper X Range out of valid dataset range.\n',msg);
                             end
-                            if this.yRange(1) < 0
+                            if this.yRange(1) < imgOffsets(2)
                                 valid = false;
                                 msg = sprintf('%s[E] Lower Y Range out of valid dataset range.\n',msg);
                             end
@@ -867,56 +868,56 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Upper Y Range out of valid dataset range.\n',msg);
                             end
-                        else
-                            msg = sprintf('%s[W] Since resolution not specified X and Y coordinates could not be checked against the database.\n',msg);
-                        end
-                        
-                        if this.zRange(1) < dbInfo.DATASET.SLICERANGE(1)
-                            valid = false;
-                            msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
-                        end
-                        if this.zRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
-                            valid = false;
-                            msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
-                        end
-                        
-                        % Check if channels are listed and valid for
-                        % multichannel queries
-                        if (dbInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
-                                (dbInfo.PROJECT.TYPE == eRAMONDataType.channels8)
-                            
-                            if isempty(this.channels)
-                                % Gotta have channels for multichannel
-                                % data!
+                            if this.zRange(1) < imgOffsets(3)
                                 valid = false;
-                                msg = sprintf('%s[E] Must specify channels to cutout for multichannel data\n',msg);
-                                return
+                                msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
                             end
-                            
-                            
-                            % Check that channels requested are in DB
-                            channel_cell_array = fieldnames(dbInfo.CHANNELS);
-                            
-                            if isa(this.channels, 'cell')
-                                % Collection of channels
-                                for jj = 1:length(this.channels)
-                                    ch_matches(jj) = any(strcmp(this.channels{jj},channel_cell_array));  %#ok<AGROW>
-                                end
-                                
-                                if all(ch_matches) == 0
-                                    valid = false;
-                                    bad_ind = find(ch_matches == 0);
-                                    msg = sprintf('%s[E] Channels not found in database: ',msg);
-                                    tmsg = sprintf('%s,',this.channels{bad_ind}); %#ok<FNDSB>
-                                    msg = sprintf('%s%s\n',msg, tmsg(1:end-1));
-                                    return
-                                end
+                            if this.zRange(2) > imgDims(3) 
+                                valid = false;
+                                msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
                             end
                         else
-                            % not multichannel
-                            msg = sprintf('%s[W] channels ignored with non-multichannel data.\n',msg);
+                            msg = sprintf('%s[W] Since resolution not specified no coordinates could not be checked against the database.\n',msg);
                         end
-                        
+                
+% AB NOTE: We check that channels are valid upon setting the channel. 
+%                         % Check if channels are listed and valid for
+%                         % multichannel queries
+%                         if (dbInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
+%                                 (dbInfo.PROJECT.TYPE == eRAMONDataType.channels8)
+%                             
+%                             if isempty(this.channels)
+%                                 % Gotta have channels for multichannel
+%                                 % data!
+%                                 valid = false;
+%                                 msg = sprintf('%s[E] Must specify channels to cutout for multichannel data\n',msg);
+%                                 return
+%                             end
+%                             
+%                             
+%                             % Check that channels requested are in DB
+%                             channel_cell_array = fieldnames(dbInfo.CHANNELS);
+%                             
+%                             if isa(this.channels, 'cell')
+%                                 % Collection of channels
+%                                 for jj = 1:length(this.channels)
+%                                     ch_matches(jj) = any(strcmp(this.channels{jj},channel_cell_array));  %#ok<AGROW>
+%                                 end
+%                                 
+%                                 if all(ch_matches) == 0
+%                                     valid = false;
+%                                     bad_ind = find(ch_matches == 0);
+%                                     msg = sprintf('%s[E] Channels not found in database: ',msg);
+%                                     tmsg = sprintf('%s,',this.channels{bad_ind}); %#ok<FNDSB>
+%                                     msg = sprintf('%s%s\n',msg, tmsg(1:end-1));
+%                                     return
+%                                 end
+%                             end
+%                         else
+%                             % not multichannel
+%                             msg = sprintf('%s[W] channels ignored with non-multichannel data.\n',msg);
+%                         end
+%                         
                         
                     case {eOCPQueryType.imageSlice,...
                             eOCPQueryType.annoSlice,...
@@ -934,7 +935,8 @@ classdef OCPQuery < handle
                             case eOCPSlicePlane.xy
                                 if ~isempty(this.resolution)
                                     imgDims = dbInfo.DATASET.IMAGE_SIZE(this.resolution);
-                                    if this.aRange(1) < 0
+                                    imgOffsets = dbInfo.DATASET.OFFSET(this.resolution);
+                                    if this.aRange(1) < imgOffsets(1)
                                         valid = false;
                                         msg = sprintf('%s[E] Lower A Range (X dim) out of valid dataset range.\n',msg);
                                     end
@@ -942,7 +944,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Upper A Range (X dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(1) < 0
+                                    if this.bRange(1) < imgOffsets(2)
                                         valid = false;
                                         msg = sprintf('%s[E] Lower B Range (Y dim) out of valid dataset range.\n',msg);
                                     end
@@ -950,20 +952,24 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Upper B Range (Y dim) out of valid dataset range.\n',msg);
                                     end
+                                    if this.cIndex < imgOffsets(3)
+                                        valid = false;
+                                        msg = sprintf('%s[E] C Index (Z dim) lower than valid dataset range.\n',msg);
+                                    end
+                                    if this.cIndex > imgDims(3)
+                                        valid = false;
+                                        msg = sprintf('%s[E] C Index (Z dim) lower than valid dataset range.\n',msg);
+                                    end
                                 else
                                     msg = sprintf('%s[W] Since resolution not specified X and Y coordinates could not be checked against the database.\n',msg);
-                                end
-                                
-                                if this.cIndex < dbInfo.DATASET.SLICERANGE(1) || this.cIndex > (dbInfo.DATASET.SLICERANGE(2) + 1)
-                                    valid = false;
-                                    msg = sprintf('%s[E] cIndex (Z dim) out of valid dataset range.\n',msg);
                                 end
                                 
                                 
                             case eOCPSlicePlane.xz
                                 if ~isempty(this.resolution)
                                     imgDims = dbInfo.DATASET.IMAGE_SIZE(this.resolution);
-                                    if this.aRange(1) < 0
+                                    imgOffsets = dbInfo.DATASET.OFFSET(this.resolution);
+                                    if this.aRange(1) < imgOffsets(1)
                                         valid = false;
                                         msg = sprintf('%s[E] Lower A Range (X dim) out of valid dataset range.\n',msg);
                                     end
@@ -971,11 +977,11 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Upper A Range (X dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(1) < dbInfo.DATASET.SLICERANGE(1)
+                                    if this.bRange(1) < imgOffsets(3)
                                         valid = false;
                                         msg = sprintf('%s[E] Lower B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
+                                    if this.bRange(2) > (imgDims(3) + 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
@@ -992,7 +998,8 @@ classdef OCPQuery < handle
                             case eOCPSlicePlane.yz
                                 if ~isempty(this.resolution)
                                     imgDims = dbInfo.DATASET.IMAGE_SIZE(this.resolution);
-                                    if this.aRange(1) < 0
+                                    imgOffsets = dbInfo.DATASET.OFFSET(this.resolution);
+                                    if this.aRange(1) < imgOffsets(2)
                                         valid = false;
                                         msg = sprintf('%s[E] Lower A Range (Y dim) out of valid dataset range.\n',msg);
                                     end
@@ -1000,11 +1007,11 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Upper A Range (Y dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(1) < dbInfo.DATASET.SLICERANGE(1)
+                                    if this.bRange(1) < imgOffsets(3)
                                         valid = false;
                                         msg = sprintf('%s[E] Lower B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
+                                    if this.bRange(2) > (imgDims(3) + 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
@@ -1019,33 +1026,33 @@ classdef OCPQuery < handle
                                 
                         end
                         
-                        % Check if channels are listed and valid for
-                        % multichannel queries
-                        if (dbInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
-                                (dbInfo.PROJECT.TYPE == eRAMONDataType.channels8)
-                            
-                            % Check that channels requested are in DB
-                            channel_cell_array = fieldnames(dbInfo.CHANNELS);
-                            
-                            if isa(this.channels, 'cell')
-                                % Collection of channels
-                                for jj = 1:length(this.channels)                                    
-                                    ch_matches(jj) = any(strcmp(this.channels{jj},channel_cell_array));  %#ok<AGROW>
-                                end
-                                
-                                if all(ch_matches) == 0
-                                    valid = false;
-                                    bad_ind = find(ch_matches == 0);
-                                    msg = sprintf('%s[E] Channels not found in database: ',msg);
-                                    tmsg = sprintf('%s,',this.channels{bad_ind}); %#ok<FNDSB>
-                                    msg = sprintf('%s%s\n',msg, tmsg(1:end-1));
-                                   return
-                                end
-                            end
-                        else
-                            % not multichannel
-                            msg = sprintf('%s[W] channels ignored with non-multichannel data.\n',msg);
-                        end
+%                         % Check if channels are listed and valid for
+%                         % multichannel queries
+%                         if (dbInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
+%                                 (dbInfo.PROJECT.TYPE == eRAMONDataType.channels8)
+%                             
+%                             % Check that channels requested are in DB
+%                             channel_cell_array = fieldnames(dbInfo.CHANNELS);
+%                             
+%                             if isa(this.channels, 'cell')
+%                                 % Collection of channels
+%                                 for jj = 1:length(this.channels)                                    
+%                                     ch_matches(jj) = any(strcmp(this.channels{jj},channel_cell_array));  %#ok<AGROW>
+%                                 end
+%                                 
+%                                 if all(ch_matches) == 0
+%                                     valid = false;
+%                                     bad_ind = find(ch_matches == 0);
+%                                     msg = sprintf('%s[E] Channels not found in database: ',msg);
+%                                     tmsg = sprintf('%s,',this.channels{bad_ind}); %#ok<FNDSB>
+%                                     msg = sprintf('%s%s\n',msg, tmsg(1:end-1));
+%                                    return
+%                                 end
+%                             end
+%                         else
+%                             % not multichannel
+%                             msg = sprintf('%s[W] channels ignored with non-multichannel data.\n',msg);
+%                         end
                         
                         
                         
@@ -1061,7 +1068,8 @@ classdef OCPQuery < handle
                         if ~isempty(this.xRange) && ~isempty(this.yRange) && ~isempty(this.zRange)
                             if ~isempty(this.resolution)
                                 imgDims = dbInfo.DATASET.IMAGE_SIZE(this.resolution);
-                                if this.xRange(1) < 0
+                                imgOffsets = dbInfo.DATASET.OFFSET(this.resolution);
+                                if this.xRange(1) < imgOffsets(1)
                                     valid = false;
                                     msg = sprintf('%s[E] Lower X Range out of valid dataset range.\n',msg);
                                 end
@@ -1069,7 +1077,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Upper X Range out of valid dataset range.\n',msg);
                                 end
-                                if this.yRange(1) < 0
+                                if this.yRange(1) < imgOffsets(2)
                                     valid = false;
                                     msg = sprintf('%s[E] Lower Y Range out of valid dataset range.\n',msg);
                                 end
@@ -1077,18 +1085,18 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Upper Y Range out of valid dataset range.\n',msg);
                                 end
+                                if this.zRange(1) < imgOffsets(3)
+                                    valid = false;
+                                    msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
+                                end
+                                if this.zRange(2) > imgDims(3)
+                                    valid = false;
+                                    msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
+                                end
                             else
-                                msg = sprintf('%s[W] Since resolution not specified X and Y coordinates could not be checked against the database.\n',msg);
+                                msg = sprintf('%s[W] Since resolution not specified X, Y, and Z coordinates could not be checked against the database.\n',msg);
                             end
                             
-                            if this.zRange(1) < dbInfo.DATASET.SLICERANGE(1)
-                                valid = false;
-                                msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
-                            end
-                            if this.zRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
-                                valid = false;
-                                msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
-                            end
                         end
                         
                         
@@ -1116,7 +1124,8 @@ classdef OCPQuery < handle
                         if ~isempty(this.xRange) && ~isempty(this.yRange) && ~isempty(this.zRange)
                             if ~isempty(this.resolution)
                                 imgDims = dbInfo.DATASET.IMAGE_SIZE(this.resolution);
-                                if this.xRange(1) < 0
+                                imgOffsets = dbInfo.DATASET.OFFSET(this.resolution);
+                                if this.xRange(1) < imgOffsets(1)
                                     valid = false;
                                     msg = sprintf('%s[E] Lower X Range out of valid dataset range.\n',msg);
                                 end
@@ -1124,7 +1133,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Upper X Range out of valid dataset range.\n',msg);
                                 end
-                                if this.yRange(1) < 0
+                                if this.yRange(1) < imgOffsets(2)
                                     valid = false;
                                     msg = sprintf('%s[E] Lower Y Range out of valid dataset range.\n',msg);
                                 end
@@ -1132,18 +1141,19 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Upper Y Range out of valid dataset range.\n',msg);
                                 end
+                                if this.zRange(1) < imgOffsets(3)
+                                    valid = false;
+                                    msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
+                                end
+                                if this.zRange(2) > imgDims(3)
+                                    valid = false;
+                                    msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
+                                end
                             else
-                                msg = sprintf('%s[W] Since resolution not specified X and Y coordinates could not be checked against the database.\n',msg);
+                                msg = sprintf('%s[W] Since resolution not specified X, Y, and Z coordinates could not be checked against the database.\n',msg);
                             end
                             
-                            if this.zRange(1) < dbInfo.DATASET.SLICERANGE(1)
-                                valid = false;
-                                msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
-                            end
-                            if this.zRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
-                                valid = false;
-                                msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
-                            end
+
                         end
                         
                         
@@ -1160,7 +1170,8 @@ classdef OCPQuery < handle
                                 end
                                 
                                 imgDims = dbInfo.DATASET.IMAGE_SIZE(this.resolution);
-                                if this.xRange(1) < 0
+                                imgOffsets = dbInfo.DATASET.OFFSET(this.resolution);
+                                if this.xRange(1) < imgOffsets(1)
                                     valid = false;
                                     msg = sprintf('%s[E] Lower X Range out of valid dataset range.\n',msg);
                                 end
@@ -1168,7 +1179,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Upper X Range out of valid dataset range.\n',msg);
                                 end
-                                if this.yRange(1) < 0
+                                if this.yRange(1) < imgOffsets(2)
                                     valid = false;
                                     msg = sprintf('%s[E] Lower Y Range out of valid dataset range.\n',msg);
                                 end
@@ -1176,18 +1187,19 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Upper Y Range out of valid dataset range.\n',msg);
                                 end
+                                if this.zRange(1) < imgOffsets(3)
+                                    valid = false;
+                                    msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
+                                end
+                                if this.zRange(2) > imgDims(3)
+                                    valid = false;
+                                    msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
+                                end
+                            
                             else
-                                msg = sprintf('%s[W] Since resolution not specified X and Y coordinates could not be checked against the database.\n',msg);
+                                msg = sprintf('%s[W] Since resolution not specified X, Y, and Z coordinates could not be checked against the database.\n',msg);
                             end
                             
-                            if this.zRange(1) < dbInfo.DATASET.SLICERANGE(1)
-                                valid = false;
-                                msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
-                            end
-                            if this.zRange(2) > (dbInfo.DATASET.SLICERANGE(2) + 1)
-                                valid = false;
-                                msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
-                            end
                         end
                         
                     case eOCPQueryType.voxelId
@@ -1202,7 +1214,8 @@ classdef OCPQuery < handle
                         
                         if ~isempty(this.resolution)
                             imgDims = dbInfo.DATASET.IMAGE_SIZE(this.resolution);
-                            if this.xyzCoord(1) < 0
+                            imgOffset = dbInfo.DATASET.OFFSET(this.resolution);
+                            if this.xyzCoord(1) < imgOffset(1)
                                 valid = false;
                                 msg = sprintf('%s[E] X coord out of valid dataset range.\n',msg);
                             end
@@ -1210,7 +1223,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] X coord out of valid dataset range.\n',msg);
                             end
-                            if this.xyzCoord(2) < 0
+                            if this.xyzCoord(2) < imgOffset(2)
                                 valid = false;
                                 msg = sprintf('%s[E] Y coord out of valid dataset range.\n',msg);
                             end
@@ -1218,17 +1231,16 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Y coord out of valid dataset range.\n',msg);
                             end
+                            if this.xyzCoord(3) < imgOffset(3)
+                                valid = false;
+                                msg = sprintf('%s[E] z coord out of valid dataset range.\n',msg);
+                            end
+                            if this.xyzCoord(3) > imgDims(3)
+                                valid = false;
+                                msg = sprintf('%s[E] Z coord out of valid dataset range.\n',msg);
+                            end
                         else
-                            msg = sprintf('%s[W] Since resolution not specified X and Y coordinates could not be checked against the database.\n',msg);
-                        end
-                        
-                        if this.xyzCoord(3) < dbInfo.DATASET.SLICERANGE(1)
-                            valid = false;
-                            msg = sprintf('%s[E] z coord out of valid dataset range.\n',msg);
-                        end
-                        if this.xyzCoord(3) > (dbInfo.DATASET.SLICERANGE(2) + 1) 
-                            valid = false;
-                            msg = sprintf('%s[E] Z coord out of valid dataset range.\n',msg);
+                            msg = sprintf('%s[W] Since resolution not specified X, Y, and Z coordinates could not be checked against the database.\n',msg);
                         end
                         
                     otherwise

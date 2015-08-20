@@ -35,7 +35,7 @@ classdef OCP < handle
     % See the License for the specific language governing permissions and
     % limitations under the License.
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     properties(SetAccess = 'private', GetAccess = 'public')
         %% Properties - Server Info
         %Url to server root
@@ -52,12 +52,16 @@ classdef OCP < handle
         defaultResolution = [] % Default resolution of the annotation DB
         
         %% Properties - DB Info
-        imageInfo = []
-        annoInfo = []
+        imageInfo = [] % Dataset Info
+        imageChanInfo = [] % Channel (prev Prject) info
+        annoInfo = [] % Dataset Info
+        annoChanInfo = [] % Channel (prev Project) info 
+        
         
     end
     
-    properties(SetAccess = 'private', GetAccess = 'private')
+    % AB TODO change getaccess back to private 
+    properties(SetAccess = 'private', GetAccess = 'public')
         %% Properties - Private
         lastQuery = [];
         lastUrl = []
@@ -65,8 +69,10 @@ classdef OCP < handle
         
         %Token for Image Database
         imageToken = []
+        imageChannel = []
         %Token for Annotation Database
         annoToken = []
+        annoChannel = []
         
         %% Properties - Utility Classes
         net = [];
@@ -137,10 +143,13 @@ classdef OCP < handle
         
         %% Methods - General - Setters/Getters
         function channel_cell_array = getChannelList(this)
+           % All tokens are multichannel databases. Return cell array
+           % listing channels.
+           
            % If the image token is a multichannel database then return
            % a cell array listing the available channels
-           if (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
-                   (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels8)
+           if (this.imageChanInfo.TYPE == eRAMONDataType.channels16) || ...
+                   (this.imageChanInfo.TYPE == eRAMONDataType.channels8)
                channel_cell_array = fieldnames(this.imageInfo.CHANNELS);               
            else
                % not multichannel
@@ -149,7 +158,7 @@ classdef OCP < handle
         end
         
         function tokens = getPublicTokens(this)
-            url = sprintf('%socp/ca/public_tokens/',...
+            url = sprintf('%s/ocp/ca/public_tokens/',...
                     this.serverLocation);
             this.lastUrl = url;
             response = this.net.read(url);
@@ -202,9 +211,11 @@ classdef OCP < handle
                 if isempty(ind)
                     val = sprintf('http://%s',val);
                 end
-                %Make sure url ends with /
-                if strcmpi(val(end),'/') == 0
-                    val = sprintf('%s/',val);
+
+                %Make sure url does not end with /
+                if strcmpi(val(end),'/') ~= 0
+                    %val = sprintf('%s/',val);
+                    val(end) = '';
                 end
                 
                 this.net.testUrl(val);
@@ -215,7 +226,7 @@ classdef OCP < handle
                     rethrow(err2);
                 end
                 
-                ex = MException('OCP:ServerConnFail','Failed to resolve server.  Check server url');
+                ex = MException('OCP:ServerConnFail',err2.message);
                 throw(ex);
             end
             
@@ -224,11 +235,37 @@ classdef OCP < handle
         
         function this = setImageToken(this,token)
             % This method sets the image database token to be used
+            % It also clears the Image Channel field 
+            this.imageChannel = [];
+            this.imageChanInfo = [];
             
             % Get DB Info
             this.imageInfo = this.queryDBInfo(token);
             
+            % Check the version
+            if (str2num(this.imageInfo.PROJECT.SCHEMA_VERSION{1}) < 0.7)
+                msg = sprintf('This version of CAJAL may not be compatible with the OCP schema specified (OCP schema version %.2f)', str2num(this.imageInfo.PROJECT.OCP_VERSION{1})); 
+                warning('OCP:IncompatibleVersion',msg)
+            end
+                
+            % set the token
             this.imageToken = token;
+            
+            % Search for a default channel and set if we found one
+            channelNames = fieldnames(this.imageInfo.CHANNELS);
+            for i = 1:numel(channelNames)
+                if this.imageInfo.CHANNELS.(channelNames{i}).DEFAULT == 1
+                    this.setImageChannel(channelNames{i});
+                    msg = sprintf('Using default image channel: %s\n Set using setImageChannel().', channelNames{i});
+                    warning('OCP:DefaultImageChannel',msg)
+                    break
+                end
+            end
+            if numel(this.imageChannel) == 0
+                msg = sprintf('No default image channel. Set image channel before running queries.');
+                warning('OCP:NoDefaultImageChannel',msg);
+            end
+            
             
         end
         function token = getImageToken(this)
@@ -237,22 +274,123 @@ classdef OCP < handle
             token = this.imageToken;
         end
         
+        function setImageChannel(this, channel)
+            % This method sets the image database channel to be used
+            
+            this.imageChannel = [];
+            this.imageChanInfo = [];
+            
+            if numel(this.imageToken) == 0
+                ex = MException('OCP:NoImageToken','Cannot set ImageChannel without first setting ImageToken.');
+                throw(ex);  
+            end
+            channelNames = fieldnames(this.imageInfo.CHANNELS);
+            for i = 1:numel(channelNames)
+                if strcmpi(channelNames{i}, channel) == 1
+                    this.imageChannel = channel;
+                    % store the channel info in imageChanInfo
+                    this.imageChanInfo = this.imageInfo.CHANNELS.(channel);
+                    break;
+                end
+            end 
+            
+            if numel(this.imageChannel) == 0
+                ex = MException('OCP:InvalidImageChannel','ImageChannel does not exist for this token.');
+                throw(ex)
+            end
+            
+        end
+        function channel = getImageChannel(this)
+            % This method gets the image database channel to be used
+            channel = this.imageChannel;
+        end
+        function PrintImageChannels(this)
+           % List all image channels for a particular token. 
+           % AB TODO 
+        end
+        
         function this = setAnnoToken(this,token)
             % This method sets the annotation database token to be used
+            % It also clears the AnnoChannel field 
+            
+            this.annoChannel = [];
+            this.annoChanInfo = [];
+            
             % Get DB Info
             this.annoInfo = this.queryDBInfo(token);
             
-            % Verify it is a writable DB
-            if this.annoInfo.PROJECT.READONLY == 1
-                warning('OCP:ReadOnlyAnno','The current Annotation DB Token is for a READ ONLY database.');
+            % Check the version
+            if (str2num(this.annoInfo.PROJECT.SCHEMA_VERSION{1}) < 0.7)
+                msg = sprintf('This version of CAJAL may not be compatible with the OCP schema specified (OCP schema version %.2f)', str2num(this.annoInfo.PROJECT.OCP_VERSION{1})); 
+                warning('OCP:IncompatibleVersion',msg)
+            end   
+            % set the token
+            this.annoToken = token;
+            
+            % Search for a default channel and set if we found one
+            channelNames = fieldnames(this.annoInfo.CHANNELS);
+            for i = 1:numel(channelNames)
+                if this.annoInfo.CHANNELS.(channelNames{i}).DEFAULT == 1
+                    this.setAnnoChannel(channelNames{i});
+                    msg = sprintf('Using default anno channel: %s\n Set using setAnnoChannel().', channelNames{i});
+                    warning('OCP:DefaultAnnoChannel',msg)
+                    break
+                end
             end
             
-            this.annoToken = token;
+            if numel(this.annoChannel) == 0
+                msg = sprintf('No default anno channel. Set anno channel before running queries.');
+                warning('OCP:NoDefaultAnnoChannel',msg)
+            end
+            
+            % ABTODO should check readonly for all channels (and all
+            % tokens?)
+            % right now READONLY is only included for channels 
+            % Verify it is a writable DB
+            %if this.annoChanInfo.READONLY == 1
+            %    warning('OCP:ReadOnlyAnno','The current Annotation DB Token is for a READ ONLY database.');
+            %end
+            
+            
         end
         function token = getAnnoToken(this)
             % This method gets the anno database token to be used
             
             token = this.annoToken;
+        end
+        
+        function setAnnoChannel(this, channel)
+            % This method sets the annotation database channel to be used
+            
+            this.annoChannel = [];
+            this.annoChanInfo = [];
+            
+            if numel(this.annoToken) == 0
+                ex = MException('OCP:NoAnnoToken','Cannot set AnnoChannel without first setting AnnoToken.');
+                throw(ex);  
+            end
+            channelNames = fieldnames(this.annoInfo.CHANNELS);
+            for i = 1:numel(channelNames)
+                if strcmpi(channelNames{i}, channel) == 1
+                    this.annoChannel = channel; 
+                    this.annoChanInfo = this.annoInfo.CHANNELS.(channel);
+                    break;
+                end
+            end 
+            
+            if numel(this.annoChannel) == 0
+                ex = MException('OCP:InvalidAnnoChannel','AnnoChannel does not exist for this token.');
+                throw(ex)
+            end
+            
+        end
+        function channel = getAnnoChannel(this)
+            % This method gets the annotation database channel to be used
+            channel = this.annoChannel;
+        end
+        function PrintAnnoChannels(this)
+           % List all anno channels for a particular token. 
+           % AB TODO 
         end
         
         function this = setImageTokenFile(this,file)
@@ -344,11 +482,16 @@ classdef OCP < handle
                             'Resolution empty in query.  Default value of %d used. Turn off "OCP:QueryResolutionEmpty" to suppress',this.defaultResolution);
                     end
                     
-                    % If annoToken hasn't been set stop
+                    % If imageToken hasn't been set stop
                     if isempty(this.imageToken)
                         ex = MException('OCP:MissingImageToken',...
                             'You must specify the image database to read from by setting the "imageToken" property. ');
                         throw(ex);
+                    end
+                    
+                    % If imageChannel hasn't been set throw a warning
+                    if isempty(this.imageChannel)
+                        warning('OCP:NoImageChannel','Missing image channel. Query failure or unexpected results may occur');
                     end
                     
                     % Verify query
@@ -364,20 +507,22 @@ classdef OCP < handle
                     % Query DB and get HDF5 File
                     hdfFile = OCPHdf(this.net.readCached(url),qObj);
                     this.lastHdfFile = hdfFile.filename;
-                    % Convert to RAMONVolume
-                    response = hdfFile.toRAMONVolume();
+                    % Convert to RAMONVolume 
+                    response = hdfFile.toRAMONVolume(this.imageChannel);
                     % Set dataType
                     if isa(response, 'cell')
                         % multichannel cutout
                         for kk = 1:length(response)
-                            response{kk}.setDataType(this.imageInfo.PROJECT.TYPE);
+                            response{kk}.setDataType(this.imageChanInfo.TYPE);
                         end
                     else
                         % normal
-                        response.setDataType(this.imageInfo.PROJECT.TYPE);
+                        response.setDataType(this.imageChanInfo.DATATYPE);
+                        response.setChannelType(this.imageChanInfo.TYPE);
                     end
                     
                 case eOCPQueryType.imageSlice
+                    % AB TODO match above after testing 
                     % If resolution isn't set Set Default and warn.
                     if isempty(qObj.resolution)
                         if isempty(this.defaultResolution)
@@ -431,12 +576,25 @@ classdef OCP < handle
                             warning('OCP:MissingAnnoToken','The Annotation Token has not been set.  Using Image Token as Annotation Token.');
                             this.setAnnoToken(this.getImageToken());
                             
+                            % check for an image channel
+                            % If imageChannel hasn't been set throw a warning
+                            if isempty(this.imageChannel)
+                                warning('OCP:NoImageChannel','Missing image channel. Query failure or unexpected results may occur');
+                            else
+                                this.setAnnoChannel(this.getImageChannel());
+                            end
+                            
                         else
                             % There isn't a token. 
                             ex = MException('OCP:MissingAnnoToken',...
                             'You must specify the annotation database to read from by setting the "annoToken" property.');
                             throw(ex);
                         end
+                    end
+                    
+                    % If annoChannel hasn't been set throw a warning
+                    if isempty(this.annoChannel)
+                        warning('OCP:NoAnnoChannel','Missing anno channel. Query failure or unexpected results may occur');
                     end
                     
                     % Verify query
@@ -452,9 +610,11 @@ classdef OCP < handle
                     hdfFile = OCPHdf(this.net.read(url),qObj);
                     this.lastHdfFile = hdfFile.filename;
                     % Convert to RAMONVolume
-                    response = hdfFile.toRAMONVolume();
-                    % Set dataType
-                    response.setDataType(this.annoInfo.PROJECT.TYPE);
+                    response = hdfFile.toRAMONVolume(this.annoChannel());
+                    % Set DBType
+                    response.setChannelType(this.annoChanInfo.TYPE{1});
+                    % set DataType
+                    response.setDataType(this.annoChanInfo.DATATYPE{1});
                     
                     
                 case eOCPQueryType.annoSlice
@@ -558,10 +718,10 @@ classdef OCP < handle
                     % Set dataType (support batch interface)
                     if iscell(response) == 1
                         for ii = 1:length(response)
-                            response{ii}.setDataType(this.annoInfo.PROJECT.TYPE);
+                            response{ii}.setDataType(this.annoChanInfo.DATATYPE);
                         end
                     else
-                        response.setDataType(this.annoInfo.PROJECT.TYPE);
+                        response.setDataType(this.annoChanInfo.DATATYPE);
                     end
                     
                 case eOCPQueryType.RAMONMetaOnly
@@ -743,11 +903,31 @@ classdef OCP < handle
                     
                     % Verify query
                     qObj.setCIndex(qObj.cIndex + 1);
-                    [tf, msg] = qObj.validate(this.annoInfo);
-                    if tf == 0
-                        ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
-                        throw(ex);
+                    if this.lastQuery.type == eOCPQueryType.annoSlice
+                        [tf, msg] = qObj.validate(this.annoInfo);
+                        if tf == 0
+                            ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
+                            throw(ex);
+                        end
+                    elseif this.lastQuery.type == eOCPQueryType.imageSlice
+                        [tf, msg] = qObj.validate(this.imageInfo);
+                        if tf == 0
+                            ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
+                            throw(ex);
+                        end
+                    else % eOCPQueryType.overlaySlice
+                        [tf, msg] = qObj.validate(this.imageInfo);
+                        if tf == 0
+                            ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
+                            throw(ex);
+                        end
+                        [tf, msg] = qObj.validate(this.annoInfo);
+                        if tf == 0
+                            ex = MException('OCP:BadQuery',sprintf('Query Validation Failed: \n%s',msg));
+                            throw(ex);
+                        end
                     end
+                    
                     % Build URL
                     url = this.buildSliceUrl(qObj);
                     this.lastUrl = url;
@@ -832,18 +1012,33 @@ classdef OCP < handle
                 throw(ex);
             end
             
+            % If the imageChannel hasn't been set stop
+            if isempty(this.imageChannel)
+                ex = MException('OCP:MissingImageChannel',...
+                    'You must specify the image database to write to by setting both the "imageToken" and "imageChannel" properties.');
+                throw(ex);
+            end
+            
             % Make sure you are writing to a database that is properly
             % setup for image upload
-            if this.imageInfo.PROJECT.EXCEPTIONS == 1
+            if this.imageChanInfo.EXCEPTIONS == 1
                 warning('OCP:ProjectOpts','Exceptions are enabled for the image database. This is non-optimal and unnessary for image data databases');
             end
             
             % Make sure you are writing to an Image datatype
-            if this.imageInfo.PROJECT.TYPE ~= 1 && ...
-                    this.imageInfo.PROJECT.TYPE ~= 8
-                
+            imgDataType = this.imageChanInfo.DATATYPE{1};
+            if eRAMONChannelDataType.(imgDataType) ~= eRAMONChannelDataType.uint8 && ...
+                    eRAMONChannelDataType.(imgDataType) ~= eRAMONChannelDataType.uint16           
                 ex = MException('OCP:ProjectOpts',...
                     'The current imageToken is for a non-grayscale datatype database.  Only grayscale 8 or 16bit is supported. Contact OCP support of uploading multichannel data');
+                throw(ex);
+            end
+            
+            % Make sure this is an image channel type.
+            imgChannelType = this.imageChanInfo.TYPE{1};
+            if eRAMONChannelType.(imgChannelType) ~= eRAMONChannelType.image
+                ex = Exception('OCP:ProjectOpts',...
+                    'The current imageToken is not for an image database!');
                 throw(ex);
             end
             
@@ -862,7 +1057,7 @@ classdef OCP < handle
                 end
                 
                   % Set datatype to that of the database
-                ramonObj.setDataType(eRAMONDataType(this.imageInfo.PROJECT.TYPE));
+                ramonObj.setDataType(eRAMONDataType(this.imageChanInfo.TYPE));
                 
                 % Compute chunked blocks by slice to make it easy for now.
                 % TODO: make this smarter if needed to deal with massive
@@ -908,8 +1103,11 @@ classdef OCP < handle
                 end
             else     
                 % Set datatype to that of the database
-                ramonObj.setDataType(eRAMONDataType(this.imageInfo.PROJECT.TYPE));
-
+                imageDataType = this.imageChanInfo.DATATYPE{1};
+                imageChannelType = this.imageChanInfo.TYPE{1};
+                ramonObj.setDataType(eRAMONChannelDataType.(imageDataType));
+                ramonObj.setChannelType(eRAMONChannelType.(imageChannelType));
+                ramonObj.setChannel(this.imageChannel);
                 % Block style upload
                 this.writeBlockImageData(ramonObj, conflictOption)        
             end             
@@ -933,21 +1131,39 @@ classdef OCP < handle
             % If annoToken hasn't been set stop
             if isempty(this.annoToken)
                 ex = MException('OCP:MissingAnnoToken',...
-                    'You must specify the annotation database to write to by setting the "annoToken" property. ');
+                    'You must specify the annotation database token to write to by setting the "annoToken" property. ');
                 throw(ex);
             end
+            
+            % If annoChannel hasn't been set stop (we need channel
+            % information)
+            if isempty(this.annoChannel)
+                ex = MException('OCP:MissingAnnoChannel',...
+                    'You must specify an annotation database channel to write to by setting the "annoChannel" property. ');
+                throw(ex);
+            end
+            
+            % Set the DataType and ChannelType for the ramonObj based on
+            % the channel info (this.annoChanInfo)
+%             chanDataType = this.annoChanInfo.DATATYPE{1};
+%             ramonObj.setDataType(eRAMONChannelDataType.(chanDataType));
+%             
+%             chanType = this.annoChanInfo.TYPE{1};
+%             ramonObj.setChannelType(eRAMONChannelType.(chanType));
+            
             
             % Make sure you can write to db
             % TODO: For now this is only for anno32 and anno64 type
             % databases
-            if (this.annoInfo.PROJECT.TYPE == eRAMONDataType.anno32 || ...
-                    this.annoInfo.PROJECT.TYPE == eRAMONDataType.anno64)
-                if (this.getAnnoPropagateStatus() ~= eOCPPropagateStatus.inconsistent)
-                    ex = MException('OCP:DbLocked',...
-                        'Annotation DB is locked due to propagation. Must wait for db to be consistent, then make writable');
-                    throw(ex);
-                end
-            end
+            % AB TODO -- this will break in batch mode, need to put
+            % elsewhere
+%             if (ramonObj.channelType == eRAMONChannelType.annotation)
+%                 if (this.getAnnoPropagateStatus() ~= eOCPPropagateStatus.inconsistent)
+%                     ex = MException('OCP:DbLocked',...
+%                         'Annotation DB is locked due to propagation. Must wait for db to be consistent, then make writable');
+%                     throw(ex);
+%                 end
+%             end
             
             % Set default conflict option default (overwrite) if needed
             if ~exist('conflictOption','var')
@@ -976,7 +1192,7 @@ classdef OCP < handle
                 batchIds = [];
                 for ii = 1:size(batchIndex,1)
                     % Set datatype
-                    ramonObj_batch = this.checkSetDataType(ramonObj(batchIndex{ii}));
+                    ramonObj_batch = this.checkSetTypes(ramonObj(batchIndex{ii}));
                     
                     batchIds = cat(2,batchIds,...
                         this.writeRamonObject(ramonObj_batch,false,conflictOption));
@@ -988,7 +1204,7 @@ classdef OCP < handle
                     chunkCollections = this.createAnnoChunks(ramonObj(chunkIndex));
                     
                     % Set datatype
-                    chunkCollections = this.checkSetDataType(chunkCollections);
+                    chunkCollections = this.checkSetTypes(chunkCollections);
                                         
                     chunkIds = this.writeRamonChunks(chunkCollections,false,conflictOption);                    
                 end
@@ -1011,7 +1227,7 @@ classdef OCP < handle
                         end
                         
                         % Set datatype
-                        ramonObj = this.checkSetDataType(ramonObj);
+                        ramonObj = this.checkSetTypes(ramonObj);
                     
                         this.writeBlockData(ramonObj, conflictOption)
                         id = [];
@@ -1020,7 +1236,7 @@ classdef OCP < handle
                         chunkCollection = this.createAnnoChunks(ramonObj);
                         
                         % Set datatype
-                        chunkCollection = this.checkSetDataType(chunkCollection);
+                        chunkCollection = this.checkSetTypes(chunkCollection);
 
                         % Upload the chunked annotation
                         id = this.writeRamonChunks(chunkCollection,false,conflictOption);
@@ -1029,14 +1245,14 @@ classdef OCP < handle
                     % Single annotation to upload
                     if strcmpi(class(ramonObj),'RAMONVolume')
                         % Set datatype
-                        ramonObj = this.checkSetDataType(ramonObj);
+                        ramonObj = this.checkSetTypes(ramonObj);
                         
                         % Block style upload
                         this.writeBlockData(ramonObj, conflictOption)
                         id = [];
                     else
                         % Set datatype
-                        ramonObj = this.checkSetDataType(ramonObj);
+                        ramonObj = this.checkSetTypes(ramonObj);
                         
                         % Standard RAMON Object upload
                         id = this.writeRamonObject(ramonObj, false, conflictOption);  
@@ -1148,7 +1364,7 @@ classdef OCP < handle
             end
             
             % Send DELETE request
-            urlStr = sprintf('%s/ocp/ocpca/%s/%s/',this.serverLocation,this.annoToken,idStr);
+            urlStr = sprintf('%s/ocp/ocpca/%s/%s/%s/',this.serverLocation,this.annoToken,this.annoChannel,idStr);
             this.lastUrl = urlStr;
             response = this.net.deleteRequest(urlStr);
         end
@@ -1171,7 +1387,7 @@ classdef OCP < handle
             merge_str = [merge_str sprintf(',%d',children)];          
 
             % Send request
-            urlStr = sprintf('%s/ocp/ca/%s/merge/%s/global/%d/',this.serverLocation,this.annoToken,merge_str,this.defaultResolution);
+            urlStr = sprintf('%s/ocp/ca/%s/%s/merge/%s/global/%d/',this.serverLocation,this.annoToken,this.annoChannel,merge_str,this.defaultResolution);
             this.lastUrl = urlStr;
             response = this.net.read(urlStr);
         end
@@ -1207,7 +1423,7 @@ classdef OCP < handle
             %     val = oo.getField(2834,'author');
             
             % Build URL
-            url = sprintf('%s/ocp/ocpca/%s/%d/getField/%s/',this.serverLocation,this.annoToken,id,field);
+            url = sprintf('%s/ocp/ocpca/%s/%s/getField/%d/%s/',this.serverLocation,this.annoToken,this.annoChannel,id,field);
             this.lastUrl = url;            
             
             % Call URL
@@ -1224,7 +1440,27 @@ classdef OCP < handle
             % returns information about that database.  The return
             % structure is:
             %
-            % TODO: document
+            % info.CHANNELS
+            %   <<CHAN_NAME>>
+            %       DATATYPE
+            %       NAME
+            %       PROPAGATE
+            %       RESOLUTION
+            %       TYPE
+            %       WINDOWRANGE
+            % info.PROJECT
+            %   HOST
+            %   NAME
+            %   OCP_VERSION
+            %   SCHEMA_VERSION
+            % info.DATASET
+            %   CUBE_DIMENSION
+            %   IMAGE_SIZE
+            %   NAME 
+            %   OFFSET
+            %   RESOLUTIONS
+            %   TIMERANGE
+            %   VOXELRES
             
             url = sprintf('%s/ocp/ocpca/%s/projinfo/',this.serverLocation,token);
             this.lastUrl = url;
@@ -1247,8 +1483,8 @@ classdef OCP < handle
             validateattributes(num_ids,{'numeric'},{'scalar','integer','finite','nonnegative','nonnan','real'});
             
             % Build URL
-            url = sprintf('%socp/ca/%s/reserve/%d/', ...
-                            this.serverLocation,this.annoToken,num_ids);
+            url = sprintf('%s/ocp/ca/%s/%s/reserve/%d/', ...
+                            this.serverLocation,this.annoToken,this.annoChannel,num_ids);
             this.lastUrl = url; 
             
             % Query DB            
@@ -1265,8 +1501,8 @@ classdef OCP < handle
         % annotation database propagation
         function status = getAnnoPropagateStatus(this)
             % Check status
-            if ~isempty(this.annoToken)
-                status = this.getPropagateStatus(this.annoToken);
+            if ~isempty(this.annoToken) && ~isempty(this.annoChannel)
+                status = this.getPropagateStatus(this.annoToken, this.annoChannel);
             else
                 status = [];
             end
@@ -1289,18 +1525,24 @@ classdef OCP < handle
         % needed if the database has been propagated and is currently
         % consistent.
         function makeAnnoWritable(this)
-            if ~isempty(this.annoToken)
-                
-                if (this.getAnnoPropagateStatus() == eOCPPropagateStatus.propagating)
-                    ex = MException('OCP:DbLocked',...
-                        'Annotation DB is locked due to propagation. Must wait for db to be consistent, before you can make it writable');
-                    throw(ex);
-                end
-                
-                this.setPropagateStatus(this.annoToken, eOCPPropagateStatus.inconsistent);
-            else
-                warning('OCP:MissingToken','You must set the annoToken before you can change propagation state!');
+            if isempty(this.annoToken)
+                ex = MException('OCP:MissingToken',...
+                    'You must set the annoToken before you can change propagation state!');
+                throw(ex);
+            elseif isempty(this.annoChannel)
+                ex = MException('OCP:MissingChannel',...
+                    'You must set the annoChannel before you can change propagation state!');
+                throw(ex);
             end
+            
+            if (this.getAnnoPropagateStatus() == eOCPPropagateStatus.propagating)
+                ex = MException('OCP:DbLocked',...
+                    'Annotation DB is locked due to propagation. Must wait for db to be consistent, before you can make it writable');
+                throw(ex);
+            end
+            
+            this.setPropagateStatus(this.annoToken, this.annoChannel, eOCPPropagateStatus.inconsistent);
+
         end
         
         %% Methods - makeImageWritable sets the status of the 
@@ -1308,39 +1550,59 @@ classdef OCP < handle
         % needed if the database has been propagated and is currently
         % consistent.
         function makeImageWritable(this)
-            if ~isempty(this.annoToken)
-                if (this.getImagePropagateStatus() == eOCPPropagateStatus.propagating)
-                    ex = MException('OCP:DbLocked',...
-                        'Image DB is locked due to propagation. Must wait for db to be consistent, before you can make it writable');
-                    throw(ex);
-                end
-                
-                this.setPropagateStatus(this.imageToken, eOCPPropagateStatus.inconsistent);
-            else
-                warning('OCP:MissingToken','You must set the imageToken before you can change propagation state!');
+            if isempty(this.annoToken)
+                ex = MException('OCP:MissingToken',...
+                    'You must set the imageToken before you can change propagation state!');
+                throw(ex);
+            elseif isempty(this.imageChannel) 
+                ex = MException('OCP:MissingChannel',...
+                    'You must set the imageChannel before you can change the propagation state!');
+                throw(ex);
             end
+            
+            if (this.getImagePropagateStatus() == eOCPPropagateStatus.propagating)
+                ex = MException('OCP:DbLocked',...
+                    'Image DB is locked due to propagation. Must wait for db to be consistent, before you can make it writable');
+                throw(ex);
+            end
+            
+            this.setPropagateStatus(this.imageToken, this.imageChannel, eOCPPropagateStatus.inconsistent);
+            
         end
         
         %% Methods - propagateAnnoDB triggers propagation of the annoToken 
         % database.  Will lock the db until the propagation process has
         % completed
         function propagateAnnoDB(this)
-            if ~isempty(this.annoToken)
-                this.setPropagateStatus(this.annoToken, eOCPPropagateStatus.propagating);
-            else
-                warning('OCP:MissingToken','You must set the annoToken before you can propagate it!');
+            if isempty(this.annoToken)
+                ex = MException('OCP:MissingToken',...
+                    'You must set the annoToken before you can change propagation state!');
+                throw(ex);
+            elseif isempty(this.annoChannel)
+                ex = MException('OCP:MissingChannel',...
+                    'You must set the annoChannel before you can change propagation state!');
+                throw(ex);
             end
+            
+            this.setPropagateStatus(this.annoToken, this.annoChannel, eOCPPropagateStatus.propagating);
         end
         
         %% Methods - propagateImageDB triggers propagation of the imageToken 
         % database.  Will lock the db until the propagation process has
         % completed
         function propagateImageDB(this)
-            if ~isempty(this.imageToken)
-                this.setPropagateStatus(this.imageToken, eOCPPropagateStatus.propagating);
-            else
-                warning('OCP:MissingToken','You must set the imageToken before you can propagate it!');
+            if isempty(this.annoToken)
+                ex = MException('OCP:MissingToken',...
+                    'You must set the imageToken before you can change propagation state!');
+                throw(ex);
+            elseif isempty(this.imageChannel) 
+                ex = MException('OCP:MissingChannel',...
+                    'You must set the imageChannel before you can change the propagation state!');
+                throw(ex);
             end
+            
+            this.setPropagateStatus(this.imageToken, this.imageChannel, eOCPPropagateStatus.propagating);
+            
         end
         
         
@@ -1550,15 +1812,17 @@ classdef OCP < handle
             % Build URL
             if updateFlag == false
                 % Create Annotation
-                urlStr = sprintf('%s/ocp/ocpca/%s/%s/',...
+                urlStr = sprintf('%s/ocp/ocpca/%s/%s/%s/',...
                     this.serverLocation,...
                     this.annoToken,...
+                    this.annoChannel,...
                     char(conflictOption));
             else
                 % Update Annotation                
-                urlStr = sprintf('%s/ocp/ocpca/%s/update/%s/',...
+                urlStr = sprintf('%s/ocp/ocpca/%s/%s/update/%s/',...
                     this.serverLocation,...
                     this.annoToken,...
+                    this.annoChannel,...
                     char(conflictOption));            
             end 
             this.lastUrl = urlStr;
@@ -1610,6 +1874,12 @@ classdef OCP < handle
                     'You can only block style upload RAMONVolume objects.');
             end
             
+            % if channel name isn't set fail
+            if isempty(ramonVol.channel)
+                error('OCP:NoUploadChannel',...
+                    'Channel name not specified in RAMONVolume. Set using setChannel()');
+            end
+            
             % If resolution isn't set fail               
             if isempty(ramonVol.resolution) 
                 error('OCP:ResolutionEmpty',...
@@ -1622,21 +1892,31 @@ classdef OCP < handle
                     'XYZ Offset empty in RAMONVolume.  You must set this before uploading block style data!');
             end
             
-            % If upload type doesn't match database fail
-            if ((this.annoInfo.PROJECT.TYPE) ~= uint32(ramonVol.dataType))
+            % If upload datatype doesn't match database datatype fail
+            annoDataType = this.annoChanInfo.DATATYPE{1};
+            if eRAMONChannelDataType.(annoDataType) ~= ramonVol.dataType
                 error('OCP:DataTypeMismatch',...
-                    'The RAMONVolume type does not match the database you are trying to upload to. Project: %d - Database: %d',...
-                    this.annoInfo.PROJECT.TYPE,uint32(ramonVol.dataType));
+                    'The RAMONVolume data type does not match the database you are trying to upload to. Project: %s - Database: %s',...
+                    annoDataType,char(ramonVol.dataType));
             end
-                  
+
+            % If upload type doesn't match database type fail     
+            annoChanType = this.annoChanInfo.TYPE{1};
+            if eRAMONChannelType.(annoChanType) ~= ramonVol.channelType
+                error('OCP:DataTypeMismatch',...
+                    'The RAMONVolume type does not match the database you are trying to upload to. Project: %s - Database: %s',...
+                    annoChanType,char(ramonVol.channelType));
+            end
+
             % Create HDF5 file
             hdfFile = OCPHdf(ramonVol);
                         
                     
             % Build URL           
-            urlStr = sprintf('%socp/ca/%s/hdf5/%d/%d,%d/%d,%d/%d,%d/%s/',...
+            urlStr = sprintf('%s/ocp/ca/%s/%s/hdf5/%d/%d,%d/%d,%d/%d,%d/%s/',...
                             this.serverLocation,...
                             this.annoToken,...
+                            this.annoChannel,...
                             ramonVol.resolution,...
                             ramonVol.xyzOffset(1), ramonVol.xyzOffset(1) + ramonVol.size(2),...
                             ramonVol.xyzOffset(2),ramonVol.xyzOffset(2) + ramonVol.size(1),...
@@ -1690,23 +1970,25 @@ classdef OCP < handle
                     'XYZ Offset empty in RAMONVolume.  You must set this before uploading block style data!');
             end
             
-            % If upload type doesn't match database fail
-            if ((this.imageInfo.PROJECT.TYPE) ~= uint32(ramonVol.dataType))
+            % If data type doesn't match database fail
+            imgDataType = this.imageChanInfo.DATATYPE{1};
+            if eRAMONChannelDataType.(imgDataType) ~= ramonVol.dataType
                 error('OCP:DataTypeMismatch',...
-                    'The RAMONVolume type does not match the database you are trying to upload to. Project: %d - Database: %d',...
-                    this.annoInfo.PROJECT.TYPE,uint32(ramonVol.dataType));
+                    'The RAMONVolume type does not match the database you are trying to upload to. Project: %s - Database: %s',...
+                    this.imageChanInfo.DATATYPE,ramonVol.dataType);
             end
                   
             % Create HDF5 file
             hdfFile = OCPHdf(ramonVol);                        
                     
             % Build URL           
-            urlStr = sprintf('%socp/ca/%s/hdf5/%d/%d,%d/%d,%d/%d,%d/%s/',...
+            urlStr = sprintf('%s/ocp/ca/%s/%s/hdf5/%d/%d,%d/%d,%d/%d,%d/%s/',...
                             this.serverLocation,...
                             this.imageToken,...
+                            this.imageChannel,...
                             ramonVol.resolution,...
-                            ramonVol.xyzOffset(1), ramonVol.xyzOffset(1) + ramonVol.size(2),...
-                            ramonVol.xyzOffset(2),ramonVol.xyzOffset(2) + ramonVol.size(1),...
+                            ramonVol.xyzOffset(1), ramonVol.xyzOffset(1) + ramonVol.size(1),...
+                            ramonVol.xyzOffset(2),ramonVol.xyzOffset(2) + ramonVol.size(2),...
                             ramonVol.xyzOffset(3),ramonVol.xyzOffset(3) + ramonVol.size(3),...
                             char(conflictOption));
           
@@ -1734,54 +2016,36 @@ classdef OCP < handle
         function url = buildCutoutUrl(this, qObj)
             % This method build the url for a cutout type query.  It
             % selects the correct service and token automatically.
-            isMulti = false;
+%             isMulti = false;
             switch qObj.type
                 case eOCPQueryType.imageDense
-                    service = 'ocp/ca';
+                    service = '/ocp/ca';
                     token = this.imageToken;
+                    channel = this.imageChannel;
                     qObj.setFilterIds([]);
-                    if (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
-                        (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels8)
-                        isMulti = true;
-                    end
+                    % AB TODO -- kill this, (I think)
+%                     if (this.imageChanInfo.TYPE == eRAMONDataType.channels16) || ...
+%                         (this.imageChanInfo.TYPE == eRAMONDataType.channels8)
+%                         isMulti = true;
+%                     end
                 case eOCPQueryType.annoDense
-                    service = 'ocp/ca';
+                    service = '/ocp/ca';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 case eOCPQueryType.probDense
-                    service = 'ocp/ca';
+                    service = '/ocp/ca';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                     qObj.setFilterIds([]);
                 otherwise
                     ex = MException('OCP:NotCutout','Query is not a cutout type.  Cannot build url.');
                     throw(ex);
             end
+  
             
-            if isMulti == true
-                % Multichannel Database!
-                % Build channel string
-                new_channels = cell(length(qObj.channels),1);
-                for ii = 1:length(qObj.channels)
-                    new_channels{ii} = strrep(qObj.channels{ii},'__','-');
-                end
-                channel_str = sprintf('%s,',new_channels{:});
-
-                % build url
-                url = sprintf('%s%s/%s/hdf5/%s/%d/%d,%d/%d,%d/%d,%d/',...
-                    this.serverLocation,...
-                    service,...
-                    token,...
-                    channel_str(1:end-1),...
-                    qObj.resolution,...
-                    qObj.xRange(1),qObj.xRange(2),...
-                    qObj.yRange(1),qObj.yRange(2),...
-                    qObj.zRange(1),qObj.zRange(2));
-
-            else
-                % Don't use channels in normal cutout so clear channels to
-                % support datatype kludge
-                qObj.setChannels([]);
-
-                % normal 
+            % build url
+            if isempty(channel)
+                % Attempt a legacy cutout
                 url = sprintf('%s%s/%s/hdf5/%d/%d,%d/%d,%d/%d,%d/',...
                     this.serverLocation,...
                     service,...
@@ -1790,7 +2054,56 @@ classdef OCP < handle
                     qObj.xRange(1),qObj.xRange(2),...
                     qObj.yRange(1),qObj.yRange(2),...
                     qObj.zRange(1),qObj.zRange(2));
+            else
+                url = sprintf('%s%s/%s/%s/hdf5/%d/%d,%d/%d,%d/%d,%d/',...
+                    this.serverLocation,...
+                    service,...
+                    token,...
+                    channel,...
+                    qObj.resolution,...
+                    qObj.xRange(1),qObj.xRange(2),...
+                    qObj.yRange(1),qObj.yRange(2),...
+                    qObj.zRange(1),qObj.zRange(2));
             end
+
+%              AB Note: As of 1.8.0 we don't support multichannel cutouts.
+%              Perform multiple single channel cutouts instead
+
+%             if isMulti == true
+%                 % Multichannel Database!
+%                 % Build channel string
+%                 new_channels = cell(length(qObj.channels),1);
+%                 for ii = 1:length(qObj.channels)
+%                     new_channels{ii} = strrep(qObj.channels{ii},'__','-');
+%                 end
+%                 channel_str = sprintf('%s,',new_channels{:});
+% 
+%                 % build url
+%                 url = sprintf('%s%s/%s/hdf5/%s/%d/%d,%d/%d,%d/%d,%d/',...
+%                     this.serverLocation,...
+%                     service,...
+%                     token,...
+%                     channel_str(1:end-1),...
+%                     qObj.resolution,...
+%                     qObj.xRange(1),qObj.xRange(2),...
+%                     qObj.yRange(1),qObj.yRange(2),...
+%                     qObj.zRange(1),qObj.zRange(2));
+% 
+%             else
+%                 % Don't use channels in normal cutout so clear channels to
+%                 % support datatype kludge
+%                 qObj.setChannels([]);
+% 
+%                 % normal 
+%                 url = sprintf('%s%s/%s/hdf5/%d/%d,%d/%d,%d/%d,%d/',...
+%                     this.serverLocation,...
+%                     service,...
+%                     token,...
+%                     qObj.resolution,...
+%                     qObj.xRange(1),qObj.xRange(2),...
+%                     qObj.yRange(1),qObj.yRange(2),...
+%                     qObj.zRange(1),qObj.zRange(2));
+%             end
                        
             if ~isempty(qObj.filterIds)
                 % add filter option
@@ -1807,74 +2120,73 @@ classdef OCP < handle
         function url = buildSliceUrl(this, qObj)
             % This method build the url for a slice type query.  It
             % selects the correct service and token automatically.
-            isMulti = false;
+%             isMulti = false;
             switch qObj.type
                 case eOCPQueryType.imageSlice
-                    service = 'ocp/ca';
+                    service = '/ocp/ca';
                     token = this.imageToken;
+                    channel = this.imageChannel;
                     qObj.setFilterIds([]);
-                    if (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels16) || ...
-                        (this.imageInfo.PROJECT.TYPE == eRAMONDataType.channels8)
-                        isMulti = true;
-                    end
                 case eOCPQueryType.annoSlice
-                    service = 'ocp/ca';
+                    service = '/ocp/ca';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 otherwise
                     ex = MException('OCP:NotSlice','Query is not a slice type.  Cannot build url.');
                     throw(ex);
             end
             
+            %AB TODO match the above (after testing) 
             
-            if isMulti == true
-                % Multichannel Database!
-                % Build channel string
-                new_channels = cell(length(qObj.channels),1);
-                for ii = 1:length(qObj.channels)
-                    new_channels{ii} = strrep(qObj.channels{ii},'__','-');
-                end
-                channel_str = sprintf('%s,',new_channels{:});
-                
-                % build url         
-                switch qObj.slicePlane
-                    case eOCPSlicePlane.xy
-                        url = sprintf('%s%s/%s/mcfc/%s/%s/%d/%d,%d/%d,%d/%d/',...
-                            this.serverLocation,...
-                            service,...
-                            token,...
-                            char(qObj.slicePlane),...
-                            channel_str(1:end-1),...
-                            qObj.resolution,...
-                            qObj.aRange(1),qObj.aRange(2),...
-                            qObj.bRange(1),qObj.bRange(2),...
-                            qObj.cIndex(1));
-                        
-                    case eOCPSlicePlane.xz
-                        url = sprintf('%s%s/%s/mcfc/%s/%s/%d/%d,%d/%d/%d,%d/',...
-                            this.serverLocation,...
-                            service,...
-                            token,...
-                            char(qObj.slicePlane),...
-                            channel_str(1:end-1),...
-                            qObj.resolution,...
-                            qObj.aRange(1),qObj.aRange(2),...
-                            qObj.cIndex(1),...
-                            qObj.bRange(1),qObj.bRange(2));
-                        
-                    case eOCPSlicePlane.yz
-                        url = sprintf('%s%s/%s/mcfc/%s/%s/%d/%d/%d,%d/%d,%d/',...
-                            this.serverLocation,...
-                            service,...
-                            token,...
-                            char(qObj.slicePlane),...
-                            channel_str(1:end-1),...
-                            qObj.resolution,...
-                            qObj.cIndex(1),...
-                            qObj.aRange(1),qObj.aRange(2),...
-                            qObj.bRange(1),qObj.bRange(2));
-                end            
-                
-            else
+%             if isMulti == true
+%                 % Multichannel Database!
+%                 % Build channel string
+%                 new_channels = cell(length(qObj.channels),1);
+%                 for ii = 1:length(qObj.channels)
+%                     new_channels{ii} = strrep(qObj.channels{ii},'__','-');
+%                 end
+%                 channel_str = sprintf('%s,',new_channels{:});
+%                 
+%                 % build url         
+%                 switch qObj.slicePlane
+%                     case eOCPSlicePlane.xy
+%                         url = sprintf('%s%s/%s/mcfc/%s/%s/%d/%d,%d/%d,%d/%d/',...
+%                             this.serverLocation,...
+%                             service,...
+%                             token,...
+%                             char(qObj.slicePlane),...
+%                             channel_str(1:end-1),...
+%                             qObj.resolution,...
+%                             qObj.aRange(1),qObj.aRange(2),...
+%                             qObj.bRange(1),qObj.bRange(2),...
+%                             qObj.cIndex(1));
+%                         
+%                     case eOCPSlicePlane.xz
+%                         url = sprintf('%s%s/%s/mcfc/%s/%s/%d/%d,%d/%d/%d,%d/',...
+%                             this.serverLocation,...
+%                             service,...
+%                             token,...
+%                             char(qObj.slicePlane),...
+%                             channel_str(1:end-1),...
+%                             qObj.resolution,...
+%                             qObj.aRange(1),qObj.aRange(2),...
+%                             qObj.cIndex(1),...
+%                             qObj.bRange(1),qObj.bRange(2));
+%                         
+%                     case eOCPSlicePlane.yz
+%                         url = sprintf('%s%s/%s/mcfc/%s/%s/%d/%d/%d,%d/%d,%d/',...
+%                             this.serverLocation,...
+%                             service,...
+%                             token,...
+%                             char(qObj.slicePlane),...
+%                             channel_str(1:end-1),...
+%                             qObj.resolution,...
+%                             qObj.cIndex(1),...
+%                             qObj.aRange(1),qObj.aRange(2),...
+%                             qObj.bRange(1),qObj.bRange(2));
+%                 end            
+%                 
+%             else
                 % Don't use channels in normal cutout so clear channels to
                 % support datatype kludge
                 qObj.setChannels([]);
@@ -1882,10 +2194,11 @@ classdef OCP < handle
                 % normal
                 switch qObj.slicePlane
                     case eOCPSlicePlane.xy
-                        url = sprintf('%s%s/%s/%s/%d/%d,%d/%d,%d/%d/',...
+                        url = sprintf('%s%s/%s/%s/%s/%d/%d,%d/%d,%d/%d/',...
                             this.serverLocation,...
                             service,...
                             token,...
+                            channel,...
                             char(qObj.slicePlane),...
                             qObj.resolution,...
                             qObj.aRange(1),qObj.aRange(2),...
@@ -1893,10 +2206,11 @@ classdef OCP < handle
                             qObj.cIndex(1));
                         
                     case eOCPSlicePlane.xz
-                        url = sprintf('%s%s/%s/%s/%d/%d,%d/%d/%d,%d/',...
+                        url = sprintf('%s%s/%s/%s/%s/%d/%d,%d/%d/%d,%d/',...
                             this.serverLocation,...
                             service,...
                             token,...
+                            channel,...
                             char(qObj.slicePlane),...
                             qObj.resolution,...
                             qObj.aRange(1),qObj.aRange(2),...
@@ -1904,17 +2218,18 @@ classdef OCP < handle
                             qObj.bRange(1),qObj.bRange(2));
                         
                     case eOCPSlicePlane.yz
-                        url = sprintf('%s%s/%s/%s/%d/%d/%d,%d/%d,%d/',...
+                        url = sprintf('%s%s/%s/%s/%s/%d/%d/%d,%d/%d,%d/',...
                             this.serverLocation,...
                             service,...
                             token,...
+                            channel,...
                             char(qObj.slicePlane),...
                             qObj.resolution,...
                             qObj.cIndex(1),...
                             qObj.aRange(1),qObj.aRange(2),...
                             qObj.bRange(1),qObj.bRange(2));
                 end            
-            end
+%             end (end for multi channel, commented out above)
             
             if ~isempty(qObj.filterIds)
                 % add filter option
@@ -1929,18 +2244,24 @@ classdef OCP < handle
         
         %% Private Method - Build URL - Overlay
         function url = buildOverlayUrl(this, qObj)
-            % This method build the url for a overlay type query.         
+            % This method build the url for a overlay type query.
+            % overlay service:
+            % ocp/overlay/alpha/server1/token1/channel1/server2/token2/channel2/cutout
             service = 'ocp/overlay';
-            token = this.annoToken;  
-        
+            server = this.serverLocation(8:end); % strip http:// off server location
             
             switch qObj.slicePlane
                 case eOCPSlicePlane.xy
-                    url = sprintf('%s%s/%0.1f/%s/%s/%d/%d,%d/%d,%d/%d/',...
+                    url = sprintf('%s/%s/%0.1f/%s/%s/%s/%s/%s/%s/%s/%d/%d,%d/%d,%d/%d/',...
                         this.serverLocation,...
                         service,...
                         qObj.overlayAlpha,...
-                        token,...
+                        server,...
+                        this.annoToken,...
+                        this.annoChannel,...
+                        server,...
+                        this.imageToken,...
+                        this.imageChannel,...
                         char(qObj.slicePlane),...
                         qObj.resolution,...
                         qObj.aRange(1),qObj.aRange(2),...
@@ -1948,11 +2269,16 @@ classdef OCP < handle
                         qObj.cIndex(1));
                     
                 case eOCPSlicePlane.xz
-                    url = sprintf('%s%s/%0.1f/%s/%s/%d/%d,%d/%d/%d,%d/',...
+                    url = sprintf('%s/%s/%0.1f/%s/%s/%s/%s/%s/%s/%s/%d/%d,%d/%d/%d,%d/',...
                         this.serverLocation,...
                         service,...
                         qObj.overlayAlpha,...
-                        token,...
+                        server,...
+                        this.annoToken,...
+                        this.annoChannel,...
+                        server,...
+                        this.imageToken,...
+                        this.imageChannel,...
                         char(qObj.slicePlane),...
                         qObj.resolution,...
                         qObj.aRange(1),qObj.aRange(2),...
@@ -1960,11 +2286,16 @@ classdef OCP < handle
                         qObj.bRange(1),qObj.bRange(2));
                     
                 case eOCPSlicePlane.yz
-                    url = sprintf('%s%s/%0.1f/%s/%s/%d/%d/%d,%d/%d,%d/',...
+                    url = sprintf('%s/%s/%0.1f/%s/%s/%s/%s/%s/%s/%s/%d/%d/%d,%d/%d,%d/',...
                         this.serverLocation,...
                         service,...
                         qObj.overlayAlpha,...
-                        token,...
+                        server,...
+                        this.annoToken,...
+                        this.annoChannel,...
+                        server,...
+                        this.imageToken,...
+                        this.imageChannel,...
                         char(qObj.slicePlane),...
                         qObj.resolution,...
                         qObj.cIndex(1),...
@@ -1991,15 +2322,19 @@ classdef OCP < handle
                 case eOCPQueryType.RAMONDense
                     option = 'cutout';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 case eOCPQueryType.RAMONVoxelList
                     option = 'voxels';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 case eOCPQueryType.RAMONMetaOnly
                     option = 'nodata';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 case eOCPQueryType.RAMONBoundingBox
                     option = 'boundingbox';
                     token = this.annoToken;
+                    channel = this.annoChannel;
                 otherwise
                     ex = MException('OCP:NotRAMON','Query is not a RAMON type.  Cannot build url.');
                     throw(ex);
@@ -2021,9 +2356,10 @@ classdef OCP < handle
                     isempty(qObj.yRange) && ...
                     isempty(qObj.zRange)
                 % Add resolution
-                url = sprintf('%socp/ca/%s/%s/%s/%d/',...
+                url = sprintf('%s/ocp/ca/%s/%s/%s/%s/%d/',...
                     this.serverLocation,...
                     token,...
+                    channel,...
                     idStr,...
                     option,...
                     qObj.resolution);
@@ -2032,9 +2368,10 @@ classdef OCP < handle
                     ~isempty(qObj.yRange) && ...
                     ~isempty(qObj.zRange)
                 % Add resolution
-                url = sprintf('%socp/ca/%s/%s/%s/%d/%d,%d/%d,%d/%d,%d/',...
+                url = sprintf('%s/ocp/ca/%s/%s/%s/%s/%d/%d,%d/%d,%d/%d,%d/',...
                     this.serverLocation,...
                     token,...
+                    channel,...
                     idStr,...
                     option,...
                     qObj.resolution,...
@@ -2043,9 +2380,10 @@ classdef OCP < handle
                     qObj.zRange(1),qObj.zRange(2));
             else
                 % Don't
-                url = sprintf('%socp/ca/%s/%s/%s/',...
+                url = sprintf('%s/ocp/ca/%s/%s/%s/%s/',...
                     this.serverLocation,...
                     token,...
+                    channel,...
                     idStr,...
                     option);
             end
@@ -2084,15 +2422,17 @@ classdef OCP < handle
                 end
                 
                 % build url
-                url = sprintf('%socp/ca/%s/query/%s',...
+                url = sprintf('%s/ocp/ca/%s/%s/query/%s',...
                     this.serverLocation,...
                     this.annoToken,...
+                    this.annoChannel,...
                     predicateStr);
             else
                 % no predicates listed so get ids of everything
-                url = sprintf('%socp/ca/%s/query/',...
+                url = sprintf('%s/ocp/ca/%s/%s/query/',...
                     this.serverLocation,...
-                    this.annoToken);
+                    this.annoToken,...
+                    this.annoChannel);
             end
             
             % if there is a list limit supplied append it to the URL
@@ -2111,9 +2451,10 @@ classdef OCP < handle
                 qObj.setResolution(this.defaultResolution);
             end
             
-            url = sprintf('%socp/ca/%s/id/%d/%d/%d/%d/',...
+            url = sprintf('%s/ocp/ca/%s/%s/id/%d/%d/%d/%d/',...
                 this.serverLocation,...
                 this.getAnnoToken(),...
+                this.annoChannel(),...
                 qObj.resolution,...
                 qObj.xyzCoord(1),...
                 qObj.xyzCoord(2),...
@@ -2167,20 +2508,21 @@ classdef OCP < handle
             end
                  
             % Build URL
-            url = sprintf('%socp/ca/%s/%d/setField/%s/%s/',...
-                this.serverLocation,this.annoToken,id,field,strVal);
+            url = sprintf('%s/ocp/ca/%s/%s/setField/%d/%s/%s/',...
+                this.serverLocation,this.annoToken,this.annoChannel,id,field,strVal);
             
             
         end
         
         %% Private Method - getPropagate checks token propagate status
-        function status = getPropagateStatus(this, token)
+        function status = getPropagateStatus(this, token, channel)
             validateattributes(token,{'char'},{'nonempty'});
+            validateattributes(channel,{'char'},{'nonempty'});
             
             % Build URL
-            url = sprintf('%socp/ca/%s/getPropagate/',...
-                this.serverLocation,token);
-            
+            url = sprintf('%s/ocp/ca/%s/%s/getPropagate/',...
+                this.serverLocation,token,channel);
+           
             % Query DB and get HDF5 File
             resp = this.net.read(url);
             
@@ -2189,8 +2531,9 @@ classdef OCP < handle
         end
         
          %% Private Method - setPropagate sets token propagate status
-        function setPropagateStatus(this, token, status)
+        function setPropagateStatus(this, token, channel, status)
             validateattributes(token,{'char'},{'nonempty'});
+            validateattributes(channel,{'char'},{'nonempty'});
             validateattributes(status,{'numeric'},{'finite','nonnegative','integer','nonnan','real','scalar'});
             
             % Validate status and convert to int
@@ -2205,8 +2548,8 @@ classdef OCP < handle
             status = int32(status);
             
             % Build URL
-            url = sprintf('%socp/ca/%s/setPropagate/%d/',...
-                this.serverLocation,token,status);
+            url = sprintf('%s/ocp/ca/%s/%s/setPropagate/%d/',...
+                this.serverLocation,token,channel,status);
             
             % Query DB and get HDF5 File
             this.net.read(url);
@@ -2269,7 +2612,8 @@ classdef OCP < handle
         
         %% Private Method - Build set dataType on annotation create
         
-        function data_object = checkSetDataType(this, data_object)
+        function data_object = checkSetTypes(this, data_object)
+            % checks and sets both the ChannelDataType and the ChannelType
             if iscell(data_object) == 1
                 % Check all cell objects
                 for ii = 1:length(data_object)
@@ -2280,32 +2624,64 @@ classdef OCP < handle
                         break
                     end
                     
+                    % set DataType
+                    chanDataType = this.annoChanInfo.DATATYPE{1};
                     if ~isempty(data_object{ii}.dataType)
                         % check that types match
-                        if uint32(data_object{ii}.dataType) ~= this.annoInfo.PROJECT.TYPE
-                            error('OCP:CheckSetDataType','Data type mismatch between project (%d) and object (%d)',...
-                                this.annoInfo.PROJECT.TYPE,data_object{ii}.dataType)
+                        if uint32(data_object{ii}.dataType) ~= eRAMONChannelDataType.(chanDataType)
+                            error('OCP:CheckSetDataType','Data type mismatch between project (%s) and object (%s)',...
+                                chanDataType,data_object{ii}.dataType)
                         end
                     else
                         % set data type to db value
-                        data_object{ii}.setDataType(this.annoInfo.PROJECT.TYPE);
-                    end 
+                        data_object{ii}.setDataType(eRAMONChannelDataType.(chanDataType));
+                    end
+                    
+                    % set ChannelType
+                    chanType = this.annoChanInfo.TYPE{1};
+                    if ~isempty(data_object{ii}.channelType)
+                        % check that types match
+                        if uint32(data_object{ii}.channelType) ~= eRAMONChannelType.(chanType)
+                            error('OCP:CheckSetDataType','Channel type mismatch between project (%s) and object (%s)',...
+                                chanType,data_object{ii}.channelType)
+                        end
+                    else
+                        % set channel type to db value
+                        data_object{ii}.setChannelType(eRAMONChannelType.(chanType));
+                    end                     
                 end
 
             else
                 % Single object
                 classes = strfind(superclasses(data_object),'RAMONVolume');
                 if any([classes{:}]) == 1 
+                    
+                    % set DataType
+                    chanDataType = this.annoChanInfo.DATATYPE{1};
                     if ~isempty(data_object.dataType)
                         % check that types match
-                        if uint32(data_object.dataType) ~= this.annoInfo.PROJECT.TYPE
-                            error('OCP:CheckSetDataType','Data type mismatch between project (%d) and object (%d)',...
-                                this.annoInfo.PROJECT.TYPE,data_object.dataType)
+                        if uint32(data_object.dataType) ~= eRAMONChannelDataType.(chanDataType)
+                            error('OCP:CheckSetDataType','Data type mismatch between project (%s) and object (%s)',...
+                                chanDataType,data_object.dataType)
                         end
                     else
                         % set data type to db value
-                        data_object.setDataType(this.annoInfo.PROJECT.TYPE);
+                        data_object.setDataType(eRAMONChannelDataType.(chanDataType));
                     end
+                    
+                    % set ChannelType
+                    chanType = this.annoChanInfo.TYPE{1};
+                    if ~isempty(data_object.channelType)
+                        % check that types match
+                        if uint32(data_object.channelType) ~= eRAMONChannelType.(chanType)
+                            error('OCP:CheckSetDataType','Channel type mismatch between project (%s) and object (%s)',...
+                                chanType,data_object.channelType)
+                        end
+                    else
+                        % set channel type to db value
+                        data_object.setChannelType(eRAMONChannelType.(chanType));
+                    end
+                    
                 end
             end
         end

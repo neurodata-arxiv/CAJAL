@@ -247,7 +247,9 @@ classdef OCPNetwork < handle
         end
         
         %% test URL
-        function testUrl(this,urlStr)
+        function testUrl(this,urlStrBase)
+            % urlStr does NOT have a trailing /  
+            urlStr = strcat(urlStrBase, '/ocp/accounts/login/');
             try
                 % Get the data
                 responseCode = this.jUrl.read(urlStr,false);

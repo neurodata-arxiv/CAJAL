@@ -24,10 +24,16 @@ classdef RAMONBase < handle
     
     properties(SetAccess = 'private', GetAccess = 'public')
         id                  % Unique 32bit ID value assigned by OCP database
+        channel             % Name of the channel corresponding to this object (for creating HDF5 files)
         confidence          % Value 0-1 indicating confidence in annotation
         dynamicMetadata     % A flexible, unspecified collection key-value pairs
         status              % Status of annotation in database
-        author              % username of the person who created the annotation
+        author              % username of the person who created the annotation   
+        
+        % All posted HDF5 files must have a ChannelType and DataType. These
+        % fields are included in all RAMON objects now for simplicity. 
+        dataType = [] % eRAMONChannelDataType
+        channelType = [] % eRAMONChannelType 
     end
     
     methods
@@ -120,6 +126,16 @@ classdef RAMONBase < handle
             end
             
             this.author = value;
+        end
+                 
+        function this = setChannel(this,name)
+            % Sets the channel name (str) 
+            if isa(name, 'char')
+                this.channel = name;
+            else
+                ex = MException('RAMONVolume:ChannelNameTypeError','Channel name field must be a character string.');
+                throw(ex);
+            end
         end
         
         function this = setStatus(this,value)
@@ -248,6 +264,76 @@ classdef RAMONBase < handle
             value = this.dynamicMetadata(key);
         end
         
+        
+        function this = setDataType(this,type)        
+            % This member function sets the volume object datatype field.
+            % The datatype field corresponds to the representation of data
+            % in the DB. Examples include uint8, uint16, uint32, float32,
+            % etc. See eRAMONChannelDataType for all. 
+            % 
+            % The data will be converted to this type on upload! If there
+            % is a mismatch between your data and the selected type
+            % information could be lost. If there is a mismatch between the
+            % database data type (specified by the token) and the upload
+            % type the upload will fail.
+            
+            % ignore for non-volume objects
+            if (strcmpi(class(this),'RAMONVolume'))
+                
+                if isempty(type)
+                    ex = MException('RAMONBase:EmptyDataType',sprintf('Supplied data type is empty!'));
+                    throw(ex);
+                end
+
+                if isa(type, 'eRAMONChannelDataType')
+                    % Is of Type eRAMONChannelDataType
+
+                else
+                    % Is not of type eRAMONDataType
+                    %validateattributes(type,{'numeric'},{'finite','nonnegative','integer','nonnan','real'});
+                    try
+                        if ischar(type)
+                            type = eRAMONChannelDataType.(type);
+                        else
+                            type = eRAMONChannelDataType.(char(type));
+                        end
+                    catch ME
+                        rethrow(ME);
+                    end
+                end
+
+                this.dataType = type;
+            end
+        end
+
+        function this = setChannelType(this,type)        
+            % This member function sets the volume object database type field.
+            % This specifies types like annotation, probmap, etc. See
+            % eRAMONChannelType.
+            if (strcmpi(class(this),'RAMONVolume'))
+                if isempty(type)
+                    ex = MException('RAMONBase:EmptyChannelType',sprintf('Supplied channel type is empty!'));
+                    throw(ex);
+                end                        
+                if isa(type, 'eRAMONChannelType')
+                    % Is of Type eRAMONChannelType
+                    this.channelType = type;
+                else
+                    try
+                        if ischar(type)
+                            type = eRAMONChannelType.(type);
+                        else
+                            type = eRAMONChannelType.(char(type));
+                        end
+                    catch ME
+                        rethrow(ME);
+                    end
+                end
+                this.channelType = type;
+            end
+        end
+
+        
         function handle = clone(this, ~)
            % Perform a deep copy because these are handles and not objects
            % default using the = operator just copies the handle and not
@@ -290,6 +376,8 @@ classdef RAMONBase < handle
             ramonObj.setDynamicMetadata(this.dynamicMetadata);
             ramonObj.setStatus(this.status);
             ramonObj.setAuthor(this.author);
+            ramonObj.setDataType(this.dataType);
+            ramonObj.setChannelType(this.channelType);
         end 
        
         function metadataConstructHelper(this,var)
@@ -317,6 +405,8 @@ classdef RAMONBase < handle
             handle.setDynamicMetadata(this.dynamicMetadata);
             handle.setStatus(this.status);
             handle.setAuthor(this.author); 
+            handle.setDataType(this.dataType);
+            handle.setChannelType(this.channelType);
         end
     end
     

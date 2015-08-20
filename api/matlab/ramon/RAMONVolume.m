@@ -27,26 +27,13 @@ classdef RAMONVolume < RAMONBase
         
         name = 'Volume1';       % Descriptive display name to give the cube
         sliceDisplayIndex = 1;     % Contains Z index for slice to display
-        
+               
         dataFormat = []; % Property indicating the format of the data property
         % eRAMONDataFormat.dense - dense NxMxKx.. voxel cutout
         % eRAMONDataFormat.voxelList - Nx3 XYZ coordinates
         % of labled voxels
         % eRAMONDataFormat.boundingBox - 1x3 X,Y,Z span (from xyzOffset start point)
         data = [];	% Property containing voxel data
-        
-        % This indicates what datatype this RAMONVolume represents.  Since
-        % developers often just make everything doubles in MATLAB
-        % autodetecting this is unreliable.
-        % DEPRICATED.  WILL BE REMOVED IN FUTURE VERSIONS
-        uploadType = []
-        % DEPRICATED.  WILL BE REMOVED IN FUTURE VERSIONS 
-
-        % This indicates what datatype this RAMONVolume represents.  Since
-        % developers often just make everything doubles in MATLAB
-        % autodetecting this is unreliable.  This is automatically synced automatically with
-        % the database project type when possible.
-        dataType = []
     end
     
     methods
@@ -181,44 +168,7 @@ classdef RAMONVolume < RAMONBase
                 throw(ex);
             end
         end
-                
-        function this = setUploadType(this,type)        
-            % This member function sets the volume object upload type field.
-            % The data will be converted to this type on upload! If there
-            % is a mismatch between your data and the selected type
-            % information could be lost. If there is a mismatch between the
-            % database data type (specified by the token) and the upload
-            % type the upload will fail.
-
-            error('RAMONVolume:MethodDepricated', 'setUploadType has been depricated.  Use setDataType and eRAMONDataType instead. Note, this property now is automatically set by the OCP class in most cases.')
-                        
-        end
         
-        function this = setDataType(this,type)        
-            % This member function sets the volume object datatype field.
-            % The data will be converted to this type on upload! If there
-            % is a mismatch between your data and the selected type
-            % information could be lost. If there is a mismatch between the
-            % database data type (specified by the token) and the upload
-            % type the upload will fail.
-                        
-            if isa(type, 'eRAMONDataType')
-                % Is of Type eRAMONDataType
-                
-            else
-                % Is not of type eRAMONDataType
-                validateattributes(type,{'numeric'},{'finite','nonnegative','integer','nonnan','real'});
-                try
-                    type = eRAMONDataType(type);
-                catch ME
-                    rethrow(ME);
-                end
-            end
-            
-            this.dataType = type;
-        end
-
-
         function handle = clone(this,option)
             % Perform a deep copy because these are handles and not objects
             % default using the = operator just copies the handle and not
