@@ -60,6 +60,7 @@ function cubeCutout(dataset, queryFile, outputFile, useSemaphore, objectType, se
     
     oo.setServerLocation(serviceLocation);
     oo.setImageToken(dataset);
+
     
     %% Load Query
     queryObj = OCPQuery.open(queryFile);
