@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic Usage &mdash; CAJAL v1.0 documentation</title>
+  <title>Basic Usage &mdash; cajal v1.0 documentation</title>
   
 
   
@@ -32,7 +32,8 @@
   
 
   
-    <link rel="top" title="CAJAL v1.0 documentation" href="../index.html"/>
+    <link rel="top" title="cajal v1.0 documentation" href="../index.html"/>
+        <link rel="next" title="manno Functions" href="../api/functions.html"/>
         <link rel="prev" title="Frequently Asked Questions (FAQ)" href="../sphinx/faq.html"/> 
 
   
@@ -50,7 +51,7 @@
         
 
         
-          <a href="../index.html" class="icon icon-home"> CAJAL
+          <a href="../index.html" class="icon icon-home"> cajal
         
 
         
@@ -87,21 +88,20 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Basic Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#train-protocol">Train Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#deploy-protocol">Deploy Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#protocol">Protocol</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#usage-notes">Usage Notes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#validation">Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#advanced-topics-future-functionality">Advanced Topics/Future Functionality</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">Further Reading</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/CAJAL">Gitter chatroom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">manno Functions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/manno">Gitter chatroom</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/ocp-support/">Mailing List</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL">Github repo</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL/releases/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno/releases/">Release Notes</a></li>
 </ul>
 
           
@@ -115,7 +115,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">CAJAL</a>
+        <a href="../index.html">cajal</a>
       </nav>
 
 
@@ -141,8 +141,8 @@
             
   <div class="section" id="basic-usage">
 <h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="train-protocol">
-<h2>Train Protocol<a class="headerlink" href="#train-protocol" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="protocol">
+<h2>Protocol<a class="headerlink" href="#protocol" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Identify a region of interest in OCP, and note the data server, token, resolution, and coordinates</li>
 <li>Create a query, using the instructions for CAJAL</li>
@@ -152,14 +152,9 @@
 <li>Run <em>manno_putAnno.m</em>, specifying the server, token, annotation file, and query used to download the underlying image. Users may choose to run a simple connected component post-processing step to break each group of connected pixels (3D) into a separate ID. More complicated post-processing should be done outside of the tool, with the result uploaded using the ocp_upload_dense.m function (see CAJAL documentation).</li>
 </ul>
 </div>
-<div class="section" id="deploy-protocol">
-<h2>Deploy Protocol<a class="headerlink" href="#deploy-protocol" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="usage-notes">
 <h2>Usage Notes<a class="headerlink" href="#usage-notes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>OCP in Ilastik</li>
-<li>Functions of Ilastik are documented at Ilastik</li>
 <li>For more information on painting annotations, please follow the steps outlined <a class="reference external" href="http://www.itksnap.org/pmwiki/pmwiki.php?n=Documentation.TutorialSectionManualSegmentation">here</a>.</li>
 <li>Currently, only single channel 8-bit image data is supported</li>
 <li>ITK-Snap is compatible with a variety of input data formats; the most straightforward is NIFTI, a general purpose neuroimaging format. On laptops or smaller workstations, only a small portion of a slice/volume should be truthed at a time for memory reasons.</li>
@@ -215,15 +210,8 @@
 <a class="reference external" href="http://braingraph1dev.cs.jhu.edu/ocp/overlay/0.7/temp2/xy/1/5472,5972/8712,9212/1031/">http://braingraph1dev.cs.jhu.edu/ocp/overlay/0.7/temp2/xy/1/5472,5972/8712,9212/1031/</a></p>
 <p>Note that the server and token pair listed here are public and other data may be pre-existing.</p>
 <div class="figure">
-<img alt="tutorials/../images/manno_example_result.png" src="tutorials/../images/manno_example_result.png" />
+<img alt="../_images/manno_example_result.png" src="../_images/manno_example_result.png" />
 </div>
-</div>
-<div class="section" id="advanced-topics-future-functionality">
-<h2>Advanced Topics/Future Functionality<a class="headerlink" href="#advanced-topics-future-functionality" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>When uploading annotations processed as many small cubes, often some sort of padding or stitching operation is required.  These will differ slightly depending on use cases.  Examples exist (e.g., i2g, vesicle) to use as a starting point</li>
-<li>ilastik also supports object detection classifiers and manual labeling.  Our wrappers should work unchanged.  The only changes expected are with the users&#8217; ilastik application.  Please let us know if you would like us to develop these protocols.</li>
-</ul>
 </div>
 </div>
 
@@ -232,6 +220,8 @@
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../api/functions.html" class="btn btn-neutral float-right" title="manno Functions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../sphinx/faq.html" class="btn btn-neutral" title="Frequently Asked Questions (FAQ)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

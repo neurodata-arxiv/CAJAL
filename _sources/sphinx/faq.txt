@@ -11,8 +11,8 @@ Please begin with the configuration page, which should get you up and running in
 
 **What are the limitations of your protocol?**
 
-This initial version of ocp-ilastik provides a simple wrapper of ilastik functionality and instructions for running in the OCP ecosystem.   We have only tested 8-bit single channel data, although we use multipage TIFFs for interfacing between the two tools, so many datatypes will likely work.
+This initial version of manno is an annotation protocol that depends on ITKSnap.  So any annotations that are possible in ITKSnap are possible in manno.  We do not currently support metadata export, or data downloads other than 8-bit, single channel. 
 
 **What updates are planned?**
 
-We develop new functionality in response to user needs.  We are currently considering wrappers for ilastik object detection, manual annotation, and more complete documentation of OCP data loading in ilastik (an existing capability).  If these are useful additions for you, please let us know!
+We develop new functionality in response to user needs.  We are currently considering wrappers for tools such as Ilastik, Fiji, Raveler and others.  If you have a favorite tool or datatype that is not currently supported, please let us know!

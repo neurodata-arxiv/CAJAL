@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>LONI Use Cases &mdash; CAJAL v1.0 documentation</title>
+  <title>manno Functions &mdash; cajal v1.0 documentation</title>
   
 
   
@@ -32,9 +32,8 @@
   
 
   
-    <link rel="top" title="CAJAL v1.0 documentation" href="../index.html"/>
-        <link rel="next" title="LONI Functions" href="loni_functions.html"/>
-        <link rel="prev" title="LONI Basic Usage" href="loni_basic_usage.html"/> 
+    <link rel="top" title="cajal v1.0 documentation" href="../index.html"/>
+        <link rel="prev" title="Basic Usage" href="../tutorials/basic_usage.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -51,7 +50,7 @@
         
 
         
-          <a href="../index.html" class="icon icon-home"> CAJAL
+          <a href="../index.html" class="icon icon-home"> cajal
         
 
         
@@ -79,6 +78,7 @@
               <p class="caption"><span class="caption-text">Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../sphinx/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/local_config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sphinx/ocp.html">OCP</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../sphinx/ocp.html#contributing">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sphinx/ocp.html#style-guides">Style Guides</a></li>
@@ -86,36 +86,21 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/basic_usage.html">Basic Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#protocol">Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#usage-notes">Usage Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#validation">Validation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">RAMON Data Model</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../ramon/ramon_intro.html">RAMON Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ramon/ramon_types.html">RAMON Types</a></li>
-</ul>
-<p class="caption"><span class="caption-text">CAJAL Toolbox</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../cajal/cajal_intro.html">CAJAL Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cajal/cajal_local_config.html">CAJAL Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cajal/cajal_basic_usage.html">CAJAL Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cajal/cajal_usecases.html">CAJAL Use Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cajal/cajal_functions.html">CAJAL Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cajal/cajal_modules.html">CAJAL Modules</a></li>
-</ul>
-<p class="caption"><span class="caption-text">LONI and OCP</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="loni_intro.html">LONI Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="loni_local_config.html">LONI Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="loni_basic_usage.html">LONI Basic Usage</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">LONI Use Cases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="loni_functions.html">LONI Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="loni_modules.html">LONI Modules</a></li>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Further Reading</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/CAJAL">Gitter chatroom</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">manno Functions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/manno">Gitter chatroom</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/ocp-support/">Mailing List</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL">Github repo</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL/releases/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno/releases/">Release Notes</a></li>
 </ul>
 
           
@@ -129,7 +114,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">CAJAL</a>
+        <a href="../index.html">cajal</a>
       </nav>
 
 
@@ -140,11 +125,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>LONI Use Cases</li>
+    <li>manno Functions</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/loni/loni_usecases.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/functions.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -153,8 +138,9 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="loni-use-cases">
-<h1>LONI Use Cases<a class="headerlink" href="#loni-use-cases" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="manno-functions">
+<h1>manno Functions<a class="headerlink" href="#manno-functions" title="Permalink to this headline">¶</a></h1>
+<p><em>For questions on these functions, please contact Will Gray Roncal at wgr&#64;jhu.edu</em></p>
 </div>
 
 
@@ -163,10 +149,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="loni_functions.html" class="btn btn-neutral float-right" title="LONI Functions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="loni_basic_usage.html" class="btn btn-neutral" title="LONI Basic Usage" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../tutorials/basic_usage.html" class="btn btn-neutral" title="Basic Usage" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
