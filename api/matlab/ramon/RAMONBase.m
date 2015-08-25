@@ -1,27 +1,27 @@
 classdef RAMONBase < handle
- %RAMONBase ************************************************
-    % Base Annotation class.  All RAMON annotations contain this
-    % commen set of information
+    % RAMONBase is the basic class for RAMON types. All RAMON types inherit
+    % this class.
     %
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Copyright 2015 The Johns Hopkins University / Applied Physics Laboratory 
-    % All Rights Reserved. 
-    % Contact the JHU/APL Office of Technology Transfer for any additional rights.  
-    % www.jhuapl.edu/ott
-    %  
-    % Licensed under the Apache License, Version 2.0 (the "License");
-    % you may not use this file except in compliance with the License.
-    % You may obtain a copy of the License at
-    %  
-    %     http://www.apache.org/licenses/LICENSE-2.0
-    %  
-    % Unless required by applicable law or agreed to in writing, software
-    % distributed under the License is distributed on an "AS IS" BASIS,
-    % WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    % See the License for the specific language governing permissions and
-    % limitations under the License.
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+    % **Properties**
+    %
+    %	:id: [int32]    Unique 32bit ID value assigned by OCP database
+    %
+    %	:channel: [string]  Name of the channel corresponding to this object (for creating HDF5 files)
+    %
+    %	:confidence: [float]    Value 0-1 indicating confidence in annotation
+    %
+    %	:dynamicMetadata: [string array] A flexible, unspecified collection key-value pairs
+    %
+    %	:status: [flag] Status of annotation in database
+    %
+    %   :author: [string]   username of the person who created the annotation
+    %
+    % **Methods**
+    %
+    %
+    %
+
+
     properties(SetAccess = 'private', GetAccess = 'public')
         id                  % Unique 32bit ID value assigned by OCP database
         channel             % Name of the channel corresponding to this object (for creating HDF5 files)
