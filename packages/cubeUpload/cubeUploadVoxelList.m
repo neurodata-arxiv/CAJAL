@@ -1,4 +1,4 @@
-function cubeUploadVoxelList(server, token, RAMONVolume, protoRAMON, useSemaphore, outFile)
+function cubeUploadVoxelList(server, token, channel, RAMONVolume, protoRAMON, useSemaphore, outFile)
 
 % W. Gray Roncal
 
@@ -17,6 +17,7 @@ end
 
 oo.setServerLocation(server);
 oo.setAnnoToken(token);
+oo.setAnnoChannel(channel);
 
 % Load data volume
 if ischar(RAMONVolume)
