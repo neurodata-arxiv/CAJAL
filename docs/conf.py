@@ -53,7 +53,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.pngmath',
     'sphinx.ext.viewcode',
-    'sphinxcontrib.matlab'
+    'sphinxcontrib.matlab',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
