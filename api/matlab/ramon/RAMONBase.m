@@ -36,6 +36,7 @@ classdef RAMONBase < handle
         channelType = [] % eRAMONChannelType 
     end
     
+    
     methods
         function this = RAMONBase(varargin)
             % Assign fields based on input arguments
