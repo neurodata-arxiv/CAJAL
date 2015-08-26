@@ -20,6 +20,8 @@ end
 oo.setServerLocation(server);
 oo.setAnnoToken(token);
 oo.setAnnoChannel(channel);
+oo.setChannel(channel);
+
 
 % Load data volume
 if ischar(volume)
@@ -30,7 +32,7 @@ else
 end
 
 %% Upload to OCP
-
+tic
 % relabel Paint
 fprintf('Relabling: ');
 if ~probability
