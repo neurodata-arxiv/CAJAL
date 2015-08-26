@@ -1,7 +1,5 @@
 function uploadLabels(server, token, channel, volume, idFile, probability, useSemaphore, varargin)
 
-% W. Gray Roncal
-
 % Function to upload objects in a RAMON volume as a denseVolume
 
 % Requires that all objects begin from a common prototype, and that
@@ -9,7 +7,7 @@ function uploadLabels(server, token, channel, volume, idFile, probability, useSe
 % offset)
 % This only supports anno32 data for now and the preserve anno option
 
-if nargin > 7
+if nargin > 8
     outFile = varargin{1};
 end
 
@@ -37,6 +35,8 @@ end
 fprintf('Relabling: ');
 if ~probability
     labels = uint32(cube.data); %TODO - loss of precision if nid > 2^32
+else
+    labels = double(cube.data);
 end
 [zz, n] = relabel_id(labels);
 
