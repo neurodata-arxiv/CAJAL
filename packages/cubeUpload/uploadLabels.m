@@ -20,8 +20,6 @@ end
 oo.setServerLocation(server);
 oo.setAnnoToken(token);
 oo.setAnnoChannel(channel);
-oo.setChannel(channel);
-
 
 % Load data volume
 if ischar(volume)
@@ -72,6 +70,6 @@ toc
 if exist('outFile')
     save(outFile,'cube')
 end
-save(idFile, ids);
+save(idFile, 'ids');
 
 end

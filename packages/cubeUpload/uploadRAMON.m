@@ -25,7 +25,7 @@ else
     oo = OCP;
 end
 
-if ischar(volume)
+if ischar(RAMONObj)
     load(RAMONObj) %should be saved as cube
     assert(exist('obj', 'var'))
 else
@@ -38,9 +38,9 @@ oo.setAnnoChannel(channel);
 
 
 if iscell(obj)
-    obj = batchProcess(obj, ids);
-else
     obj = normalProcess(obj, ids);
+else
+    obj = batchProcess(obj, ids);
 end
 
 try
@@ -56,10 +56,10 @@ if exist('outFile')
 end
 
     function object = batchProcess(obj, ids)
-        proto = obj;
+        object{1} = obj; %sets the first in case no ids are present
         for ii = 1:length(ids)
-            object{ii} = proto;
-            object{ii}.setId(ids(11));
+            object{ii} = obj;
+            object{ii}.setId(ids(ii));
         end
     end
 
