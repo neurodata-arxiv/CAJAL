@@ -35,7 +35,7 @@ probability = false;
 idFile = 'demo_ids.mat';
 uploadLabels(server, token, channel, obj, idFile, probability, semaphore);
 
-%% Upload Annotation information
+%% Upload Annotation Metadata
 
 %get server id of object you wish to annotate
 id = load(idFile); id = id.ids;
@@ -52,3 +52,35 @@ synapse.setSeeds([2 4 6 3]);
 synapse.setConfidence(.8);
 
 uploadRAMON(server, token, channel, synapse, semaphore, id);
+
+
+%% Upload Complete RAMONObjects
+
+%get server id of object you wish to annotate
+id = load(idFile); id = id.ids;
+
+%create, say, a RAMONSynapse
+
+for i=1:3
+    temp_apse = RAMONSynapse();
+    temp_apse.setChannelType(eRAMONChannelType.annotation); %define channel type
+    temp_apse.setDataType(eRAMONChannelDataType.uint32); %define data type
+    temp_apse.setChannel(channel); %pick a channel
+    temp_apse.setResolution(1); %pick a resolution
+    temp_apse.setCutout(d); %set the annotation data
+    temp_apse.setXyzOffset([xstart ystart zstart]); %set the offset (i.e. where the data is placed)
+    % Set the objects properties as desired.
+    temp_apse.setResolution(1);
+    temp_apse.setSynapseType(eRAMONSynapseType.excitatory);
+    temp_apse.setSeeds([2 4 6 3]);
+    temp_apse.setConfidence(.8);
+    
+    synapses{i} = temp_apse;
+    xstart  = xstart + 200;
+    ystart  = ystart + 100;
+    zstart  = zstart + 100;
+    
+end
+
+uploadRAMON(server, token, channel, synapses, semaphore);
+

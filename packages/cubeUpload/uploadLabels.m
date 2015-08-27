@@ -1,11 +1,34 @@
 function uploadLabels(server, token, channel, volume, idFile, probability, useSemaphore, varargin)
-
-% Function to upload objects in a RAMON volume as a denseVolume
-
-% Requires that all objects begin from a common prototype, and that
-% RAMONVolume has appropriate fields (in particular resolution and XYZ
-% offset)
-% This only supports anno32 data for now and the preserve anno option
+% uploadLabels function allows the user to post raw annotation data (i.e.
+% no meta data) in the form of either annotation labels or probabilities to
+% OCP.
+%
+% **Inputs**
+%
+%	:server: [string]   OCP server name serving as the target for annotations 
+%
+%	:token: [string]    OCP token name serving as the target for annotations
+%
+%   :channel: [string]  OCP channel name serving as the target for annotations
+%
+%	:volume: [RAMONVolume, string]  RAMONVolume or path and filename of .mat file containing the RAMONVolume to be posted
+%
+%	:idFile: [string]   path and filename which will store the posted id
+%
+%   :probability: [number][default=0]   flag indicating whether annotation is a probaility map
+%
+%	:useSemaphore: [number][default=0]  throttles reading/writing client-side for large batch jobs.  Not needed in single cutout mode
+%
+% **Outputs**
+%
+%	No explicit outputs.  Output file is optionally saved to disk rather
+%	than output as a variable to allow for downstream integration with
+%	LONI.
+%
+% **Notes**
+%
+%	Probabilities are uploaded as float32 data, and normal annotations are
+%	uploaded as uint32.
 
 if nargin > 8
     outFile = varargin{1};
