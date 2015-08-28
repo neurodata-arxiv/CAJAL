@@ -18,6 +18,7 @@ end
 
 oo.setServerLocation(server);
 oo.setAnnoToken(token);
+oo.setAnnoChannel(channel);
 
 % Load data volume
 if ischar(RAMONVol)

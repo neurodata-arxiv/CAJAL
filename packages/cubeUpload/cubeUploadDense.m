@@ -1,4 +1,4 @@
-function cubeUploadDense(server, token, RAMONVol, protoRAMON, useSemaphore, varargin)
+function cubeUploadDense(server, token, channel, RAMONVol, protoRAMON, useSemaphore, varargin)
 
 % W. Gray Roncal
 
@@ -21,6 +21,7 @@ end
 
 oo.setServerLocation(server);
 oo.setAnnoToken(token);
+oo.setAnnoChannel(channel);
 
 % Load data volume
 if ischar(RAMONVol)

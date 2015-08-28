@@ -16,6 +16,7 @@ function test_suite = testOCP %#ok<STOUT>
     %target_server = 'http://localhost:8000';
     target_server = 'http://openconnecto.me';
     
+    %
     %% Init the test suite
     initTestSuite;
     
@@ -44,6 +45,7 @@ function testInit %#ok<*DEFNU>
     oo = OCP(); %#ok<*NASGU>   
     
     % database bad
+    % TODO - this line should fail and doesn't
     assertExceptionThrown(@() oo.setServerLocation('http://openconnectooo.me'), 'OCP:ServerConnFail'); %#ok<*NODEF>
     
     % database good    
@@ -91,7 +93,7 @@ function testNoToken %#ok<*DEFNU>
         oo.setAnnoChannel('apiUnitTestKasthuri');
     end
     
-    % Set default resolutino
+    % Set default resolution
     oo.setDefaultResolution(1);
 end
 
@@ -1341,6 +1343,7 @@ end
 
 %% Annotation Slice Cutouts
 function testAnnotationSlice
+% TRY RESETTING THE DB IF TEST FAILS
     global oo
     
     %Use to reset db if needed
@@ -1581,6 +1584,14 @@ function testIDPredicateQueryWithLimit
     
     % Get updated IDs
     ids2 = oo.query(q);
+    
+    % TODO: Make sure there are more than 20 IDs of this type for test to
+    % make sense
+    if length(ids2) < 25
+        for i = length(ids2):25
+            oo.createAnnotation(s1);
+        end
+    end
     
     % Limit to 20 objects
     assertExceptionThrown(@() q.setIdListLimit(0), 'MATLAB:expectedPositive');
@@ -3091,6 +3102,7 @@ end
 % end
 
 function testImageDataUpload %#ok<*DEFNU> 
+% IF TEST FAILS, MAKE SURE TO RESET THE DATABASE AS INDICATED
     global oo;
     oo2 = OCP();
     
