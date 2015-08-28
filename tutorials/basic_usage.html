@@ -33,7 +33,7 @@
 
   
     <link rel="top" title="cajal v1.0 documentation" href="../index.html"/>
-        <link rel="next" title="manno Functions" href="../api/functions.html"/>
+        <link rel="next" title="Scalable Processing" href="scalable_processing.html"/>
         <link rel="prev" title="Frequently Asked Questions (FAQ)" href="../sphinx/faq.html"/> 
 
   
@@ -76,32 +76,51 @@
         
           
           
-              <p class="caption"><span class="caption-text">Documentation</span></p>
-<ul class="current">
+              <p class="caption"><span class="caption-text">Overview</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../sphinx/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sphinx/local_config.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sphinx/ocp.html">OCP</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/ocp.html">NeuroData</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../sphinx/ocp.html#contributing">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sphinx/ocp.html#style-guides">Style Guides</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sphinx/ocp.html#ocp-support-forums">OCP Support Forums</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">Basic Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#protocol">Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#usage-notes">Usage Notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#validation">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server-setup">Server Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-annotation">Create Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#upload-annotation">Upload Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#update-annotation">Update Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#delete-annotation">Delete Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#read-data-queries">Read Data (Queries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="scalable_processing.html">Scalable Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scalable_processing.html#server-setup">Server Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scalable_processing.html#create-annotation">Create Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scalable_processing.html#upload-annotation">Upload Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scalable_processing.html#update-annotation">Update Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scalable_processing.html#delete-annotation">Delete Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scalable_processing.html#read-data-queries">Read Data (Queries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scalable_processing.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_topics.html">Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="queries.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cheat_sheet.html">Advanced Topics</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Further Reading</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">manno Functions</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/manno">Gitter chatroom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">Functions and Modules</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/cajal">Gitter chatroom</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/ocp-support/">Mailing List</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno">Github repo</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno/releases/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal/releases/">Release Notes</a></li>
 </ul>
 
           
@@ -141,77 +160,27 @@
             
   <div class="section" id="basic-usage">
 <h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="protocol">
-<h2>Protocol<a class="headerlink" href="#protocol" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Identify a region of interest in OCP, and note the data server, token, resolution, and coordinates</li>
-<li>Create a query, using the instructions for CAJAL</li>
-<li>Run <em>manno_getImage.m</em> to generate an image volume suitable for annotation in ITK Snap</li>
-<li>Annotate: Once the data has been formatted for ITK Snap, the user should open the ITK SNAP application and load in the NIFTI data saved during the data acquisition step. Then using the brush tool, annotate the data as desired. Users can choose to use separate colors for each annotation or rely on a connected component post-processing step to identify each object (best for sparse data)</li>
-<li>Save Segmentation Image: (ITK Snap Menu &gt; Segmentation &gt; Save Segmentation Image). Choose a name that you will be able to easily correlate to its appropriate volume image volume.</li>
-<li>Run <em>manno_putAnno.m</em>, specifying the server, token, annotation file, and query used to download the underlying image. Users may choose to run a simple connected component post-processing step to break each group of connected pixels (3D) into a separate ID. More complicated post-processing should be done outside of the tool, with the result uploaded using the ocp_upload_dense.m function (see CAJAL documentation).</li>
-</ul>
+<p>CAJAL facilitates both local exploration and scalable processing.  This section focuses on local exploration, and is especially valuable for new CAJAL users.  By following these steps and the linked example files, you will learn about basic toolbox functionality and each of the major capabilities of CAJAL.</p>
+<div class="section" id="server-setup">
+<h2>Server Setup<a class="headerlink" href="#server-setup" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="usage-notes">
-<h2>Usage Notes<a class="headerlink" href="#usage-notes" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>For more information on painting annotations, please follow the steps outlined <a class="reference external" href="http://www.itksnap.org/pmwiki/pmwiki.php?n=Documentation.TutorialSectionManualSegmentation">here</a>.</li>
-<li>Currently, only single channel 8-bit image data is supported</li>
-<li>ITK-Snap is compatible with a variety of input data formats; the most straightforward is NIFTI, a general purpose neuroimaging format. On laptops or smaller workstations, only a small portion of a slice/volume should be truthed at a time for memory reasons.</li>
-<li><em>run_manno_example.m</em> provides a minimal working example to use as a starting point.</li>
-</ul>
+<div class="section" id="create-annotation">
+<h2>Create Annotation<a class="headerlink" href="#create-annotation" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<p>The following code demonstrates the manno protocol.  A few mitochondria have been labeled as an example.  The example script should take approximately 10 seconds to complete.</p>
-<div class="highlight-matlab"><div class="highlight"><pre><span class="k">function</span><span class="w"> </span><span class="nf">run_manno_example</span><span class="p">()</span><span class="w"></span>
-<span class="c">% Mananno Example</span>
-<span class="c">% manno starter to demonstrate protocol functionality.  All required inputs</span>
-<span class="c">% are hardcoded for this demo.  Paths are hardcoded for Linux/Mac.</span>
-<span class="c">%</span>
-<span class="c">% The result of this run can be viewed in a webbrowser using the following</span>
-<span class="c">% URL: http://braingraph1dev.cs.jhu.edu/ocp/overlay/0.7/temp2/xy/1/5472,5972/8712,9212/1031/</span>
-<span class="c">%</span>
-<span class="c">% **Author**</span>
-<span class="c">%</span>
-<span class="c">% W. Gray Roncal</span>
-
-<span class="c">%% test_query</span>
-<span class="n">xstart</span> <span class="p">=</span> <span class="mi">5472</span><span class="p">;</span>
-<span class="n">xstop</span> <span class="p">=</span> <span class="n">xstart</span> <span class="o">+</span> <span class="mi">512</span><span class="p">;</span>
-<span class="n">ystart</span> <span class="p">=</span> <span class="mi">8712</span><span class="p">;</span>
-<span class="n">ystop</span> <span class="p">=</span> <span class="n">ystart</span> <span class="o">+</span> <span class="mi">512</span><span class="p">;</span>
-<span class="n">zstart</span> <span class="p">=</span> <span class="mi">1020</span><span class="p">;</span>
-<span class="n">zstop</span> <span class="p">=</span> <span class="n">zstart</span> <span class="o">+</span> <span class="mi">16</span><span class="p">;</span>
-
-<span class="n">resolution</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
-
-<span class="n">query</span> <span class="p">=</span> <span class="n">OCPQuery</span><span class="p">;</span>
-<span class="n">query</span><span class="p">.</span><span class="n">setType</span><span class="p">(</span><span class="n">eOCPQueryType</span><span class="p">.</span><span class="n">imageDense</span><span class="p">);</span>
-<span class="n">query</span><span class="p">.</span><span class="n">setCutoutArgs</span><span class="p">([</span><span class="n">xstart</span><span class="p">,</span> <span class="n">xstop</span><span class="p">],[</span><span class="n">ystart</span><span class="p">,</span><span class="n">ystop</span><span class="p">],[</span><span class="n">zstart</span><span class="p">,</span><span class="n">zstop</span><span class="p">],</span><span class="n">resolution</span><span class="p">);</span>
-
-<span class="c">%% Servers and tokens - alter appropriately</span>
-<span class="n">server</span> <span class="p">=</span> <span class="s">&#39;openconnecto.me&#39;</span><span class="p">;</span>
-<span class="n">token</span> <span class="p">=</span> <span class="s">&#39;kasthuri11cc&#39;</span><span class="p">;</span>
-
-<span class="n">serverUp</span> <span class="p">=</span> <span class="s">&#39;braingraph1dev.cs.jhu.edu&#39;</span><span class="p">;</span>
-<span class="n">tokenUp</span> <span class="p">=</span> <span class="s">&#39;temp2&#39;</span><span class="p">;</span>
-
-<span class="c">%% Run manno</span>
-<span class="n">manno_getImage</span><span class="p">(</span><span class="n">server</span><span class="p">,</span><span class="n">token</span><span class="p">,</span><span class="s">&#39;../data/queryFileTest&#39;</span><span class="p">,</span><span class="s">&#39;../data/testitk.nii&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="c">% Manual annotation step happens here</span>
-<span class="n">manno_putAnno</span><span class="p">(</span><span class="n">serverUp</span><span class="p">,</span><span class="n">tokenUp</span><span class="p">,</span><span class="s">&#39;../data/queryFileTest&#39;</span><span class="p">,</span><span class="s">&#39;../data/exampleAnno.nii.gz&#39;</span><span class="p">,</span><span class="s">&#39;RAMONOrganelle&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
+<div class="section" id="upload-annotation">
+<h2>Upload Annotation<a class="headerlink" href="#upload-annotation" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="update-annotation">
+<h2>Update Annotation<a class="headerlink" href="#update-annotation" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="validation">
-<h2>Validation<a class="headerlink" href="#validation" title="Permalink to this headline">¶</a></h2>
-<p>The result of the example script can be accessed using the following link:
-<a class="reference external" href="http://braingraph1dev.cs.jhu.edu/ocp/overlay/0.7/temp2/xy/1/5472,5972/8712,9212/1031/">http://braingraph1dev.cs.jhu.edu/ocp/overlay/0.7/temp2/xy/1/5472,5972/8712,9212/1031/</a></p>
-<p>Note that the server and token pair listed here are public and other data may be pre-existing.</p>
-<div class="figure">
-<img alt="../_images/manno_example_result.png" src="../_images/manno_example_result.png" />
+<div class="section" id="delete-annotation">
+<h2>Delete Annotation<a class="headerlink" href="#delete-annotation" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="read-data-queries">
+<h2>Read Data (Queries)<a class="headerlink" href="#read-data-queries" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -221,7 +190,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../api/functions.html" class="btn btn-neutral float-right" title="manno Functions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scalable_processing.html" class="btn btn-neutral float-right" title="Scalable Processing" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../sphinx/faq.html" class="btn btn-neutral" title="Frequently Asked Questions (FAQ)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

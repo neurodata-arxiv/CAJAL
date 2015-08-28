@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta content="Official documentation for manno:  Manual Annotation Protocol for the Open Connectome Project" name="description" />
+  <meta content="Official documentation for CAJAL:  Collaborative Annotation for Joint Analysis of Large Data" name="description" />
 <meta content="annotation, tracing, neuroscience, object detection" name="keywords" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -77,32 +77,51 @@
         
           
           
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption"><span class="caption-text">Overview</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/local_config.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sphinx/ocp.html">OCP</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="sphinx/ocp.html">NeuroData</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sphinx/ocp.html#contributing">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sphinx/ocp.html#style-guides">Style Guides</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sphinx/ocp.html#ocp-support-forums">OCP Support Forums</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/basic_usage.html">Basic Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#protocol">Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#usage-notes">Usage Notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#example">Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#validation">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#server-setup">Server Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#create-annotation">Create Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#upload-annotation">Upload Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#update-annotation">Update Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#delete-annotation">Delete Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#read-data-queries">Read Data (Queries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#notes">Notes</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/scalable_processing.html">Scalable Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#server-setup">Server Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#create-annotation">Create Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#upload-annotation">Upload Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#update-annotation">Update Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#delete-annotation">Delete Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#read-data-queries">Read Data (Queries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/advanced_topics.html">Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/queries.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/cheat_sheet.html">Advanced Topics</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Further Reading</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/functions.html">manno Functions</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/manno">Gitter chatroom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/functions.html">Functions and Modules</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/cajal">Gitter chatroom</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/ocp-support/">Mailing List</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno">Github repo</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno/releases/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal/releases/">Release Notes</a></li>
 </ul>
 
           
@@ -140,38 +159,65 @@
 </div>
           <div role="main" class="document">
             
-  <h1>manno:  A Lightweight Annotation Protocol for the Open Connectome Project using ITK-Snap and CAJAL </h1>
-<br><p>manno provides a protocol for creating Open Connectome Project compatible manual annotations, leveraging <a class="reference external" href="http://www.itksnap.org/">ITK Snap</a>.  This tool allows users to quickly create and upload annotations to the Open Connectome Project for science, machine learning, and other applications.  This protocol uses the NIFTI format as a method to exchange data; other tools such as MRIStudio may also be able to use this protocol (but have not been extensively tested).</p>
+  <h1>CAJAL Matlab Toolbox:  Collaborative Annotation for Joint Analysis of Large Data </h1>
+<br><p>The CAJAL toolbox (or API) provides functionality to interact with the Open Connectome Project image and annotation databases, including querying raw image data, annotation data, and RAMON objects. Complex HTTP queries are wrapped in easy to use Matlab code - helper functions and example files are provided.</p>
 <div class="figure align-center">
-<a class="reference internal image-reference" href="_images/manno_itk_example.jpg"><img alt="_images/manno_itk_example.jpg" src="_images/manno_itk_example.jpg" style="width: 300px;" /></a>
+<a class="reference internal image-reference" href="_images/cajal_pipeline.jpg"><img alt="_images/cajal_pipeline.jpg" src="_images/cajal_pipeline.jpg" style="width: 800px;" /></a>
 </div>
 <div>
   <img style="width:30px;height:30px;vertical-align:middle">
   <span style=""></span>
-  <IMG SRC="_static/GitHub.png" height="50" width="50"> <a href="https://github.com/openconnectome/manno/zipball/master"> [ZIP]   </a>
-  <a image="_static/GitHub.png" href="https://github.com/openconnectome/manno/tarball/master">[TAR.GZ] </a></p>
+  <IMG SRC="_static/GitHub.png" height="50" width="50"> <a href="https://github.com/openconnectome/CAJAL/zipball/master"> [ZIP]   </a>
+  <a image="_static/GitHub.png" href="https://github.com/openconnectome/CAJAL/tarball/master">[TAR.GZ] </a></p>
 </div><div class="sidebar">
-<p class="first sidebar-title">manno Contact Us</p>
-<p class="last">If you have questions about manno, or have data to analyze, let us know:  <a class="reference external" href="mailto:ocp-support&#37;&#52;&#48;googlegroups&#46;com">ocp-support<span>&#64;</span>googlegroups<span>&#46;</span>com</a></p>
+<p class="first sidebar-title">CAJAL Contact Us</p>
+<p class="last">If you have questions about CAJAL, or have data to analyze, let us know:  <a class="reference external" href="mailto:ocp-support&#37;&#52;&#48;googlegroups&#46;com">ocp-support<span>&#64;</span>googlegroups<span>&#46;</span>com</a></p>
 </div>
-<div class="toctree-wrapper compound" id="documentation">
-<p class="caption"><span class="caption-text">Documentation</span><a class="headerlink" href="#documentation" title="Permalink to this toctree">¶</a></p>
+<div class="toctree-wrapper compound" id="overview">
+<p class="caption"><span class="caption-text">Overview</span><a class="headerlink" href="#overview" title="Permalink to this toctree">¶</a></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/local_config.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sphinx/ocp.html">OCP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sphinx/ocp.html">NeuroData</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/basic_usage.html">Basic Usage</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound" id="tutorials">
+<p class="caption"><span class="caption-text">Tutorials</span><a class="headerlink" href="#tutorials" title="Permalink to this toctree">¶</a></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/basic_usage.html">Basic Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#server-setup">Server Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#create-annotation">Create Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#upload-annotation">Upload Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#update-annotation">Update Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#delete-annotation">Delete Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#read-data-queries">Read Data (Queries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/basic_usage.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/scalable_processing.html">Scalable Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#server-setup">Server Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#create-annotation">Create Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#upload-annotation">Upload Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#update-annotation">Update Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#delete-annotation">Delete Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#read-data-queries">Read Data (Queries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/scalable_processing.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/advanced_topics.html">Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/queries.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/cheat_sheet.html">Advanced Topics</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound" id="further-reading">
 <p class="caption"><span class="caption-text">Further Reading</span><a class="headerlink" href="#further-reading" title="Permalink to this toctree">¶</a></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/functions.html">manno Functions</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/manno">Gitter chatroom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/functions.html">Functions and Modules</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/cajal">Gitter chatroom</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/ocp-support/">Mailing List</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno">Github repo</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno/releases/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal/releases/">Release Notes</a></li>
 </ul>
 </div>
 

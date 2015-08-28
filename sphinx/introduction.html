@@ -76,32 +76,51 @@
         
           
           
-              <p class="caption"><span class="caption-text">Documentation</span></p>
+              <p class="caption"><span class="caption-text">Overview</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="local_config.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ocp.html">OCP</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="ocp.html">NeuroData</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ocp.html#contributing">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ocp.html#style-guides">Style Guides</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ocp.html#ocp-support-forums">OCP Support Forums</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions (FAQ)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/basic_usage.html">Basic Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#protocol">Protocol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#usage-notes">Usage Notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#example">Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#validation">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#server-setup">Server Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#create-annotation">Create Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#upload-annotation">Upload Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#update-annotation">Update Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#delete-annotation">Delete Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#read-data-queries">Read Data (Queries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/basic_usage.html#notes">Notes</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/scalable_processing.html">Scalable Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/scalable_processing.html#server-setup">Server Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/scalable_processing.html#create-annotation">Create Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/scalable_processing.html#upload-annotation">Upload Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/scalable_processing.html#update-annotation">Update Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/scalable_processing.html#delete-annotation">Delete Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/scalable_processing.html#read-data-queries">Read Data (Queries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/scalable_processing.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/advanced_topics.html">Advanced Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/queries.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/cheat_sheet.html">Advanced Topics</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Further Reading</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">manno Functions</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/manno">Gitter chatroom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">Functions and Modules</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/cajal">Gitter chatroom</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/ocp-support/">Mailing List</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno">Github repo</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/manno/releases/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal/releases/">Release Notes</a></li>
 </ul>
 
           
@@ -141,10 +160,21 @@
             
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<p>manno is a lightweight protocol leveraging the OCP Spatial database and the CAJAL toolbox.  This provides an easy method for users to create, upload, and manage manual annotations across a variety of use-cases and datasets.  The figure below outlines a sample workflow.</p>
-<div class="figure align-center">
-<img alt="../_images/manno_intro.png" src="../_images/manno_intro.png" />
-</div>
+<p>CAJAL is a toolbox to interface with the NeuroData image and annotation spatial databases.  This provides an easy method for users to create and interact with data across a variety of use cases.  For client applications, users will generally follow these steps:</p>
+<ul class="simple">
+<li>Server setup</li>
+<li>Upload Image Data (if not using an existing data set)</li>
+<li>Create and Upload Annotation Data</li>
+<li>Update Annotations</li>
+<li>Delete Annotations</li>
+<li>Query (Read) Annotations</li>
+</ul>
+<p>For most of these usecases, we have created examples, functions, and loni modules to get you started.</p>
+<p>Although documentation exists for the API at a method and object level,
+we have provided functions and wrappers to allow most of the database interface
+to happen via simple code reuse and drag-and-drop modules.</p>
+<p>CAJAL Leverages RAMON, our flexible data standard to facilitate data exchange and processing.  More details are available
+here:  <a class="reference external" href="http://openconnectome.github.io/docs">http://openconnectome.github.io/docs</a></p>
 </div>
 
 
