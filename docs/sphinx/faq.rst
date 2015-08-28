@@ -9,10 +9,6 @@ New questions should be asked on  `our support pages <ocp-support@googlegroups.c
 
 Please begin with the configuration page, which should get you up and running in no time.
 
-**What are the limitations of your protocol?**
-
-This initial version of manno is an annotation protocol that depends on ITKSnap.  So any annotations that are possible in ITKSnap are possible in manno.  We do not currently support metadata export, or data downloads other than 8-bit, single channel. 
-
 **What updates are planned?**
 
-We develop new functionality in response to user needs.  We are currently considering wrappers for tools such as Ilastik, Fiji, Raveler and others.  If you have a favorite tool or datatype that is not currently supported, please let us know!
+We develop new functionality in response to user needs and strive to keep CAJAL updated with the OCP backend.  If you have a tool or datatype that is not currently supported, please let us know!

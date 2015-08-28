@@ -1,7 +1,7 @@
-OCP
-***
+NeuroData
+*********
 
-This project is part of the `Open Connectome Project <openconnecto.me/>`_.  The following information applies across our projects.
+This project is part of `NeuroData <openconnecto.me/>`_.  The following information applies across our projects.
 
 Contributing
 ~~~~~~~~~~~~
@@ -12,8 +12,8 @@ Style Guides
 ~~~~~~~~~~~~
 
  - `Python code complies with PEP-8 <http://legacy.python.org/dev/peps/pep-0008/>`_
- - manno follows the `style guidelines <http://w.ocp.me/style>`_ used by the Open Connectome Project 
- - MATLAB code style is similar to that of MATHWorks authored functions.
+ - This project follows the `style guidelines <http://w.ocp.me/style>`_ used by the Open Connectome Project 
+ - MATLAB code style is similar to that of Mathworks authored functions.
 
 OCP Support Forums
 ~~~~~~~~~~~~~~~~~~
