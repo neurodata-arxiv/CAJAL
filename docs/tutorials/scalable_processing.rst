@@ -24,19 +24,5 @@ There are several key ways to upload data. One can upload paint (i.e annotations
 Example
 -------
 
-.. code-block:: matlab
+For now, please see the example posted here: https://github.com/openconnectome/CAJAL/blob/gkiar-cajal-doc/examples/demoUpload.m
 
-	%define your server, project, and channel
-	server = 'openconnecto.me';
-	channel = 'testanno';
-	token = 'gk1';
-	
-	%define some region you wish to annotate
-	d = zeros(200,200,5);
-	d(30:170,30:170,:) = 1;
-	
-	xstart = 3000;
-	ystart = 5000;
-	zstart = 400;
-
-	... to be completed
