@@ -678,26 +678,15 @@ classdef OCPHdf < handle
                             % Trying to block style upload  
                             switch ramonObj.dataType
                                 case eRAMONChannelDataType.float32
-                                    switch ramonObj.channelType
-                                        case eRAMONChannelType.probmap
-                                           % Create HDF5 file
-                                            h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');            
-                                            % Probability Map                                    
-                                            OCPHdf.addBlockData(h5Handle, ramonObj, single(ramonObj.data), 'H5T_IEEE_F32LE','H5T_IEEE_F32LE');
-                                            
-                                    end
-                                    
+                                    % All float32 data treated the same, regardless of channel                    
+                                    % Create HDF5 file
+                                    h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');            
+                                    % float32                                    
+                                    OCPHdf.addBlockData(h5Handle, ramonObj, single(ramonObj.data), 'H5T_IEEE_F32LE','H5T_IEEE_F32LE');
+
+                                                                      
                                 case eRAMONChannelDataType.uint32
-                                    switch ramonObj.channelType 
-                                        case eRAMONChannelType.probmap 
-%                                             % Create HDF5 file
-%                                             h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');            
-%                                             % Probability Map                                    
-%                                             OCPHdf.addBlockData(h5Handle, ramonObj, single(ramonObj.data), 'H5T_IEEE_F32LE','H5T_IEEE_F32LE');
-                                            % probmap should be float32
-                                            error('OCPHdf:UnsupportedProbDataType','uint32 probability maps are no longer supported. Use float32.');
-                 
-                                            
+                                    switch ramonObj.channelType                                           
                                         case eRAMONChannelType.annotation % TODO this is where the test fails 
                                             % Create HDF5 file
                                             h5Handle =  H5F.create(hdfFile, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');
