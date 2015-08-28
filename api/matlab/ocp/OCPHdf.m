@@ -694,12 +694,11 @@ classdef OCPHdf < handle
                                             gid = H5G.create(h5Handle,ramonObj.channel,'H5P_DEFAULT','H5P_DEFAULT','H5P_DEFAULT');
                                             % 32Bit annotations
                                             OCPHdf.addBlockData(h5Handle, ramonObj, uint32(ramonObj.data), 'H5T_STD_U32LE','H5T_NATIVE_INT');
-                                            
-                                            % Add data type and channel
-                                            % type -- AB TODO
-                                            
-                                            
+
+                                        otherwise 
+                                            error('OCPHdf:UnsupportedUploadType','Unsupported type for block style uploads');
                                     end   
+                                    
                                     
                                 case eRAMONChannelDataType.uint16
                                     % Create HDF5 file
@@ -1167,10 +1166,23 @@ classdef OCPHdf < handle
                 H5G.close(group)
             end
 
-            % Write unsigned int labeled voxel data         
+            % Write voxel data based on datatype         
             dsetName = sprintf('/%s/CUTOUT', channel); 
             dset = H5D.create(h5Handle, dsetName, createType, space, dcpl);
-            H5D.write(dset, writeType, 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', data);
+            
+            switch ramonObj.dataType
+                case eRAMONChannelDataType.uint32
+                    H5D.write(dset, writeType, 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', uint32(data));
+                case eRAMONChannelDataType.uint16
+                    H5D.write(dset, writeType, 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', uint16(data));
+                case eRAMONChannelDataType.uint8
+                    H5D.write(dset, writeType, 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', uint8(data));
+                case eRAMONChannelDataType.float32
+                    H5D.write(dset, writeType, 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', single(data));                
+                otherwise
+                    error('OCPHdf:UnsupportedUploadType','Unsupported type for volume style uploads');
+            end
+            
             H5D.close(dset);
             
             % Add datatype and channeltype 
