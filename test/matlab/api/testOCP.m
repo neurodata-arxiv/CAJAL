@@ -12,9 +12,12 @@ function test_suite = testOCP %#ok<STOUT>
     
     % Holds the server location target for the test suite. 
     % Default is 'http://openconnecto.me' 
-    target_server = 'http://brainviz1.cs.jhu.edu';
+    %target_server = 'http://brainviz1.cs.jhu.edu';
     %target_server = 'http://localhost:8000';
+    target_server = 'http://openconnecto.me'
+    %target_server = 'http://joy.cs.jhu.edu'
     
+    %
     %% Init the test suite
     initTestSuite;
     
@@ -43,6 +46,7 @@ function testInit %#ok<*DEFNU>
     oo = OCP(); %#ok<*NASGU>   
     
     % database bad
+    % TODO - this line should fail and doesn't
     assertExceptionThrown(@() oo.setServerLocation('http://openconnectooo.me'), 'OCP:ServerConnFail'); %#ok<*NODEF>
     
     % database good    
@@ -77,7 +81,7 @@ function testNoToken %#ok<*DEFNU>
     
     % image token
     oo.setImageToken('kasthuri11');
-    oo.setImageChannel('images');
+    oo.setImageChannel('image'); %wrgr Fixed - should be image
     
     s1 = RAMONSeed([10000 10000 50],eRAMONCubeOrientation.pos_z,124,14,[],.89,eRAMONAnnoStatus.locked,{'test',23});
     assertExceptionThrown(@() oo.createAnnotation(s1), 'OCP:MissingAnnoToken');
@@ -90,7 +94,7 @@ function testNoToken %#ok<*DEFNU>
         oo.setAnnoChannel('apiUnitTestKasthuri');
     end
     
-    % Set default resolutino
+    % Set default resolution
     oo.setDefaultResolution(1);
 end
 
@@ -246,7 +250,7 @@ function testUploadDownloadProbMapCutout %#ok<*DEFNU>
     g1.setXyzOffset([2560 1000 64]);
     g1.setResolution(1);
     g1.setDataType(eRAMONChannelDataType.float32);
-    g1.setChannelType(eRAMONChannelType.probmap);
+    g1.setChannelType(eRAMONChannelType.image);
     g1.setChannel(oo2.getAnnoChannel());
     oo2.createAnnotation(g1);
         
@@ -1338,6 +1342,7 @@ end
 
 %% Annotation Slice Cutouts
 function testAnnotationSlice
+% TRY RESETTING THE DB IF TEST FAILS
     global oo
     
     %Use to reset db if needed
@@ -1578,6 +1583,14 @@ function testIDPredicateQueryWithLimit
     
     % Get updated IDs
     ids2 = oo.query(q);
+    
+    % TODO: Make sure there are more than 20 IDs of this type for test to
+    % make sense
+    if length(ids2) < 25
+        for i = length(ids2):25
+            oo.createAnnotation(s1);
+        end
+    end
     
     % Limit to 20 objects
     assertExceptionThrown(@() q.setIdListLimit(0), 'MATLAB:expectedPositive');
@@ -3088,6 +3101,7 @@ end
 % end
 
 function testImageDataUpload %#ok<*DEFNU> 
+% IF TEST FAILS, MAKE SURE TO RESET THE DATABASE AS INDICATED
     global oo;
     oo2 = OCP();
     
