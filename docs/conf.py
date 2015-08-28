@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# manno documentation build configuration file, created by
+# cajal documentation build configuration file, created by
 # sphinx-quickstart on Sun May 17 11:10:35 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -20,7 +20,7 @@ import shlex
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-#sys.path.insert(0, os.getenv('manno_HOME'))
+sys.path.insert(0, os.getenv('cajal_HOME'))
 #import packages.utils.setup
 #import packages.dtipreproc.extract_b0
 #import packages.dtipreproc.parse_b
@@ -31,9 +31,9 @@ import shlex
 #import docs.scripts.bet
 #import docs.scripts.eddycorrect
 #import docs.scripts.flirt
-#import docs.scripts.manno
-#import docs.scripts.manno_registration
-#import docs.scripts.manno_diffusion
+#import docs.scripts.cajal
+#import docs.scripts.cajal_registration
+#import docs.scripts.cajal_diffusion
 #import packages.utils.graphml2mat
 
 # -- General configuration ------------------------------------------------
@@ -72,7 +72,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'manno'
+project = u'cajal'
 copyright = u'2015, Open Connectome Project'
 author = u'OCP'
 
@@ -225,7 +225,7 @@ html_use_smartypants = True
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'mannodoc'
+htmlhelp_basename = 'cajaldoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -247,7 +247,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'manno.tex', u'manno Documentation',
+  (master_doc, 'cajal.tex', u'CAJAL Documentation',
    u'OCP', 'manual'),
 ]
 
@@ -277,7 +277,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'manno', u'manno Documentation',
+    (master_doc, 'cajal', u'CAJAL Documentation',
      [author], 1)
 ]
 
@@ -291,8 +291,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'manno', u'manno Documentation',
-   author, 'manno', 'One line description of project.',
+  (master_doc, 'cajal', u'CAJAL Documentation',
+   author, 'cajal', 'One line description of project.',
    'Miscellaneous'),
 ]
 
