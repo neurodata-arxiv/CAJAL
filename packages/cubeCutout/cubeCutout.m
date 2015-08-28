@@ -1,11 +1,11 @@
-function cubeCutout(dataset, queryFile, outputFile, useSemaphore, objectType, serviceLocation)
+function cubeCutout(token, queryFile, outputFile, useSemaphore, objectType, serviceLocation)
     % cubeCutout function allows the user to post raw annotation data (i.e.
     % no meta data) in the form of either annotation labels or probabilities to
     % OCP.
     %
     % **Inputs**
     %
-    %	:dataset: [string]   OCP databet name serving as the source for data
+    %	:token: [string]   OCP token name serving as the source for data
     %
     %	:queryFile: [string]    Fully formed OCP query saved to a .mat file
     %
@@ -50,7 +50,7 @@ function cubeCutout(dataset, queryFile, outputFile, useSemaphore, objectType, se
         serviceLocation = 'http://openconnecto.me/';
     end
     
-    validateattributes(dataset,{'char'},{'row'});
+    validateattributes(token,{'char'},{'row'});
     validateattributes(queryFile,{'char'},{'row'});    
     
     if useSemaphore == 1        
@@ -60,7 +60,7 @@ function cubeCutout(dataset, queryFile, outputFile, useSemaphore, objectType, se
     end
     
     oo.setServerLocation(serviceLocation);
-    oo.setImageToken(dataset);
+    oo.setImageToken(token);
 
     
     %% Load Query

@@ -64,7 +64,12 @@ end
 [zz, n] = relabel_id(labels);
 
 labelOut = zeros(size(zz));
-ids = oo.reserve_ids(n);
+
+if exist(idFile);
+    load(idFile)
+else
+    ids = oo.reserve_ids(n);
+end
 
 rp = regionprops(zz,'PixelIdxList');
 for ii = 1:length(rp)

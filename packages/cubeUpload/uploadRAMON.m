@@ -1,4 +1,4 @@
-function uploadRAMON (server, token, channel, RAMONObj, useSemaphore, ids, varargin)
+function uploadRAMON (server, token, channel, RAMONObj, useSemaphore, idFile, varargin)
     % uploadRAMON function allows the user to post complete RAMON objects
     % (annotations and meta data), annotation metadata, or batch upload RAMON
     % prototypes.
@@ -39,8 +39,9 @@ if nargin > 6
     outFile = varargin{1};
 end
 
-if nargin > 5
-    if ~isempty(ids), assert(length(ids)==length(RAMONObj)), end
+load(idFile)
+if ~isempty(ids)
+    assert(length(ids)==length(RAMONObj));
 else
     ids = [];
 end
@@ -77,8 +78,9 @@ catch
     end
 end
 
+save(idFile, 'ids')
 if exist('outFile')
-    save(outFile,'ids')
+    save(outFile,'obj')
 end
 
     function object = batchProcess(obj, ids)
