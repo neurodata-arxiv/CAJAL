@@ -24,7 +24,6 @@ classdef eRAMONChannelType
     enumeration
         image   
         annotation 
-        probmap 
         timeseries  
     end
     
