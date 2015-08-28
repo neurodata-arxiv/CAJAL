@@ -5,28 +5,50 @@ function computeBlock(serverLocation, token, channel, resolution, ...
                                     alignXY, alignZ, computeOptions, shuffleFilesFlag, ...
                                     cubeListFile, cubeOutputDir,...
                                     mergeListFile, mergeOutputDir, print_flag)
-
-    % cubeCutoutPreprocessCubiod This method calcs subvolume queries from a larger volume
+    % computeBlock function allows the user to create a query and pull data
+    % from OCP easily while computing subvolumes from a larger volume of
+    % interest.
     %
-    % This method is used to create OCPQuery objects specifing subvolumes
-    % of a larger volume that you want to query from the database. It
-    % autoalignes to DB cubiods based on the token and resolution provided
+    % **Inputs**
     %
-    % The region you are cutting out from is specified by the start and
-    % stop arguments.  It is start point inclusive, stop point exclusive
-    % (python convention)
+    %	:server: [string]   OCP server name serving as the source for data 
     %
-    % The specified span will be used to size the subcubes.  As many cubes
-    % of the desired size as possible will be created and the remaining
-    % volume will be diced up into smaller subcubes.
+    %	:token: [string]    OCP token name serving as the source for data
     %
-    % pad arguments can be used to add overlapping voxels to the subcubes
-    % in each dimension
+    %   :channel: [string]  OCP channel name serving as the source for data
     %
-    % The result is OCPQuery objects called "query" saved in mat-files. One
-    % mat-file is created per subvolume for easy pipelining.  The path to
-    % each file is stored in the .list file "listFile".
-
+    %   :resolution: [int]  Resolution of data you wish to download
+    %
+    %   :xStart, yStart, zStart: [int]    Lower bounds of cube to download
+    %
+    %   :xStop, yStop, zStop: [int]  Upper bounds of cube to download
+    %
+    %   :xSpan, ySpan, zSpan: [int]  Data range in each dimension
+    %
+    %   :padX, padY, padZ: [int] How much you wish to pad the data in each dimension
+    %
+    %   :alignXY, alignZ: [int]   Flag for aligning cutout volumes with cubes
+    %
+    %	:computeOptions: [string]   Additional processing options
+    %
+    %	:shuffleFilesFlag: [int]   Flag for shuffling file ordering of cutouts
+    %
+    %   :cubeListFile: [string]   Basename of output cubeList file
+    %
+    %	:cubeOutputDir: [string]  Directory to which downloaded cubes are saved
+    %
+    %   :mergeListFile: [int]   Flag for merging listfiles across instances
+    %
+    %   :mergeOutputDir: [int]  Flag for merging output directories across instances
+    %
+    %   :print_flag: [int]  Flag for verbose output or not
+    %
+    % **Outputs**
+    %
+    %	No explicit outputs.  Output cubes are saved to disk rather
+    %	than output as a variable to allow for downstream integration with
+    %	LONI.
+    %
     
     %% Get Dataset info
     oo = OCP();

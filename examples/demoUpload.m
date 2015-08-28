@@ -51,7 +51,7 @@ synapse.setSynapseType(eRAMONSynapseType.excitatory);
 synapse.setSeeds([2 4 6 3]);
 synapse.setConfidence(.8);
 
-uploadRAMON(server, token, channel, synapse, semaphore, id);
+uploadRAMON(server, token, channel, synapse, semaphore, [], 'testfilegk.mat');
 
 
 %% Upload Complete RAMONObjects

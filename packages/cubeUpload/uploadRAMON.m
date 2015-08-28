@@ -13,7 +13,7 @@ function uploadRAMON (server, token, channel, RAMONObj, useSemaphore, ids, varar
     %
     %	:RAMONObj: [RAMON object, cell array, string]  single RAMON object, cell array of RAMON objects, or path and filename of .mat file containing the RAMON object to be posted
     %
-    %	:useSemaphore: [number][default=0]  throttles reading/writing client-side for large batch jobs.  Not needed in single cutout mode
+    %	:useSemaphore: [int][default=0]  throttles reading/writing client-side for large batch jobs.  Not needed in single cutout mode
     %
     %	:ids: [integer array]   optional ids if labels already exist or space has been reserved in the database
     %
@@ -40,7 +40,7 @@ if nargin > 6
 end
 
 if nargin > 5
-    assert(length(ids)==length(RAMONObj))
+    if ~isempty(ids), assert(length(ids)==length(RAMONObj)), end
 else
     ids = [];
 end
@@ -70,15 +70,15 @@ else
 end
 
 try
-    oo.createAnnotation(obj);
+    ids = oo.createAnnotation(obj);
 catch
     for i = 1:length(obj)
-        oo.createAnnotation(obj{i});
+        ids(i) = oo.createAnnotation(obj{i});
     end
 end
 
 if exist('outFile')
-    save(outFile,'obj')
+    save(outFile,'ids')
 end
 
     function object = batchProcess(obj, ids)

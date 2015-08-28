@@ -15,9 +15,9 @@ function uploadLabels(server, token, channel, volume, idFile, probability, useSe
     %
     %	:idFile: [string]   path and filename which will store the posted id
     %
-    %   :probability: [number][default=0]   flag indicating whether annotation is a probaility map
+    %   :probability: [float][default=0]   flag indicating whether annotation is a probaility map
     %
-    %	:useSemaphore: [number][default=0]  throttles reading/writing client-side for large batch jobs.  Not needed in single cutout mode
+    %	:useSemaphore: [int][default=0]  throttles reading/writing client-side for large batch jobs.  Not needed in single cutout mode
     %
     % **Outputs**
     %
