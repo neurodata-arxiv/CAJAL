@@ -1,5 +1,5 @@
-RAMON Types
-***********
+Functions and Modules
+*********************
 
 
 .. autoclass:: api.matlab.ramon.RAMONBase

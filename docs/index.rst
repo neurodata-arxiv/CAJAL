@@ -19,19 +19,19 @@ The CAJAL toolbox (or API) provides functionality to interact with the Open Conn
 
 
 .. raw:: html
- 
+
   <div>
     <img style="width:30px;height:30px;vertical-align:middle">
     <span style=""></span>
-    <IMG SRC="_static/GitHub.png" height="50" width="50"> <a href="https://github.com/openconnectome/CAJAL/zipball/master"> [ZIP]   </a>  
+    <IMG SRC="_static/GitHub.png" height="50" width="50"> <a href="https://github.com/openconnectome/CAJAL/zipball/master"> [ZIP]   </a>
     <a image="_static/GitHub.png" href="https://github.com/openconnectome/CAJAL/tarball/master">[TAR.GZ] </a></p>
   </div>
 
 
-.. sidebar:: CAJAL Contact Us 
-   
+.. sidebar:: CAJAL Contact Us
+
    If you have questions about CAJAL, or have data to analyze, let us know:  ocp-support@googlegroups.com
-   
+
 .. toctree::
    :maxdepth: 1
    :caption: Overview
@@ -41,16 +41,22 @@ The CAJAL toolbox (or API) provides functionality to interact with the Open Conn
    sphinx/ocp
    sphinx/faq
 
+.. toctree::
+  :maxdepth: 2
+  :caption: Tutorials
 
-   tutorials/basic_usage
+  tutorials/basic_usage
+  tutorials/scalable_processing
+  tutorials/advanced_topics
+  tutorials/queries
+  tutorials/cheat_sheet
 
 .. toctree::
    :maxdepth: 1
    :caption: Further Reading
 
    api/functions
-   Gitter chatroom <https://gitter.im/openconnectome/manno>
-   Mailing List <https://groups.google.com/forum/#!forum/ocp-support/> 
-   Github repo <https://github.com/openconnectome/manno>
-   Release Notes <https://github.com/openconnectome/manno/releases/>
-  
+   Gitter chatroom <https://gitter.im/openconnectome/cajal>
+   Mailing List <https://groups.google.com/forum/#!forum/ocp-support/>
+   Github repo <https://github.com/openconnectome/cajal>
+   Release Notes <https://github.com/openconnectome/cajal/releases/>
