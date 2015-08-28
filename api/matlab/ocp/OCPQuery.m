@@ -856,7 +856,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Lower X Range out of valid dataset range.\n',msg);
                             end
-                            if this.xRange(2) > imgDims(1)
+                            if this.xRange(2) > (imgDims(1) + imgOffsets(1) - 1)
                                 valid = false;
                                 msg = sprintf('%s[E] Upper X Range out of valid dataset range.\n',msg);
                             end
@@ -864,7 +864,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Lower Y Range out of valid dataset range.\n',msg);
                             end
-                            if this.yRange(2) > imgDims(2)
+                            if this.yRange(2) > (imgDims(2) + imgOffsets(2) - 1)
                                 valid = false;
                                 msg = sprintf('%s[E] Upper Y Range out of valid dataset range.\n',msg);
                             end
@@ -872,7 +872,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
                             end
-                            if this.zRange(2) > imgDims(3) 
+                            if this.zRange(2) > (imgDims(3) + imgOffsets(3) - 1)
                                 valid = false;
                                 msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
                             end
@@ -940,7 +940,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Lower A Range (X dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.aRange(2) > imgDims(1)
+                                    if this.aRange(2) > (imgDims(1) + imgOffsets(1) - 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper A Range (X dim) out of valid dataset range.\n',msg);
                                     end
@@ -948,7 +948,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Lower B Range (Y dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(2) > imgDims(2)
+                                    if this.bRange(2) > (imgDims(2) + imgOffsets(2) - 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper B Range (Y dim) out of valid dataset range.\n',msg);
                                     end
@@ -956,7 +956,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] C Index (Z dim) lower than valid dataset range.\n',msg);
                                     end
-                                    if this.cIndex > imgDims(3)
+                                    if this.cIndex > (imgDims(3) + imgOffsets(3) - 1)
                                         valid = false;
                                         msg = sprintf('%s[E] C Index (Z dim) lower than valid dataset range.\n',msg);
                                     end
@@ -973,7 +973,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Lower A Range (X dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.aRange(2) > imgDims(1)
+                                    if this.aRange(2) > (imgDims(1) + imgOffsets(1) - 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper A Range (X dim) out of valid dataset range.\n',msg);
                                     end
@@ -981,7 +981,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Lower B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(2) > (imgDims(3) + 1)
+                                    if this.bRange(2) > (imgDims(3) + imgOffsets(3) - 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
@@ -1003,7 +1003,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Lower A Range (Y dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.aRange(2) > imgDims(2)
+                                    if this.aRange(2) > (imgDims(2) + imgOffsets(2) - 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper A Range (Y dim) out of valid dataset range.\n',msg);
                                     end
@@ -1011,7 +1011,7 @@ classdef OCPQuery < handle
                                         valid = false;
                                         msg = sprintf('%s[E] Lower B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
-                                    if this.bRange(2) > (imgDims(3) + 1)
+                                    if this.bRange(2) > (imgDims(3) + imgOffsets(3) - 1)
                                         valid = false;
                                         msg = sprintf('%s[E] Upper B Range (Z dim) out of valid dataset range.\n',msg);
                                     end
@@ -1073,7 +1073,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Lower X Range out of valid dataset range.\n',msg);
                                 end
-                                if this.xRange(2) > imgDims(1)
+                                if this.xRange(2) > (imgDims(1) + imgOffsets(1) - 1)
                                     valid = false;
                                     msg = sprintf('%s[E] Upper X Range out of valid dataset range.\n',msg);
                                 end
@@ -1081,7 +1081,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Lower Y Range out of valid dataset range.\n',msg);
                                 end
-                                if this.yRange(2) > imgDims(2)
+                                if this.yRange(2) > (imgDims(2) + imgOffsets(2) - 1)
                                     valid = false;
                                     msg = sprintf('%s[E] Upper Y Range out of valid dataset range.\n',msg);
                                 end
@@ -1089,7 +1089,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
                                 end
-                                if this.zRange(2) > imgDims(3)
+                                if this.zRange(2) > (imgDims(3) + imgOffsets(3) - 1)
                                     valid = false;
                                     msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
                                 end
@@ -1129,7 +1129,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Lower X Range out of valid dataset range.\n',msg);
                                 end
-                                if this.xRange(2) > imgDims(1)
+                                if this.xRange(2) > (imgDims(1) + imgOffsets(1) - 1)
                                     valid = false;
                                     msg = sprintf('%s[E] Upper X Range out of valid dataset range.\n',msg);
                                 end
@@ -1137,7 +1137,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Lower Y Range out of valid dataset range.\n',msg);
                                 end
-                                if this.yRange(2) > imgDims(2)
+                                if this.yRange(2) > (imgDims(2) + imgOffsets(2) - 1)
                                     valid = false;
                                     msg = sprintf('%s[E] Upper Y Range out of valid dataset range.\n',msg);
                                 end
@@ -1145,7 +1145,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
                                 end
-                                if this.zRange(2) > imgDims(3)
+                                if this.zRange(2) > (imgDims(3) + imgOffsets(3) - 1)
                                     valid = false;
                                     msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
                                 end
@@ -1175,7 +1175,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Lower X Range out of valid dataset range.\n',msg);
                                 end
-                                if this.xRange(2) > imgDims(1)
+                                if this.xRange(2) > (imgDims(1) + imgOffsets(1) - 1)
                                     valid = false;
                                     msg = sprintf('%s[E] Upper X Range out of valid dataset range.\n',msg);
                                 end
@@ -1183,7 +1183,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Lower Y Range out of valid dataset range.\n',msg);
                                 end
-                                if this.yRange(2) > imgDims(2)
+                                if this.yRange(2) > (imgDims(2) + imgOffsets(2) - 1)
                                     valid = false;
                                     msg = sprintf('%s[E] Upper Y Range out of valid dataset range.\n',msg);
                                 end
@@ -1191,7 +1191,7 @@ classdef OCPQuery < handle
                                     valid = false;
                                     msg = sprintf('%s[E] Lower Z Range out of valid dataset range.\n',msg);
                                 end
-                                if this.zRange(2) > imgDims(3)
+                                if this.zRange(2) > (imgDims(3) + imgOffsets(3) - 1)
                                     valid = false;
                                     msg = sprintf('%s[E] Upper Z Range out of valid dataset range.\n',msg);
                                 end
@@ -1219,7 +1219,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] X coord out of valid dataset range.\n',msg);
                             end
-                            if this.xyzCoord(1) > imgDims(1)
+                            if this.xyzCoord(1) > (imgDims(1) + imgOffset(1) - 1)
                                 valid = false;
                                 msg = sprintf('%s[E] X coord out of valid dataset range.\n',msg);
                             end
@@ -1227,7 +1227,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] Y coord out of valid dataset range.\n',msg);
                             end
-                            if this.xyzCoord(2) > imgDims(2)
+                            if this.xyzCoord(2) > (imgDims(2) + imgOffset(2) - 1)
                                 valid = false;
                                 msg = sprintf('%s[E] Y coord out of valid dataset range.\n',msg);
                             end
@@ -1235,7 +1235,7 @@ classdef OCPQuery < handle
                                 valid = false;
                                 msg = sprintf('%s[E] z coord out of valid dataset range.\n',msg);
                             end
-                            if this.xyzCoord(3) > imgDims(3)
+                            if this.xyzCoord(3) > (imgDims(3) + imgOffset(3) - 1)
                                 valid = false;
                                 msg = sprintf('%s[E] Z coord out of valid dataset range.\n',msg);
                             end
