@@ -101,13 +101,10 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Scalable Processing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#server-setup">Server Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#read-data">Read Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#create-annotation">Create Annotation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#upload-annotation">Upload Annotation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#update-annotation">Update Annotation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#delete-annotation">Delete Annotation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#read-data-queries">Read Data (Queries)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced_topics.html">Advanced Topics</a></li>
@@ -116,7 +113,11 @@
 </ul>
 <p class="caption"><span class="caption-text">Further Reading</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">Functions and Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">Functions and Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/functions.html#download-data">Download Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/functions.html#upload-data">Upload Data</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference external" href="https://gitter.im/openconnectome/cajal">Gitter chatroom</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/ocp-support/">Mailing List</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal">Github repo</a></li>
@@ -161,26 +162,22 @@
   <div class="section" id="scalable-processing">
 <h1>Scalable Processing<a class="headerlink" href="#scalable-processing" title="Permalink to this headline">¶</a></h1>
 <p>CAJAL facilitates both local exploration and scalable processing.  This section focuses on scalable processing, and is especially valuable for new CAJAL users.  By following these steps and the linked example files, you will learn about basic toolbox functionality and each of the major capabilities of CAJAL.</p>
-<div class="section" id="server-setup">
-<h2>Server Setup<a class="headerlink" href="#server-setup" title="Permalink to this headline">¶</a></h2>
+<p>The major functions involved in scalable processing are: reading data, creating annotations, and uploading said annotations. We will go through several demonstration scripts which will guide you through accomplishing each of these tasks independently, or sequentially.</p>
+<div class="section" id="read-data">
+<h2>Read Data<a class="headerlink" href="#read-data" title="Permalink to this headline">¶</a></h2>
+<p>When reading data, you leverage the querying interface of OCP, which is explained in the Queries section. However, some basic queries exist which are most commonly used in the scalable setting.</p>
 </div>
 <div class="section" id="create-annotation">
 <h2>Create Annotation<a class="headerlink" href="#create-annotation" title="Permalink to this headline">¶</a></h2>
+<p>Creating annotations is where the processing algorithms being used make their mark. When doing voxel classification, block merging, or spatial clustering, you plug the algorithms in here. Say a classification task is being performed, then the result of your algorithm should be a paint volume which identifies the class or cluster of each region by assigning them a unique and consistent intensity (i.e. id). These ids are how OCP distinguishes between different annotations, and metadata associated with each.</p>
 </div>
 <div class="section" id="upload-annotation">
 <h2>Upload Annotation<a class="headerlink" href="#upload-annotation" title="Permalink to this headline">¶</a></h2>
+<p>There are several key ways to upload data. One can upload paint (i.e annotations) without associated metadata, metadata by itself, or both of these together. It is worth noting that though often times one wishes to upload both paint and metadata, it is more computationally efficient to upload them sequentially rather than at once for larger volumes.</p>
 </div>
-<div class="section" id="update-annotation">
-<h2>Update Annotation<a class="headerlink" href="#update-annotation" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="delete-annotation">
-<h2>Delete Annotation<a class="headerlink" href="#delete-annotation" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="read-data-queries">
-<h2>Read Data (Queries)<a class="headerlink" href="#read-data-queries" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>For now, please see the example posted here: <a class="reference external" href="https://github.com/openconnectome/CAJAL/blob/gkiar-cajal-doc/examples/demoUpload.m">https://github.com/openconnectome/CAJAL/blob/gkiar-cajal-doc/examples/demoUpload.m</a></p>
 </div>
 </div>
 
