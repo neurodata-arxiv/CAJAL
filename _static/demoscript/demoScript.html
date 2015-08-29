@@ -67,7 +67,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
   </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">CAJAL3D Demo Script</a></li><li><a href="#2">Create OCP Interface and set tokens</a></li><li><a href="#3">Get Some Image Data</a></li><li><a href="#4">Create a Synapse</a></li><li><a href="#5">Upload a Synapse</a></li><li><a href="#6">Download a Synapse</a></li><li><a href="#7">Update a Synapse</a></li><li><a href="#8">Query for Synapses</a></li><li><a href="#9">Delete a Synapse</a></li><li><a href="#10">Re-Upload the Synapse</a></li><li><a href="#11">Download a server side rendered overlay image (2D only)</a></li><li><a href="#12">Download Image and Anno Cutouts</a></li><li><a href="#13">More...</a></li></ul></div><h2>CAJAL3D Demo Script<a name="1"></a></h2><p>Set xyz starting point.  Since anyone can use this script you may want to "move" to a different region to run.</p><pre class="codeinput">xstart = 3000;
-ystart = 5000;
+ystart = 6000;
 zstart = 400;
 </pre><h2>Create OCP Interface and set tokens<a name="2"></a></h2><pre class="codeinput"><span class="comment">% Create an OCP Object.  This is the main class used for talking with OCP</span>
 <span class="comment">% services. If you want to create an OCP object that will use the</span>
@@ -177,7 +177,7 @@ cutout =
 
   500x500x5 RAMONVolume array with properties:
 
-            xyzOffset: [3000 5000 400]
+            xyzOffset: [3000 6000 400]
            resolution: 1
                  name: 'image'
     sliceDisplayIndex: 1
@@ -278,7 +278,7 @@ idList = oo.query(q) <span class="comment">%#ok&lt;*NASGU,*NOPTS&gt;</span>
 </pre><pre class="codeoutput">
 idList =
 
-           1           2
+           1           3          14
 
 </pre><h2>Delete a Synapse<a name="9"></a></h2><p>Delete and annotation by its ID</p><pre class="codeinput">oo.deleteAnnotation(id1)
 
@@ -291,7 +291,7 @@ Success
 
 idList =
 
-           1
+           1           3
 
 </pre><h2>Re-Upload the Synapse<a name="10"></a></h2><pre class="codeinput"><span class="comment">% Create some 'dummy' labels</span>
 d = zeros(200,200,5);
@@ -336,7 +336,7 @@ ans =
               zRange: []
           slicePlane: [1x1 eOCPSlicePlane]
               aRange: [2750 3250]
-              bRange: [4750 5250]
+              bRange: [5750 6250]
               cIndex: 402
         overlayAlpha: []
     idListPredicates: [0x1 containers.Map]
@@ -382,7 +382,7 @@ q =
   OCPQuery with properties:
 
                 type: [1x1 eOCPQueryType]
-                  id: 3
+                  id: 15
           resolution: []
               xRange: []
               yRange: []
@@ -404,7 +404,7 @@ q =
 % Set xyz starting point.  Since anyone can use this script you may want to
 % "move" to a different region to run.
 xstart = 3000;
-ystart = 5000;
+ystart = 6000;
 zstart = 400;
 
 %% Create OCP Interface and set tokens
