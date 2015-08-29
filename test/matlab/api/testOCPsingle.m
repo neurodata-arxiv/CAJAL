@@ -12,8 +12,9 @@ function test_suite = testOCPsingle %#ok<STOUT>
     
     % Holds the server location target for the test suite. 
     % Default is 'http://openconnecto.me' 
-    %target_server = 'http://brainviz1.cs.jhu.edu';
-    target_server = 'http://localhost:8000';
+    target_server = 'http://openconnecto.me';
+    %target_server = 'http://localhost:8000';
+
     
     %% Init the test suite
     initTestSuite;
@@ -93,7 +94,120 @@ function testNoToken %#ok<*DEFNU>
     oo.setDefaultResolution(1);
 end
 
+%% BLANK THE DB %%
+
+% Uncomment these functions when resetting the db / running test on a new OCP
+% install 
+
+% function testAnnotationSlice
+%     global oo
+%     
+%     % Use to reset db if needed
+%     d = zeros(100,80,30);
+%     d(40:60,40:60,1:2) = 1;
+%     d(50:55,60:70,2:3) = 1;
+%     d(40:70,50:65,2:5) = 1;
+% 
+%     s1 = RAMONSynapse(d,eRAMONDataFormat.dense,[2200 2200 200],1,eRAMONSynapseType.excitatory, 100,...
+%         [1,2;4,0],34,[],.64, eRAMONAnnoStatus.processed,{'tester',1212;'test2',[];'test','sets'},'testuser');
+%     oo.createAnnotation(s1);
+%     
+%     % xy
+%     q = OCPQuery(eOCPQueryType.annoSlice);
+%     q.setSliceArgs(eOCPSlicePlane.xy,2200,2400,2200,2400,201,1);
+%     slice = oo.query(q);
+%     
+%     load(fullfile(fileparts(which('cajal3d')),'test','matlab','api','data','slice_anno_xy.mat'));
+%     
+%     slice = rgb2gray(slice);
+%     savedSlice = rgb2gray(savedSlice); 
+%     inds1 = find(slice~=0);
+%     inds2 = find(savedSlice~=0);
+%     
+%     assertEqual(inds1,inds2);
+%     
+%     % xz
+%     q = OCPQuery(eOCPQueryType.annoSlice);
+%     q.setSliceArgs(eOCPSlicePlane.yz,2200,2400,180,280,2255,1);
+%     slice = oo.query(q);
+%     
+%     load(fullfile(fileparts(which('cajal3d')),'test','matlab','api','data','slice_anno_xz.mat'));
+%     slice = rgb2gray(slice);
+%     savedSlice = rgb2gray(savedSlice); 
+%     inds1 = find(slice~=0);
+%     inds2 = find(savedSlice~=0);    
+%     assertEqual(inds1,inds2);
+%     
+%     % yz
+%     q = OCPQuery(eOCPQueryType.annoSlice);
+%     q.setSliceArgs(eOCPSlicePlane.yz,2100,2400,180,280,2255,1);
+%     slice = oo.query(q);
+%     
+%     load(fullfile(fileparts(which('cajal3d')),'test','matlab','api','data','slice_anno_yz.mat'));
+%     slice = rgb2gray(slice);
+%     savedSlice = rgb2gray(savedSlice); 
+%     inds1 = find(slice~=0);
+%     inds2 = find(savedSlice~=0);
+%     assertEqual(inds1,inds2);
+% end
+% 
+% function testImageDataUpload %#ok<*DEFNU> 
+%     global oo;
+%     oo2 = OCP();
+%     
+%     % set server location 
+%     global target_server 
+%     oo2.setServerLocation(target_server) ;
+%     
+%     oo2.setImageToken('apiUnitTests');
+%     oo2.setImageChannel('apiUnitTestImageUpload');
+%     
+%     % Check db is empty
+%     q = OCPQuery(eOCPQueryType.imageDense);
+%     q.setCutoutArgs([3000,3250],[4000,4250],[500,505]);
+%     q.setResolution(1);
+%     
+%     % Cutout some kasthuri11 data
+%     k_data = oo.query(q);
+%     d = ones(size(k_data.data));
+%     sum_total = sum(d(:));
+%     
+%         
+%     % reset db if necessary:
+%     blank_data = k_data.clone;
+%     blank_data.setCutout(d);
+%     oo2.uploadImageData(blank_data);
+%     
+%     % Make sure the image upload DB is empty to start
+%     start_data = oo2.query(q); 
+%     assertEqual(sum_total,sum(start_data.data(:)));
+%      
+%     % Upload data
+%     oo2.uploadImageData(k_data);
+%     
+%     % Cutout newly uploaded data
+%     new_data = oo2.query(q);
+%     
+%     % Check that it matches
+%     % TODO: They don't straight match for some reason. Need to figure
+%     % out why this is happening.
+%     assertEqual(k_data.xyzOffset,new_data.xyzOffset);
+%     assertEqual(k_data.resolution,new_data.resolution);
+%     assertEqual(sum(k_data.data(:) - new_data.data(:)),0);
+% 
+%     % Clear out newly uploaded data
+%     blank_data = new_data.clone;
+%     blank_data.setCutout(d);
+%     oo2.uploadImageData(blank_data);
+%     
+%     % Check it's empty
+%     cleared_data = oo2.query(q);
+%     assertEqual(sum_total,sum(cleared_data.data(:)));
+% end
+
 %% ###### COPY AND PASTE SINGLE UNIT TESTS BELOW ######
+
+
 
 
 %% Clean up
