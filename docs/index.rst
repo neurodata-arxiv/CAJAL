@@ -10,8 +10,7 @@
 	<br>
 
 
-The CAJAL toolbox (or API) provides functionality to interact with the Open Connectome Project image and annotation databases, including querying raw image data, annotation data, and RAMON objects. Complex HTTP queries are wrapped in easy to use Matlab code - helper functions and example files are provided.
-
+The CAJAL toolbox (or API) provides functionality to interact with the Open Connectome Project image and annotation databases, including querying raw image data, annotation data, and RAMON objects. Complex HTTP queries are wrapped in easy to use Matlab code - helper functions and example files are provided.  New users may wish to begin with the `Getting Started Script <_static/demoscript/demoScript.html>`_.
 
 .. figure:: images/cajal_pipeline.jpg
     :width: 800px
@@ -50,7 +49,7 @@ The CAJAL toolbox (or API) provides functionality to interact with the Open Conn
   tutorials/advanced_topics
   tutorials/queries
   tutorials/cheat_sheet
-
+  
 .. toctree::
    :maxdepth: 1
    :caption: Further Reading

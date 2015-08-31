@@ -1,0 +1,624 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>demoScript</title><meta name="generator" content="MATLAB 8.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-08-29"><meta name="DC.source" content="demoScript.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">CAJAL3D Demo Script</a></li><li><a href="#2">Create OCP Interface and set tokens</a></li><li><a href="#3">Get Some Image Data</a></li><li><a href="#4">Create a Synapse</a></li><li><a href="#5">Upload a Synapse</a></li><li><a href="#6">Download a Synapse</a></li><li><a href="#7">Update a Synapse</a></li><li><a href="#8">Query for Synapses</a></li><li><a href="#9">Delete a Synapse</a></li><li><a href="#10">Re-Upload the Synapse</a></li><li><a href="#11">Download a server side rendered overlay image (2D only)</a></li><li><a href="#12">Download Image and Anno Cutouts</a></li><li><a href="#13">More...</a></li></ul></div><h2>CAJAL3D Demo Script<a name="1"></a></h2><p>Set xyz starting point.  Since anyone can use this script you may want to "move" to a different region to run.</p><pre class="codeinput">xstart = 3000;
+ystart = 6000;
+zstart = 400;
+</pre><h2>Create OCP Interface and set tokens<a name="2"></a></h2><pre class="codeinput"><span class="comment">% Create an OCP Object.  This is the main class used for talking with OCP</span>
+<span class="comment">% services. If you want to create an OCP object that will use the</span>
+<span class="comment">% distributed semaphore (assuming you've set it up) use OCP('semaphore')</span>
+<span class="comment">% instead.</span>
+oo = OCP();
+
+<span class="comment">% Set the server location.  This is the default server and most likely the</span>
+<span class="comment">% one you should be using.</span>
+oo.setServerLocation(<span class="string">'http://openconnecto.me/'</span>);
+
+<span class="comment">% Set the image token.  This is the database for image data reading.</span>
+oo.setImageToken(<span class="string">'kasthuri11cc'</span>);
+
+<span class="comment">% Set the image token.  This is the database for image data reading. You</span>
+<span class="comment">% can also read this from a file using setAnnoTokenFile. Also update</span>
+<span class="comment">% propagate status to make the annotation project writeable.</span>
+<span class="comment">% Note: We do not propagate in the demo script.</span>
+oo.setAnnoToken(<span class="string">'cajal_demo'</span>);
+oo.setAnnoChannel(<span class="string">'anno'</span>);
+oo.makeAnnoWritable();
+
+<span class="comment">% Information about the databases are accessible</span>
+oo.annoInfo.DATASET
+oo.annoInfo.DATASET.IMAGE_SIZE(1)
+
+<span class="comment">% Set the default resolution.  This is the resolution at which operations</span>
+<span class="comment">% should occur unless otherwise specified.</span>
+oo.setDefaultResolution(1);
+
+<span class="comment">% There are other options to further tweak the OCP object.</span>
+<span class="comment">% oo.setBatchSize - This sets the maximum number of objects the API will</span>
+<span class="comment">% group into a single batch write.  You shouldn't have to change this.</span>
+<span class="comment">% oo.setMaxAnnoSize - This is the maximum size an annotation can be before</span>
+<span class="comment">% the API automatically chunks it up into multiple writes. You shouldn't</span>
+<span class="comment">% have to touch this.</span>
+<span class="comment">% oo.setErrorPageLocation - this is where OCP errors will be written.  The</span>
+<span class="comment">% server generates an html response that can be viewed for debugging.</span>
+</pre><pre class="codeoutput">
+ans = 
+
+    CUBE_DIMENSION: [8x1 containers.Map]
+        IMAGE_SIZE: [8x1 containers.Map]
+              NAME: {'kasthuri11cc'}
+            OFFSET: [8x1 containers.Map]
+       RESOLUTIONS: [0 1 2 3 4 5 6 7]
+         TIMERANGE: [0 0]
+          VOXELRES: [8x1 containers.Map]
+
+
+ans =
+
+       10752       13312        1850
+
+</pre><h2>Get Some Image Data<a name="3"></a></h2><p>The OCPQuery object is the basis for building queries for the database. The constructors accept multiple options so check out the code.</p><pre class="codeinput"><span class="comment">% Build query to cutout IMAGE data.</span>
+q = OCPQuery(eOCPQueryType.imageDense);
+
+<span class="comment">% The validate method can be used to check if the query has any errors</span>
+[pf, msg] = q.validate()
+
+<span class="comment">% setCutoutArgs sets all the required fields for a cutout query.</span>
+q.setCutoutArgs([xstart xstart+500],<span class="keyword">...</span>
+                [ystart ystart+500],<span class="keyword">...</span>
+                [zstart zstart+5],<span class="keyword">...</span>
+                1);
+
+<span class="comment">% Query is now valid</span>
+[pf, msg] = q.validate()
+
+<span class="comment">% Download the data into a RAMONVolume. The RAMONVolume stores the image</span>
+<span class="comment">% data in the .data property.  There are other useful bits of information,</span>
+<span class="comment">% specifically the xyzOffset value which indicates where the data came</span>
+<span class="comment">% from.</span>
+cutout = oo.query(q);
+cutout
+
+<span class="comment">% The image method has been overloaded to launch the API's simple data</span>
+<span class="comment">% viewer.  '?' prints the shortcuts</span>
+image(cutout);
+</pre><pre class="codeoutput">
+pf =
+
+     0
+
+
+msg =
+
+[E] X Range is required for dense cutouts
+[E] Y Range is required for dense cutouts
+[E] Z Range is required for dense cutouts
+[W] Resolution is empty.  Default resolution will be used at runtime.
+
+
+
+pf =
+
+     1
+
+
+msg =
+
+     ''
+
+
+
+cutout = 
+
+  500x500x5 RAMONVolume array with properties:
+
+            xyzOffset: [3000 6000 400]
+           resolution: 1
+                 name: 'image'
+    sliceDisplayIndex: 1
+           dataFormat: [1x1 eRAMONDataFormat]
+                 data: [500x500x5 uint8]
+                   id: []
+              channel: []
+           confidence: 1
+      dynamicMetadata: [0x1 containers.Map]
+               status: [1x1 eRAMONAnnoStatus]
+               author: 'unspecified'
+             dataType: [1x1 eRAMONChannelDataType]
+          channelType: [1x1 eRAMONChannelType]
+
+</pre><img vspace="5" hspace="5" src="demoScript_01.png" alt=""> <img vspace="5" hspace="5" src="demoScript_02.png" alt=""> <h2>Create a Synapse<a name="4"></a></h2><p>Create some 'dummy' labels</p><pre class="codeinput">d = zeros(200,200,5);
+d(30:170,30:170,:) = 1;
+
+<span class="comment">% Create an empty RAMONSynapse object</span>
+s1 = RAMONSynapse()
+
+<span class="comment">% Set the objects properties as desired.</span>
+s1.setCutout(uint32(d));
+s1.setXyzOffset([xstart ystart zstart]);
+s1.setResolution(1);
+
+s1.setSynapseType(eRAMONSynapseType.excitatory);
+s1.setSeeds([2 4 6 3]);
+s1.setConfidence(.8);
+</pre><pre class="codeoutput">
+s1 = 
+
+  0x0 RAMONSynapse array with properties:
+
+          synapseType: [1x1 eRAMONSynapseType]
+               weight: []
+             segments: [0x1 containers.Map]
+                seeds: []
+            xyzOffset: []
+           resolution: []
+                 name: 'Volume1'
+    sliceDisplayIndex: 1
+           dataFormat: [1x1 eRAMONDataFormat]
+                 data: []
+                   id: []
+              channel: []
+           confidence: 1
+      dynamicMetadata: [0x1 containers.Map]
+               status: [1x1 eRAMONAnnoStatus]
+               author: 'unspecified'
+             dataType: []
+          channelType: []
+
+</pre><h2>Upload a Synapse<a name="5"></a></h2><pre class="codeinput"><span class="comment">%Simply passing the RAMON object (or any RAMON object really...) will upload</span>
+<span class="comment">%the data and create an annotation.  The database will assign an ID as long</span>
+<span class="comment">%as the ID was empty in the RAMON object.</span>
+id1 = oo.createAnnotation(s1);
+</pre><h2>Download a Synapse<a name="6"></a></h2><p>The server can't get objects that don't exist THIS LINE SHOULD THROW AN EXCEPTION AS AN EXAMPLE</p><pre class="codeinput"><span class="comment">%sbad = oo.query(OCPQuery(eOCPQueryType.RAMONDense,4565564531));</span>
+
+<span class="comment">% Download the synapse we just uploaded. s1 and s2 should now contain the</span>
+<span class="comment">% same data, but s2 has been spatially aligned to the backend storage cuboids and has</span>
+<span class="comment">% been assigned an ID.</span>
+s2 = oo.query(OCPQuery(eOCPQueryType.RAMONDense,id1));
+</pre><h2>Update a Synapse<a name="7"></a></h2><p>You can directly update metadata fields</p><pre class="codeinput">f = OCPFields();
+oo.getField(id1,f.synapse.author)
+oo.setField(id1,f.synapse.author,<span class="string">'demo_test'</span>);
+oo.getField(id1,f.synapse.author)
+
+<span class="comment">% You can also update the object locally and then push the changes.  if</span>
+<span class="comment">% you're changing the annotation data this is how it is done as well.</span>
+oo.getField(id1,f.synapse.weight)
+s2.setWeight(.5);
+id1 = oo.updateAnnotation(s2);
+oo.getField(id1,f.synapse.weight)
+</pre><pre class="codeoutput">
+ans =
+
+unspecified
+
+
+ans =
+
+demo_test
+
+
+ans =
+
+     0
+
+
+ans =
+
+    0.5000
+
+</pre><h2>Query for Synapses<a name="8"></a></h2><p>You can query the database for IDs that match some list of predicates. This can also be done spatially!</p><pre class="codeinput">q = OCPQuery(eOCPQueryType.RAMONIdList);
+q.addIdListPredicate(eOCPPredicate.type,eRAMONAnnoType.synapse);
+
+idList = oo.query(q) <span class="comment">%#ok&lt;*NASGU,*NOPTS&gt;</span>
+</pre><pre class="codeoutput">
+idList =
+
+           1           3          14
+
+</pre><h2>Delete a Synapse<a name="9"></a></h2><p>Delete and annotation by its ID</p><pre class="codeinput">oo.deleteAnnotation(id1)
+
+idList = oo.query(q)
+</pre><pre class="codeoutput">
+ans =
+
+Success
+
+
+idList =
+
+           1           3
+
+</pre><h2>Re-Upload the Synapse<a name="10"></a></h2><pre class="codeinput"><span class="comment">% Create some 'dummy' labels</span>
+d = zeros(200,200,5);
+d(30:170,30:170,:) = 1;
+
+<span class="comment">% Create an RAMONSynapse object with a single call.</span>
+s3 = RAMONSynapse(d,eRAMONDataFormat.dense,[xstart+450 ystart+540 zstart+65],1);
+id3 = oo.createAnnotation(s3);
+</pre><h2>Download a server side rendered overlay image (2D only)<a name="11"></a></h2><pre class="codeinput">q = OCPQuery(eOCPQueryType.overlaySlice);
+q.setSliceArgs(eOCPSlicePlane.xy,<span class="keyword">...</span>
+    [s1.xyzOffset(1) - 250, s1.xyzOffset(1) + 250],<span class="keyword">...</span>
+    [s1.xyzOffset(2) - 250, s1.xyzOffset(2) + 250],<span class="keyword">...</span>
+    s1.xyzOffset(3) + 2,<span class="keyword">...</span>
+    1)
+
+slice = oo.query(q);
+figure;
+imshow(slice);
+
+<span class="comment">% You can set the alpha too.</span>
+q.setOverlayAlpha(.7);
+slice = oo.query(q);
+figure;
+imshow(slice);
+
+
+<span class="comment">% You can set the alpha too.</span>
+q.setOverlayAlpha(.3);
+slice = oo.query(q);
+figure;
+imshow(slice);
+</pre><pre class="codeoutput">
+ans = 
+
+  OCPQuery with properties:
+
+                type: [1x1 eOCPQueryType]
+                  id: []
+          resolution: 1
+              xRange: []
+              yRange: []
+              zRange: []
+          slicePlane: [1x1 eOCPSlicePlane]
+              aRange: [2750 3250]
+              bRange: [5750 6250]
+              cIndex: 402
+        overlayAlpha: []
+    idListPredicates: [0x1 containers.Map]
+         idListLimit: []
+            xyzCoord: []
+           filterIds: []
+            channels: []
+
+</pre><img vspace="5" hspace="5" src="demoScript_03.png" alt=""> <img vspace="5" hspace="5" src="demoScript_04.png" alt=""> <img vspace="5" hspace="5" src="demoScript_05.png" alt=""> <h2>Download Image and Anno Cutouts<a name="12"></a></h2><p>Finally lets cutout both an image and annotation volume around the annotation we created and view them together using the basic viewer.</p><pre class="codeinput"><span class="comment">% You can do it the hard manual way.</span>
+q = OCPQuery(eOCPQueryType.annoDense);
+q.setCutoutArgs([s3.xyzOffset(1) - 250 s3.xyzOffset(1) + 250],<span class="keyword">...</span>
+                [s3.xyzOffset(2) - 150 s3.xyzOffset(2) + 250],<span class="keyword">...</span>
+                [s3.xyzOffset(3) - 3 s3.xyzOffset(3) + 3],<span class="keyword">...</span>
+                1);
+cutoutAnno = oo.query(q);
+
+q = OCPQuery(eOCPQueryType.imageDense);
+q.setCutoutArgs([s3.xyzOffset(1) - 250 s3.xyzOffset(1) + 250],<span class="keyword">...</span>
+                [s3.xyzOffset(2) - 150 s3.xyzOffset(2) + 250],<span class="keyword">...</span>
+                [s3.xyzOffset(3) - 3 s3.xyzOffset(3) + 3],<span class="keyword">...</span>
+                1);
+cutoutImage = oo.query(q);
+
+h = image(cutoutImage);
+
+<span class="comment">% Press the 'a' key to toggle the annotation overlay on and off.</span>
+h.associate(cutoutAnno);
+
+<span class="comment">% You can also do it the easy automatic way if you are trying to just</span>
+<span class="comment">% visualize a specific RAMON Object.</span>
+q = OCPQuery(eOCPQueryType.RAMONDense,id3)
+cutoutAnno = oo.query(q);
+
+q_anno = cutoutAnno.toImageDenseQuery();
+cutoutImg = oo.query(q_anno);
+
+
+h = image(cutoutImg);
+h.associate(cutoutAnno);
+</pre><pre class="codeoutput">
+q = 
+
+  OCPQuery with properties:
+
+                type: [1x1 eOCPQueryType]
+                  id: 15
+          resolution: []
+              xRange: []
+              yRange: []
+              zRange: []
+          slicePlane: []
+              aRange: []
+              bRange: []
+              cIndex: []
+        overlayAlpha: []
+    idListPredicates: [0x1 containers.Map]
+         idListLimit: []
+            xyzCoord: []
+           filterIds: []
+            channels: []
+
+</pre><img vspace="5" hspace="5" src="demoScript_06.png" alt=""> <img vspace="5" hspace="5" src="demoScript_07.png" alt=""> <img vspace="5" hspace="5" src="demoScript_08.png" alt=""> <img vspace="5" hspace="5" src="demoScript_09.png" alt=""> <h2>More...<a name="13"></a></h2><p>This example script provides some initial code to get you started, but there is much more to the API.  The unit tests more comprehensively describe the full functionality.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% CAJAL3D Demo Script
+% Set xyz starting point.  Since anyone can use this script you may want to
+% "move" to a different region to run.
+xstart = 3000;
+ystart = 6000;
+zstart = 400;
+
+%% Create OCP Interface and set tokens
+
+% Create an OCP Object.  This is the main class used for talking with OCP
+% services. If you want to create an OCP object that will use the
+% distributed semaphore (assuming you've set it up) use OCP('semaphore')
+% instead.
+oo = OCP();
+
+% Set the server location.  This is the default server and most likely the
+% one you should be using.
+oo.setServerLocation('http://openconnecto.me/');
+
+% Set the image token.  This is the database for image data reading.
+oo.setImageToken('kasthuri11cc');
+
+% Set the image token.  This is the database for image data reading. You
+% can also read this from a file using setAnnoTokenFile. Also update 
+% propagate status to make the annotation project writeable.
+% Note: We do not propagate in the demo script.
+oo.setAnnoToken('cajal_demo');
+oo.setAnnoChannel('anno');
+oo.makeAnnoWritable();
+
+% Information about the databases are accessible
+oo.annoInfo.DATASET
+oo.annoInfo.DATASET.IMAGE_SIZE(1)
+
+% Set the default resolution.  This is the resolution at which operations
+% should occur unless otherwise specified.
+oo.setDefaultResolution(1);
+
+% There are other options to further tweak the OCP object.
+% oo.setBatchSize - This sets the maximum number of objects the API will
+% group into a single batch write.  You shouldn't have to change this.
+% oo.setMaxAnnoSize - This is the maximum size an annotation can be before
+% the API automatically chunks it up into multiple writes. You shouldn't
+% have to touch this.
+% oo.setErrorPageLocation - this is where OCP errors will be written.  The
+% server generates an html response that can be viewed for debugging.
+
+
+%% Get Some Image Data
+% The OCPQuery object is the basis for building queries for the database.
+% The constructors accept multiple options so check out the code.
+
+% Build query to cutout IMAGE data.
+q = OCPQuery(eOCPQueryType.imageDense);
+
+% The validate method can be used to check if the query has any errors
+[pf, msg] = q.validate()
+
+% setCutoutArgs sets all the required fields for a cutout query.
+q.setCutoutArgs([xstart xstart+500],...
+                [ystart ystart+500],...
+                [zstart zstart+5],...
+                1);
+
+% Query is now valid
+[pf, msg] = q.validate()
+
+% Download the data into a RAMONVolume. The RAMONVolume stores the image
+% data in the .data property.  There are other useful bits of information,
+% specifically the xyzOffset value which indicates where the data came
+% from.
+cutout = oo.query(q);
+cutout
+
+% The image method has been overloaded to launch the API's simple data
+% viewer.  '?' prints the shortcuts
+image(cutout);
+
+%% Create a Synapse
+% Create some 'dummy' labels
+d = zeros(200,200,5);
+d(30:170,30:170,:) = 1;
+
+% Create an empty RAMONSynapse object
+s1 = RAMONSynapse()
+
+% Set the objects properties as desired.
+s1.setCutout(uint32(d));
+s1.setXyzOffset([xstart ystart zstart]);
+s1.setResolution(1);
+
+s1.setSynapseType(eRAMONSynapseType.excitatory);
+s1.setSeeds([2 4 6 3]);
+s1.setConfidence(.8);
+
+
+%% Upload a Synapse
+%Simply passing the RAMON object (or any RAMON object really...) will upload
+%the data and create an annotation.  The database will assign an ID as long
+%as the ID was empty in the RAMON object.
+id1 = oo.createAnnotation(s1);
+
+%% Download a Synapse
+% The server can't get objects that don't exist
+% THIS LINE SHOULD THROW AN EXCEPTION AS AN EXAMPLE
+%sbad = oo.query(OCPQuery(eOCPQueryType.RAMONDense,4565564531));
+
+% Download the synapse we just uploaded. s1 and s2 should now contain the
+% same data, but s2 has been spatially aligned to the backend storage cuboids and has
+% been assigned an ID.
+s2 = oo.query(OCPQuery(eOCPQueryType.RAMONDense,id1));
+
+%% Update a Synapse
+% You can directly update metadata fields
+f = OCPFields();
+oo.getField(id1,f.synapse.author)
+oo.setField(id1,f.synapse.author,'demo_test');
+oo.getField(id1,f.synapse.author)
+
+% You can also update the object locally and then push the changes.  if
+% you're changing the annotation data this is how it is done as well.
+oo.getField(id1,f.synapse.weight)
+s2.setWeight(.5);
+id1 = oo.updateAnnotation(s2);
+oo.getField(id1,f.synapse.weight)
+
+
+%% Query for Synapses
+% You can query the database for IDs that match some list of predicates.
+% This can also be done spatially!
+q = OCPQuery(eOCPQueryType.RAMONIdList);
+q.addIdListPredicate(eOCPPredicate.type,eRAMONAnnoType.synapse);
+
+idList = oo.query(q) %#ok<*NASGU,*NOPTS>
+
+%% Delete a Synapse
+% Delete and annotation by its ID
+oo.deleteAnnotation(id1)
+
+idList = oo.query(q)
+
+%% Re-Upload the Synapse
+
+% Create some 'dummy' labels
+d = zeros(200,200,5);
+d(30:170,30:170,:) = 1;
+
+% Create an RAMONSynapse object with a single call.
+s3 = RAMONSynapse(d,eRAMONDataFormat.dense,[xstart+450 ystart+540 zstart+65],1);
+id3 = oo.createAnnotation(s3);
+
+%% Download a server side rendered overlay image (2D only)
+q = OCPQuery(eOCPQueryType.overlaySlice);
+q.setSliceArgs(eOCPSlicePlane.xy,...
+    [s1.xyzOffset(1) - 250, s1.xyzOffset(1) + 250],...
+    [s1.xyzOffset(2) - 250, s1.xyzOffset(2) + 250],...
+    s1.xyzOffset(3) + 2,...
+    1)
+
+slice = oo.query(q);
+figure;
+imshow(slice);
+
+% You can set the alpha too.
+q.setOverlayAlpha(.7);
+slice = oo.query(q);
+figure;
+imshow(slice);
+
+
+% You can set the alpha too.
+q.setOverlayAlpha(.3);
+slice = oo.query(q);
+figure;
+imshow(slice);
+
+%% Download Image and Anno Cutouts
+% Finally lets cutout both an image and annotation volume around the annotation
+% we created and view them together using the basic viewer.
+
+% You can do it the hard manual way.
+q = OCPQuery(eOCPQueryType.annoDense);
+q.setCutoutArgs([s3.xyzOffset(1) - 250 s3.xyzOffset(1) + 250],...
+                [s3.xyzOffset(2) - 150 s3.xyzOffset(2) + 250],...
+                [s3.xyzOffset(3) - 3 s3.xyzOffset(3) + 3],...
+                1);
+cutoutAnno = oo.query(q);
+
+q = OCPQuery(eOCPQueryType.imageDense);
+q.setCutoutArgs([s3.xyzOffset(1) - 250 s3.xyzOffset(1) + 250],...
+                [s3.xyzOffset(2) - 150 s3.xyzOffset(2) + 250],...
+                [s3.xyzOffset(3) - 3 s3.xyzOffset(3) + 3],...
+                1);
+cutoutImage = oo.query(q);
+
+h = image(cutoutImage);
+
+% Press the 'a' key to toggle the annotation overlay on and off.
+h.associate(cutoutAnno);
+
+% You can also do it the easy automatic way if you are trying to just
+% visualize a specific RAMON Object.
+q = OCPQuery(eOCPQueryType.RAMONDense,id3)
+cutoutAnno = oo.query(q);
+
+q_anno = cutoutAnno.toImageDenseQuery();
+cutoutImg = oo.query(q_anno);
+
+
+h = image(cutoutImg);
+h.associate(cutoutAnno);
+
+
+%% More...
+% This example script provides some initial code to get you started, 
+% but there is much more to the API.  The unit tests more comprehensively 
+% describe the full functionality. 
+
+
+
+##### SOURCE END #####
+--></body></html>
