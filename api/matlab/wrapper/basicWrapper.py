@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#/usr/bin/env python
 
 ## Template for a basic matlab wrapper for the LONI Pipeline##
 
