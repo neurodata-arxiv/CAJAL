@@ -7,8 +7,8 @@
 
 %define your server, project, and channel
 server = 'openconnecto.me';
-channel = 'testanno';
-token = 'gk1';
+channel = 'anno1';
+token = 'test_cajal';
 
 %define some region you wish to annotate
 d = zeros(200,200,5);
@@ -51,7 +51,7 @@ synapse.setSynapseType(eRAMONSynapseType.excitatory);
 synapse.setSeeds([2 4 6 3]);
 synapse.setConfidence(.8);
 
-uploadRAMON(server, token, channel, synapse, semaphore, [], 'testfilegk.mat');
+uploadRAMON(server, token, channel, synapse, semaphore, idFile);
 
 
 %% Upload Complete RAMONObjects

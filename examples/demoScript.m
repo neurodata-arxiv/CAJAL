@@ -1,7 +1,7 @@
 %% CAJAL3D Demo Script
 % Set xyz starting point.  Since anyone can use this script you may want to
 % "move" to a different region to run.
-xstart = 3000;
+xstart = 5500;
 ystart = 6000;
 zstart = 400;
 
@@ -92,6 +92,8 @@ s1.setResolution(1);
 s1.setSynapseType(eRAMONSynapseType.excitatory);
 s1.setSeeds([2 4 6 3]);
 s1.setConfidence(.8);
+s1.setChannel(oo.getAnnoChannel)
+s1.setChannelType(eRAMONChannelType.annotation)
 
 
 %% Upload a Synapse
@@ -121,7 +123,7 @@ oo.getField(id1,f.synapse.author)
 % you're changing the annotation data this is how it is done as well.
 oo.getField(id1,f.synapse.weight)
 s2.setWeight(.5);
-id1 = oo.updateAnnotation(s2);
+%id1 = oo.updateAnnotation(s2);
 oo.getField(id1,f.synapse.weight)
 
 
@@ -146,7 +148,10 @@ d = zeros(200,200,5);
 d(30:170,30:170,:) = 1;
 
 % Create an RAMONSynapse object with a single call.
-s3 = RAMONSynapse(d,eRAMONDataFormat.dense,[xstart+450 ystart+540 zstart+65],1);
+s3 = RAMONSynapse(uint32(d),eRAMONDataFormat.dense,[xstart+450 ystart+540 zstart+65],1);
+s3.setChannel(oo.getAnnoChannel)
+s3.setChannelType(eRAMONChannelType.annotation)
+
 id3 = oo.createAnnotation(s3);
 
 %% Download a server side rendered overlay image (2D only)
