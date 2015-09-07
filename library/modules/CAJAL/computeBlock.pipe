@@ -7,7 +7,7 @@
                 <metadata>
                         <data key="__creationDateKey" value="Tue Jan 27 13:56:38 EST 2015" />
                 </metadata>
-                <module id="ComputeBlock_1" name="Compute Block" package="CAJAL3D" version="1.2" description="This module creates sub-cubes of data from a larger specified region.  It creates a collection of saved OCPQuery objects and a list file that specifies the location to the saved OCPQuery objects.&#xA;&#xA;You can optionally pad in x,y, and z.  This will generate overlapping cubes, which can be important for some computer vision tasks.&#xA;&#xA;You can optionally align to database X-Y cuboid boundaries for more efficient query/writing.&#xA;&#xA;You can optionally align to Z cuboid boundaries&#xA;&#xA;You can optionally shuffle the list file.  This is useful when running on a cluster and padding so data access has a lower chance of colliding. &#xA;&#xA;Use the Cube Cutout module to retrieve data based on the generated OCPQuery objects&#xA;&#xA;*** Important Note:&#xA;When specifying the cutout region, it is important to remember that the first point is inclusive and the second point is exclusive.&#xA;Example - start: 10 end: 20 = 10 -&gt; 19 (span of 10)&#xA;&#xA;&#xA;" icon="0" posX="25" posY="105" sourceCode="" location="pipeline://localhost//mnt/pipeline/tools/CAJAL3D/api/matlab/wrapper/basicWrapper.py" executableVersion="1.2">
+                <module id="ComputeBlock_1" name="Compute Block" package="CAJAL" version="1.2" description="This module creates sub-cubes of data from a larger specified region.  It creates a collection of saved OCPQuery objects and a list file that specifies the location to the saved OCPQuery objects.&#xA;&#xA;You can optionally pad in x,y, and z.  This will generate overlapping cubes, which can be important for some computer vision tasks.&#xA;&#xA;You can optionally align to database X-Y cuboid boundaries for more efficient query/writing.&#xA;&#xA;You can optionally align to Z cuboid boundaries&#xA;&#xA;You can optionally shuffle the list file.  This is useful when running on a cluster and padding so data access has a lower chance of colliding. &#xA;&#xA;Use the Cube Cutout module to retrieve data based on the generated OCPQuery objects&#xA;&#xA;*** Important Note:&#xA;When specifying the cutout region, it is important to remember that the first point is inclusive and the second point is exclusive.&#xA;Example - start: 10 end: 20 = 10 -&gt; 19 (span of 10)&#xA;&#xA;&#xA;" icon="0" posX="132" posY="163" sourceCode="" location="pipeline://localhost//mnt/pipeline/tools/CAJAL3D/api/matlab/wrapper/basicWrapper.py" executableVersion="1.2">
                         <authors>
                                 <author fullName="Dean Kleissas" email="dean.kleissas@jhuapl.edu" website="www.jhuapl.edu" />
                         </authors>
@@ -245,16 +245,16 @@
                 </module>
                 <variables>
                         <variable name="emToken">kasthuri11cc</variable>
-                        <variable name="yStop">6464</variable>
-                        <variable name="vesicleLocation">http://braingraph1dev.cs.jhu.edu/</variable>
                         <variable name="annoToken">cajal3d_inscribedSynapseProb4</variable>
-                        <variable name="yStart">5440</variable>
+                        <variable name="vesicleLocation">http://braingraph1dev.cs.jhu.edu/</variable>
+                        <variable name="yStop">6464</variable>
                         <variable name="serviceLocation">http://braingraph1dev.cs.jhu.edu/</variable>
+                        <variable name="yStart">5440</variable>
                         <variable name="vesicleToken">c3d_vesicle1</variable>
                         <variable name="xStop">5424</variable>
                         <variable name="membraneToken">kasthuri11_final_membranes</variable>
-                        <variable name="synObjLocation">http://braingraph1dev.cs.jhu.edu/</variable>
                         <variable name="segToken">c3d_rhoana1</variable>
+                        <variable name="synObjLocation">http://braingraph1dev.cs.jhu.edu/</variable>
                         <variable name="xSpan">1024</variable>
                         <variable name="serviceLocationCutout">http://braingraph1dev.cs.jhu.edu/</variable>
                         <variable name="imgToken">cajal3d_inscribedSynapseProb4</variable>
@@ -271,8 +271,8 @@
                         <variable name="ySpan">1024</variable>
                         <variable name="padX">50</variable>
                         <variable name="padZ">2</variable>
-                        <variable name="emLocation">http://braingraph1dev.cs.jhu.edu/</variable>
                         <variable name="padY">50</variable>
+                        <variable name="emLocation">http://braingraph1dev.cs.jhu.edu/</variable>
                         <variable name="synProbLocation">http://braingraph1dev.cs.jhu.edu/</variable>
                         <variable name="zStop">1200</variable>
                 </variables>

@@ -7,7 +7,7 @@
                 <metadata>
                         <data key="__creationDateKey" value="Mon Oct 08 13:00:54 EDT 2012" />
                 </metadata>
-                <module id="UploadLabels_1" name="Upload Labels" package="CAJAL3D" version="1.2" description="This module ingests an OCPQuery object and based on the parameters, retrieves data from the Open Connectome Project servers and saves a file for pipeline use.&#xA;&#xA;This module can save the retrieved cube as either a RAMONVolume stored in a .mat file or an HDF5 .h5 file by setting the objectType flag.  If omitted a RAMONVolume is created by default.&#xA;&#xA;NOTE:  The output file type set in LONI pipeline should match the objectType flag.&#xA;0 = .mat&#xA;1 = .h5" icon="0" posX="168" posY="106" sourceCode="" location="pipeline://localhost/api/matlab/wrapper/basicWrapper.py" executableVersion="1.0">
+                <module id="UploadLabels_1" name="Upload Labels" package="CAJAL" version="1.2" description="This module ingests an OCPQuery object and based on the parameters, retrieves data from the Open Connectome Project servers and saves a file for pipeline use.&#xA;&#xA;This module can save the retrieved cube as either a RAMONVolume stored in a .mat file or an HDF5 .h5 file by setting the objectType flag.  If omitted a RAMONVolume is created by default.&#xA;&#xA;NOTE:  The output file type set in LONI pipeline should match the objectType flag.&#xA;0 = .mat&#xA;1 = .h5" icon="0" posX="255" posY="152" sourceCode="" location="pipeline://braincloud1.cs.jhu.edu/api/matlab/wrapper/basicWrapper.py" executableVersion="1.0">
                         <authors>
                                 <author fullName="Dean Kleissas" email="dean.kleissas@jhuapl.edu" website="www.jhuapl.edu" />
                         </authors>
@@ -42,14 +42,14 @@
                         <input id="UploadLabels_1.volume" name="volume" description="This argument is a .mat file containing a RAMONVolume" required="true" enabled="true" order="4" prefix="-s" prefixSpaced="true" prefixAllArgs="false">
                                 <format type="File" cardinality="1">
                                         <fileTypes>
-                                                <filetype name="list file" extension="list" description="list file for LONI" />
+                                                <filetype name="Matlab file" extension="mat" description="" />
                                         </fileTypes>
                                 </format>
                         </input>
                         <input id="UploadLabels_1.server" name="server" required="true" enabled="true" order="1" prefix="-s" prefixSpaced="true" prefixAllArgs="false">
                                 <format type="String" cardinality="1" />
                                 <values>
-                                        <value>{server}</value>
+                                        <value>{emLocation}</value>
                                 </values>
                         </input>
                         <input id="UploadLabels_1.useSemaphore" name="useSemaphore" description="Flag indicating if the distributed semaphore system should be used while communicating with OCP servers.  This controls the number of possible simultaneous HTTP POSTs and GETs.  Use the SemaphoreTool class to inspect current distributed semaphore setup.   Default is 0 (disabled)&#xA;&#xA;0 = disabled&#xA;1 = enabled" required="true" enabled="true" order="7" prefix="-d" prefixSpaced="true" prefixAllArgs="false">
@@ -64,13 +64,13 @@
                         <input id="UploadLabels_1.token" name="token" required="false" enabled="true" order="2" prefix="-s" prefixSpaced="true" prefixAllArgs="false">
                                 <format type="String" cardinality="1" />
                                 <values>
-                                        <value>{imgToken}</value>
+                                        <value>{uploadTokenProb}</value>
                                 </values>
                         </input>
                         <input id="UploadLabels_1.channel" name="channel" required="false" enabled="true" order="3" prefix="-s" prefixSpaced="true" prefixAllArgs="false">
                                 <format type="String" cardinality="1" />
                                 <values>
-                                        <value>{channel}</value>
+                                        <value>{image}</value>
                                 </values>
                         </input>
                         <input id="UploadLabels_1.probability" name="probability" description="Flag indicating whether or not the annotation is a probability&#xA;0 = value&#xA;1 = probability" required="false" enabled="true" order="6" prefix="-d" prefixSpaced="true" prefixAllArgs="false">
@@ -79,7 +79,7 @@
                                         <enumeration>1</enumeration>
                                 </format>
                                 <values>
-                                        <value>0</value>
+                                        <value>1</value>
                                 </values>
                         </input>
                         <executableAuthors>
@@ -87,8 +87,56 @@
                         </executableAuthors>
                 </module>
                 <variables>
+                        <variable name="padZ2">2</variable>
+                        <variable name="anno_token">testwill1</variable>
+                        <variable name="padZ1">2</variable>
+                        <variable name="uploadTokenObj">test_ilastik_obj1</variable>
+                        <variable name="sToken">sDeploy5</variable>
+                        <variable name="yStart">8500</variable>
+                        <variable name="padZ3">20</variable>
+                        <variable name="segToken">test_i2g_gala1</variable>
+                        <variable name="xSpan2">500</variable>
+                        <variable name="emChannel">image</variable>
+                        <variable name="xSpan">1000</variable>
+                        <variable name="syn_prob_token">kasthuri11cc_synprob_ac3</variable>
+                        <variable name="xStart">7000</variable>
                         <variable name="imgToken" description="image database token" required="true" order="0">kasthuri11</variable>
+                        <variable name="truth_cutout">truth_cutout.mat</variable>
+                        <variable name="padY1">0</variable>
+                        <variable name="synapse_cutout">synapse_cutout.mat</variable>
+                        <variable name="padY3">300</variable>
+                        <variable name="edge_truth_server">openconnecto.me</variable>
                         <variable name="serverLocation" required="true" order="1">http://openconnecto.me/</variable>
+                        <variable name="img_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="zSpan">25</variable>
+                        <variable name="zStart">1000</variable>
+                        <variable name="padX">0</variable>
+                        <variable name="img_token">kasthuri11cc</variable>
+                        <variable name="padZ">0</variable>
+                        <variable name="padY">0</variable>
+                        <variable name="membrane_token">kasthuri11_final_membranes</variable>
+                        <variable name="zStop">1025</variable>
+                        <variable name="emToken">kasthuri11cc</variable>
+                        <variable name="padX3">300</variable>
+                        <variable name="uploadTokenProb">test_ilastik_prob1</variable>
+                        <variable name="yStop">9500</variable>
+                        <variable name="memServer">dsp061.pha.jhu.edu</variable>
+                        <variable name="padX1">50</variable>
+                        <variable name="neuLocation">braingraph1.cs.jhu.edu</variable>
+                        <variable name="xStop">8000</variable>
+                        <variable name="anno_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="rhoana_cutout">rhoana_cutout.mat</variable>
+                        <variable name="membrane_server">dsp061.pha.jhu.edu</variable>
+                        <variable name="ySpan2">500</variable>
+                        <variable name="synProbToken">test_i2g_vesiclerf_prob1b</variable>
+                        <variable name="Var 3">Value</variable>
+                        <variable name="syn_anno_server">braingraph1dev.cs.jhu.edu</variable>
+                        <variable name="csdToken">csd_inscribed_rfr3</variable>
+                        <variable name="vToken">vDeploy5</variable>
+                        <variable name="ySpan">1000</variable>
+                        <variable name="csdServer">dsp061.pha.jhu.edu</variable>
+                        <variable name="emLocation">openconnecto.me</variable>
+                        <variable name="memToken">ac3_membranes</variable>
                 </variables>
         </moduleGroup>
 </pipeline>

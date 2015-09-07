@@ -7,7 +7,8 @@ function cubeUploadDense(server, token, channel, RAMONVol, protoRAMON, useSemaph
 % Requires that all objects begin from a common prototype, and that
 % RAMONVolume has appropriate fields (in particular resolution and XYZ
 % offset)
-% This only supports anno32 data for now and the preserve anno option
+% This only supports anno32 data for now - do not use for probability
+% uploads
 
 if nargin > 6
     outFile = varargin{1};
@@ -38,6 +39,7 @@ fprintf('Relabling: ');
 labels = uint32(cube.data); %TODO - loss of precision if nid > 2^32
 [zz, n] = relabel_id(labels);
 
+if n > 0
 % Create empty RAMON Objects
 
 obj_cell = cell(n,1);
@@ -67,10 +69,16 @@ tic
 
 % Reuse object
 cube.setCutout(labelOut);
-cube.setDataType(eRAMONDataType.anno32); %just in case
+cube.setDataType(eRAMONChannelDataType.uint32); %just in case
+cube.setChannelType(eRAMONChannelType.annotation);
+cube.setChannel(channel);
+
 oo.createAnnotation(cube);
 fprintf('Block Write Upload: ');
 toc
+else
+    disp('no labels found...skipping upload!')
+end
 
 if exist('outFile')
 save(outFile,'cube')

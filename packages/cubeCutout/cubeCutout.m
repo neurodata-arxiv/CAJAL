@@ -1,4 +1,4 @@
-function cubeCutout(token, queryFile, outputFile, useSemaphore, objectType, serviceLocation)
+function cubeCutout(token, channel, queryFile, outputFile, useSemaphore, objectType, serviceLocation)
     % cubeCutout function allows the user to post raw annotation data (i.e.
     % no meta data) in the form of either annotation labels or probabilities to
     % OCP.
@@ -6,6 +6,8 @@ function cubeCutout(token, queryFile, outputFile, useSemaphore, objectType, serv
     % **Inputs**
     %
     %	:token: [string]   OCP token name serving as the source for data
+    %
+    %   :channel: [string] OCP channel name for source data
     %
     %	:queryFile: [string]    Fully formed OCP query saved to a .mat file
     %
@@ -61,7 +63,7 @@ function cubeCutout(token, queryFile, outputFile, useSemaphore, objectType, serv
     
     oo.setServerLocation(serviceLocation);
     oo.setImageToken(token);
-
+    oo.setImageChannel(channel);
     
     %% Load Query
     queryObj = OCPQuery.open(queryFile);

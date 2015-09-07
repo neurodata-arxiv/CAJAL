@@ -39,11 +39,16 @@ if nargin > 6
     outFile = varargin{1};
 end
 
-load(idFile)
-if ~isempty(ids)
-    assert(length(ids)==length(RAMONObj));
-else
-    ids = [];
+% Allow ids to be unset - left empty
+ids = [];
+
+if ~isempty(idFile)
+    load(idFile)
+    
+    % Verify that if ids are set that
+    if ~isempty(ids)
+        assert(length(ids)==length(RAMONObj));     
+    end
 end
 
 if useSemaphore
@@ -78,7 +83,7 @@ catch
     end
 end
 
-save(idFile, 'ids')
+save('idFile', 'ids')
 if exist('outFile')
     save(outFile,'obj')
 end
