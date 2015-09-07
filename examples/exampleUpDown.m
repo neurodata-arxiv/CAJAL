@@ -26,8 +26,8 @@ segCuboid = oo.query(q);
 oo.setServerLocation('http://openconnecto.me');
 oo.setImageToken('kasthuri11cc');
 oo.setDefaultResolution(1);
-oo.setAnnoToken('test_upload');
-
+oo.setAnnoToken('test_upload_ramon');
+oo.setAnnoChannel('anno');
 [zz, n] = relabel_id(segCuboid.data);
  
 % Create empty RAMON Objects - faster than the naive way
@@ -40,6 +40,7 @@ for ii = 1:n
 end
 
 % Batch write RAMON Objects
+clear t
 tic
 oo.setBatchSize(100);
 ids = oo.createAnnotation(seg_cell);
@@ -64,11 +65,32 @@ t(2) = toc
 tic
 paint = RAMONVolume();
 paint.setCutout(labelOut);
-paint.setDataType(eRAMONDataType.anno32);
+paint.setDataType(eRAMONChannelDataType.uint32);
+paint.setChannelType(eRAMONChannelType.annotation);
+paint.setChannel('anno');
 paint.setResolution(1);
-paint.setXyzOffset([5400,5440,1100]);
+paint.setXyzOffset([4400,5440,1100]);
 oo.createAnnotation(paint);
 fprintf('Block Write Upload: ');
 t(3) = toc
 
 t(4) = sum(t)
+
+
+
+
+
+
+
+tic
+paint = RAMONVolume();
+paint.setCutout(labelOut(:,:,1:96));
+paint.setDataType(eRAMONChannelDataType.uint32);
+paint.setChannelType(eRAMONChannelType.annotation);
+paint.setChannel('anno');
+paint.setResolution(1);
+paint.setXyzOffset([128*20,128*25,16*10]);
+oo.createAnnotation(paint);
+fprintf('Block Write Upload: ');
+t(5) = toc
+t(6) = t(1)+t(5);

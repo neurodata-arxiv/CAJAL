@@ -85,7 +85,7 @@ classdef VolumeImageBox < handle
             % Internal helper function to aide in interfacing various GUI. This
             % function updates the internal image data to the provided data.
             %
-            if this.datatype == eRAMONDataType.rgba32
+            if 0% TODO this.channelType == eRAMONChannelType.image && this.channelDataType == eRAMONChannelDataType.uint32 %RGBA32
                 % save 3 channels
                 img = squeeze(data(:,:,this.sliceIndex,1:3));
                 
@@ -131,7 +131,7 @@ classdef VolumeImageBox < handle
                     % use coords to pop it into place
                     xForm = 0;
                     if ndims(anno.data) ~= ndims(this.dataCube)
-                        if this.datatype == eRAMONDataType.rgba32
+                        if 0%TODOthis.channelType == eRAMONChannelType.image && this.channelDataType == eRAMONChannelDataType.uint32 %RGBA32
                             xForm = 0;
                           
                         elseif size(anno.data) ~= size(this.dataCube)
@@ -459,7 +459,7 @@ classdef VolumeImageBox < handle
             % In this case, we will just scale in a non-uniform manner:
             %prev_dims(prev_dims < min_dim_size) = min_dim_size;
             
-            if datatype == eRAMONDataType.rgba32
+            if 0% TODO this.channelType == eRAMONChannelType.image && this.channelDataType == eRAMONChannelDataType.uint32 %RGBA32
                 % save 3 channels
                 img = squeeze(this.dataCube(:,:,this.sliceIndex,1:3));
             else

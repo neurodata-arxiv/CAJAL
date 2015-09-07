@@ -1,8 +1,8 @@
 %% CAJAL3D Demo Script
 % Set xyz starting point.  Since anyone can use this script you may want to
 % "move" to a different region to run.
-xstart = 3000;
-ystart = 5000;
+xstart = 5500;
+ystart = 6000;
 zstart = 400;
 
 %% Create OCP Interface and set tokens
@@ -24,7 +24,8 @@ oo.setImageToken('kasthuri11cc');
 % can also read this from a file using setAnnoTokenFile. Also update 
 % propagate status to make the annotation project writeable.
 % Note: We do not propagate in the demo script.
-oo.setAnnoToken('gk1');
+oo.setAnnoToken('cajal_demo');
+oo.setAnnoChannel('anno');
 oo.makeAnnoWritable();
 
 % Information about the databases are accessible
@@ -47,7 +48,7 @@ oo.setDefaultResolution(1);
 
 %% Get Some Image Data
 % The OCPQuery object is the basis for building queries for the database.
-% The constructure accepts multiple things so check out the code.
+% The constructors accept multiple options so check out the code.
 
 % Build query to cutout IMAGE data.
 q = OCPQuery(eOCPQueryType.imageDense);
@@ -84,28 +85,27 @@ d(30:170,30:170,:) = 1;
 s1 = RAMONSynapse()
 
 % Set the objects properties as desired.
-s1.setCutout(d);
+s1.setCutout(uint32(d));
 s1.setXyzOffset([xstart ystart zstart]);
 s1.setResolution(1);
 
 s1.setSynapseType(eRAMONSynapseType.excitatory);
 s1.setSeeds([2 4 6 3]);
 s1.setConfidence(.8);
+s1.setChannel(oo.getAnnoChannel)
+s1.setChannelType(eRAMONChannelType.annotation)
 
 
 %% Upload a Synapse
-%Simply passing the RAMON object (or any RAMON object really..) will upload
+%Simply passing the RAMON object (or any RAMON object really...) will upload
 %the data and create an annotation.  The database will assign an ID as long
 %as the ID was empty in the RAMON object.
 id1 = oo.createAnnotation(s1);
 
-channel = 'testanno';
-project = 'gk1';
-
 %% Download a Synapse
 % The server can't get objects that don't exist
 % THIS LINE SHOULD THROW AN EXCEPTION AS AN EXAMPLE
-% sbad = oo.query(OCPQuery(eOCPQueryType.RAMONDense,4565564531));
+%sbad = oo.query(OCPQuery(eOCPQueryType.RAMONDense,4565564531));
 
 % Download the synapse we just uploaded. s1 and s2 should now contain the
 % same data, but s2 has been spatially aligned to the backend storage cuboids and has
@@ -123,7 +123,7 @@ oo.getField(id1,f.synapse.author)
 % you're changing the annotation data this is how it is done as well.
 oo.getField(id1,f.synapse.weight)
 s2.setWeight(.5);
-id1 = oo.updateAnnotation(s2);
+%id1 = oo.updateAnnotation(s2);
 oo.getField(id1,f.synapse.weight)
 
 
@@ -148,7 +148,10 @@ d = zeros(200,200,5);
 d(30:170,30:170,:) = 1;
 
 % Create an RAMONSynapse object with a single call.
-s3 = RAMONSynapse(d,eRAMONDataFormat.dense,[xstart ystart zstart],1);
+s3 = RAMONSynapse(uint32(d),eRAMONDataFormat.dense,[xstart+450 ystart+540 zstart+65],1);
+s3.setChannel(oo.getAnnoChannel)
+s3.setChannelType(eRAMONChannelType.annotation)
+
 id3 = oo.createAnnotation(s3);
 
 %% Download a server side rendered overlay image (2D only)
