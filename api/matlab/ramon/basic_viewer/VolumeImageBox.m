@@ -696,8 +696,8 @@ classdef VolumeImageBox < handle
                             writerObj = VideoWriter(fullfile(pathname,filename),'MPEG-4');
                             
                         end
-                        writerObj.FrameRate = 2;
-                        writerObj.Quality = 100;
+                        writerObj.FrameRate = 24;
+                        writerObj.Quality = 80;
                         open(writerObj);
                         
                         for iii = this.sliceIndex:size(this.dataCube,3)

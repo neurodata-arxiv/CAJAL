@@ -17,7 +17,8 @@ function cubeCutout(token, channel, queryFile, outputFile, useSemaphore, objectT
     %
     %	:objectType: [int]  Flag indicating data download type. 0=RAMONVolume saved to .mat; 1=HDF5 saved to .h5
     %
-    %	:serviceLocation: [string]   Locatin of OCP server hosting the data
+    %	:serviceLocation: [string]   Location of OCP server hosting the
+    %	data, typically openconnecto.me
     %
     %
     % **Outputs**
