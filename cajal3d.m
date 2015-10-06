@@ -66,7 +66,7 @@ classdef cajal3d
     
     properties(Constant = true)
         version = '1.8.0 RC3';
-        POC = 'ocp-support@googlegroups.com';
+        POC = 'support@neurodata.io';
     end
     
     methods
