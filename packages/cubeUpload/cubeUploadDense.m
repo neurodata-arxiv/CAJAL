@@ -62,7 +62,6 @@ for ii = 1:length(rp)
 end
 
 clear zz
-toc
 
 % Block write paint
 tic
