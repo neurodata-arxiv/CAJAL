@@ -74,3 +74,5 @@ cube.setChannel(channel);
 oo.createAnnotation(cube);
 
 toc
+
+% oo.propagateAnnoDB
