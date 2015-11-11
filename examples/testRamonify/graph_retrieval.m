@@ -56,7 +56,11 @@ for i = 1:length(synIdList)
             
             nList = [];
             for j = 1:length(segId)
-                nList(end+1) = ocpN.getField(segId(j), f.segment.neuron);
+                try
+                    nList(end+1) = ocpN.getField(segId(j), f.segment.neuron);
+                catch
+                    disp('no partner found')
+                end
             end
             nList(nList == 0) = []; %removes segments with no neurons...
             
@@ -71,13 +75,15 @@ for i = 1:length(synIdList)
         end
         edgeList = [edgeList; edgePairs];
         
-        for ii = 1:size(edgeList,1)
-            ee = edgeList(i,1:2);
-            edgeList(i,1) = min(ee);
-            edgeList(i,2) = max(ee);
-        end
     else
         disp('no synapse-segment links for this synapse')
     end
+end
+
+%TODO
+for ii = 1:size(edgeList,1)
+    ee = edgeList(ii,1:2);
+    edgeList(ii,1) = min(ee);
+    edgeList(ii,2) = max(ee);
 end
 

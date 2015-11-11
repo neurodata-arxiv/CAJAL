@@ -3254,7 +3254,7 @@ function testPublicTokens%#ok<*DEFNU>
     assertEqual(sum(cellfun(@any,strfind(tokens,'Ex14R58'))),1);
     assertEqual(sum(cellfun(@any,strfind(tokens,'Ex2R18C2'))),1);
     assertEqual(sum(cellfun(@any,strfind(tokens,'Ex3R43C3'))),1);
-    assertEqual(sum(cellfun(@any,strfind(tokens,'kasthuri11'))),1);
+    assertEqual(double(sum(cellfun(@any,strfind(tokens,'kasthuri11')))>0),1);
 end
 
 %% Clean up

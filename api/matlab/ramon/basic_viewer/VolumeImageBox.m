@@ -24,17 +24,17 @@ classdef VolumeImageBox < handle
     % Added new modes to (S) save all slices and (M) to make a movie
     % Sped up overlay rendering for simple use cases.
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Copyright 2015 The Johns Hopkins University / Applied Physics Laboratory 
-    % All Rights Reserved. 
-    % Contact the JHU/APL Office of Technology Transfer for any additional rights.  
+    % Copyright 2015 The Johns Hopkins University / Applied Physics Laboratory
+    % All Rights Reserved.
+    % Contact the JHU/APL Office of Technology Transfer for any additional rights.
     % www.jhuapl.edu/ott
-    %  
+    %
     % Licensed under the Apache License, Version 2.0 (the "License");
     % you may not use this file except in compliance with the License.
     % You may obtain a copy of the License at
-    %  
+    %
     %     http://www.apache.org/licenses/LICENSE-2.0
-    %  
+    %
     % Unless required by applicable law or agreed to in writing, software
     % distributed under the License is distributed on an "AS IS" BASIS,
     % WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -90,9 +90,9 @@ classdef VolumeImageBox < handle
                 img = squeeze(data(:,:,this.sliceIndex,1:3));
                 
                 if (this.invert_mode == 1)
-                   img(:,:,1) = max(max(img(:,:,1))) - img(:,:,1);
-                   img(:,:,2) = max(max(img(:,:,2))) - img(:,:,2);
-                   img(:,:,3) = max(max(img(:,:,3))) - img(:,:,3);
+                    img(:,:,1) = max(max(img(:,:,1))) - img(:,:,1);
+                    img(:,:,2) = max(max(img(:,:,2))) - img(:,:,2);
+                    img(:,:,3) = max(max(img(:,:,3))) - img(:,:,3);
                 end
             else
                 % Save single slice and manipulate to force proper scaling
@@ -101,13 +101,13 @@ classdef VolumeImageBox < handle
                 % Rescale image:
                 mmin = min(img(:));
                 mmax = max(img(:));
-
+                
                 if (mmax-mmin) == 0,
                     mmin = 0;
                 end
-
+                
                 img = uint8(double(img - mmin) / double(mmax-mmin)*255.0);
-
+                
                 if (this.invert_mode == 1)
                     img = max(img(:)) - img;
                 end
@@ -133,7 +133,7 @@ classdef VolumeImageBox < handle
                     if ndims(anno.data) ~= ndims(this.dataCube)
                         if 0%TODOthis.channelType == eRAMONChannelType.image && this.channelDataType == eRAMONChannelDataType.uint32 %RGBA32
                             xForm = 0;
-                          
+                            
                         elseif size(anno.data) ~= size(this.dataCube)
                             xForm = 1;
                         end
@@ -181,10 +181,10 @@ classdef VolumeImageBox < handle
                         % inputs are annoSlice and img
                         
                         %if  length(unique(annoSlice))  > 5 %TODO
-                            this.overlayColors = round(255*brewermap(this.nColors,'Spectral'));% Array containing color info (id,r,g,b)
-                       % else
-                            this.overlayColors(1:5,:) = 255*[1 1 0; 0 1 0; 0 0 1; 1 0 0; 1 1 0];
-                       % end
+                        this.overlayColors = round(255*brewermap(this.nColors,'Spectral'));% Array containing color info (id,r,g,b)
+                        % else
+                        this.overlayColors(1:5,:) = 255*[1 1 0; 0 1 0; 0 0 1; 1 0 0; 1 1 0];
+                        % end
                         this.overlayColors(end+1,:) = [0,0,0]; %for BG
                         
                         colorIdx = mod(annoSlice,this.nColors - 1) + 1;
@@ -465,14 +465,14 @@ classdef VolumeImageBox < handle
             else
                 % Save single slice and manipulate to force proper scaling
                 img = this.dataCube(:,:,this.sliceIndex);
-
+                
                 mmin = min(img(:));
                 mmax = max(img(:));
-
+                
                 if (mmax-mmin) == 0,
                     mmin = 0;
                 end
-
+                
                 img = uint8(double(img - mmin) / double(mmax-mmin) * 255.0);
             end
             
@@ -819,6 +819,42 @@ classdef VolumeImageBox < handle
             imwrite(this.img_data, filename);
         end
         
+        function savegif(this, filename)
+            
+            disp('first reset to slice 1')
+            this.sliceIndex = 1;
+            this = this.update_image(this.dataCube);
+            notify(this, 'UpdateTitle');
+            this.overlayMode = 1;
+            this = this.update_image(this.dataCube);
+
+            drawnow
+            disp('then iterate over all slices')
+            
+            frame = getframe(this.hFig);
+            [imind,cm] = rgb2ind(frame.cdata,256);
+
+            imwrite(imind,cm,filename, 'gif', 'Loopcount',inf);
+            
+            for iii = this.sliceIndex:size(this.dataCube,3)
+                ee.Key = 'uparrow';
+                ee.Character = 'uparrow';
+                this.hFig.KeyPressFcn(this, ee)
+                drawnow
+                
+                frame = getframe(this.hFig);
+                [imind,cm] = rgb2ind(frame.cdata,256);
+
+                imwrite(imind,cm,filename,'gif','WriteMode','append');
+                
+                
+                
+                fprintf('Saving slice %d of %d...\n', iii, size(this.dataCube,3))
+                
+            end
+            
+            
+        end
         function associate(this, cube, key)
             % OBJ.associate(this, cube)
             % OBJ.associate(this, cube, key)
