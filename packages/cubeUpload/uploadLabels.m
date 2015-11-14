@@ -1,4 +1,4 @@
-function uploadLabels(server, token, channel, volume, idFile, probability, useSemaphore, varargin)
+function uploadLabels(server, token, channel, volume, idFile, probability, doRelabel, useSemaphore, varargin)
 % uploadLabels function allows the user to post raw annotation data (i.e.
 % no meta data) in the form of either annotation labels or probabilities to
 % OCP.
@@ -52,6 +52,11 @@ else
     cube = volume;
 end
 
+if sum(cube.data(:)) <= 0 %all zero cube
+    disp('no detections to upload')
+    return
+end
+
 %% Upload to OCP
 tic
 % relabel Paint
@@ -72,14 +77,14 @@ if probability == 1
     save(idFile, 'ids');
     
 else %annodata
-    fprintf('Relabling: ');
-    labels = uint32(cube.data); %TODO - loss of precision if nid > 2^32
-    [zz, n] = relabel_id(labels);
     
-    if n == 0
-        ids = [];
-        disp('no objects found...exiting')
-    else
+    labels = uint32(cube.data); %TODO - loss of precision if nid > 2^32
+    
+    if doRelabel
+    fprintf('Relabling: ');
+        [zz, n] = relabel_id(labels);
+    
+
         labelOut = zeros(size(zz));
         
         if exist(idFile);
@@ -95,7 +100,7 @@ else %annodata
         
         clear zz
         toc
-        
+    end 
         % Block write paint
         tic
         
@@ -115,5 +120,3 @@ else %annodata
     end
     
     save(idFile, 'ids');
-end
-
