@@ -99,13 +99,14 @@ else %annodata
         end
         
         clear zz
+        cube.setCutout(labelOut);
+
         toc
     end 
         % Block write paint
         tic
         
         % Reuse object
-        cube.setCutout(labelOut);
         cube.setChannel(channel);
         
         cube.setDataType(eRAMONChannelDataType.uint32); %just in case
