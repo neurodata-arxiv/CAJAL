@@ -57,13 +57,15 @@ if sum(cube.data(:)) <= 0 %all zero cube
     return
 end
 
+
 %% Upload to OCP
 tic
+ids = [];
+
 % relabel Paint
 
 if probability == 1
     labels = double(cube.data);
-    ids = [];
     % Reuse object
     cube.setCutout(labels);
     cube.setChannel(channel);
@@ -81,10 +83,10 @@ else %annodata
     labels = uint32(cube.data); %TODO - loss of precision if nid > 2^32
     
     if doRelabel
-    fprintf('Relabling: ');
+        fprintf('Relabling: ');
         [zz, n] = relabel_id(labels);
-    
-
+        
+        
         labelOut = zeros(size(zz));
         
         if exist(idFile);
@@ -100,24 +102,24 @@ else %annodata
         
         clear zz
         cube.setCutout(labelOut);
+        
+        toc
+    end
+    % Block write paint
+    tic
+    
+    % Reuse object
+    cube.setChannel(channel);
+    
+    cube.setDataType(eRAMONChannelDataType.uint32); %just in case
+    cube.setChannelType(eRAMONChannelType.annotation)
+    oo.createAnnotation(cube);
+    fprintf('Block Write Upload: ');
+    toc
+end
 
-        toc
-    end 
-        % Block write paint
-        tic
-        
-        % Reuse object
-        cube.setChannel(channel);
-        
-        cube.setDataType(eRAMONChannelDataType.uint32); %just in case
-        cube.setChannelType(eRAMONChannelType.annotation)
-        oo.createAnnotation(cube);
-        fprintf('Block Write Upload: ');
-        toc
-    end
-    
-    if exist('outFile')
-        save(outFile,'cube')
-    end
-    
-    save(idFile, 'ids');
+if exist('outFile')
+    save(outFile,'cube')
+end
+
+save(idFile, 'ids');
