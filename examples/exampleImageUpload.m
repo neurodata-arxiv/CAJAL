@@ -4,42 +4,88 @@
 
 % W. Gray Roncal
 
-imToken = XXX; %Your token goes here
-server = XXX;  %Your server goes here
+%% Get Data
+
+oo = OCP();
+oo.setServerLocation('http://openconnecto.me');
+oo.setImageToken('kasthuri11cc');
+oo.setImageChannel('image');
+q = OCPQuery;
+q.setType(eOCPQueryType.imageDense);
+q.setCutoutArgs([4400,5424],[5440,6464],[1100,1200],1);
+imData = oo.query(q);
+
+mkdir('temp')
+for i = 1:size(imData.data,3)
+    istr = zeropad_number(i,4);
+    slice = imData.data(:,:,i);
+    
+    imwrite(slice,sprintf('temp/sampledata_slice_%s.tif',istr))
+end
+
+%% Upload Image Data
+server = 'openconnecto.me';
+imToken = 'testupload';
+imChannel = 'test1';
+resolution = 1;
 
 oo = OCP();
 oo.setServerLocation(server);
 oo.setImageToken(imToken);
+oo.setImageChannel(imChannel);
+oo.setDefaultResolution(resolution);
 
-imChunk = 16; %Controls how many slices to upload at a time - keep this fairly small
-              %Ideally multiples of 16 (careful if your xy extent is large
-zOffset = 0;  %Starting slice offset (set to 0, normally)
+dataOffset = oo.imageInfo.DATASET.OFFSET(resolution);
+zOffset = dataOffset(3);
+zChunk = 16;
 
-q = OCPQuery;
+blockOffset = [4400, 5440, 1100];
+addpath('temp')
+f = dir('temp/*.tif');
 
-%Data Directory
-f = dir('*.tif'); %Assumes tif files in your local directory
+% align block - may be less than zChunk!
+nFilesStart = zChunk-mod(blockOffset(3)-zOffset+1, zChunk)
 
-nChunk = ceil(length(f)/imChunk);
+
+nChunk = ceil(length(f)/zChunk);
+
+c = 1; %file index pointer
 
 for jj = 1:nChunk
-    clear im %do this
-    jj
-    s1 = imChunk * (jj-1) + 1;
-    s2 = min(imChunk * (jj), length(f));
+    clear imVol
     
-    c = 1;
-    for ii = s1:s2
+    % upload initial partial block
+    if jj == 1
+        zstart = blockOffset(3)
+        zstop = blockOffset(3) + nFilesStart
         
-        im(:,:,c) = im2uint8(imread(f(ii).name));  %You may not need this conversion
+        % upload final partial block
+    elseif jj == nChunk
+        zstart = zstop+1
+        zstop = blockOffset(3)+length(f);%todo
+        % upload all other blocks
+        
+    else
+        zstart = zstop + 1
+        zstop = zstart + zChunk
+    end
+    
+    nSlice = zstop - zstart;
+    
+    for kk = 1:nSlice
+        imVol(:,:,kk) = imread(f(c).name);
         c = c + 1;
     end
-     
-    X = RAMONVolume; X.setCutout(im);
-    X.setResolution(0);
-    X.setXyzOffset([0,0,zOffset+s1-1]);
+    
+    X = RAMONVolume; X.setCutout(imVol);
+    X.setResolution(resolution);
+    X.setXyzOffset([blockOffset(1), blockOffset(2), zstart]);
+    X.setChannel(imChannel);
+    X.setDataType(eRAMONChannelDataType.uint8); %DATA TYPE HARDCODED TODO
+    X.setChannelType(eRAMONChannelType.image);
     
     % Put chunks
-    oo.uploadImageData(X) 
-
+    oo.uploadImageData(X)
+    
 end
+
