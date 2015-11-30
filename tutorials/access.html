@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Accessing Data &mdash; cajal v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/ocp_favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="cajal v1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Querying Data" href="query.html"/>
+        <link rel="prev" title="Frequently Asked Questions (FAQ)" href="../sphinx/faq.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> cajal
+          
+
+          
+            
+            <img src="../_static/ocp_main.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/local_config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/ocp.html">NeuroData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Accessing Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#database-configuration">Database Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-information-about-datasets">Get information about datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#image-data">Image Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#upload-data">Upload Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#download-data">Download Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#annotation-data">Annotation Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Upload Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Download Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#update-annotation">Update Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#delete-annotation">Delete Annotation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Querying Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ramonify.html">RAMON and RAMONifying Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graphs.html">Generating Graphs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Further Reading</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">Functions and Modules</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal/releases/">Release Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">cajal</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Accessing Data</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorials/access.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="accessing-data">
+<h1>Accessing Data<a class="headerlink" href="#accessing-data" title="Permalink to this headline">¶</a></h1>
+<p>This page briefly explains how to access data from CAJAL, and provides brief code snippets illustrating usage.  For more detailed examples, please see the examples folder.
+One good starting point is the <a class="reference external" href="_static/demoscript/demoScript.html">Getting Started Script</a>.</p>
+<p>CAJAL is intentionally verbose and is designed by be used via &#8216;tab-completion&#8217;.</p>
+<div class="section" id="database-configuration">
+<h2>Database Configuration<a class="headerlink" href="#database-configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
+<p>To begin accessing data, users should first specify the server, token, and channel of their data.
+To get a token and channel pair, users should first follow the instructions <a class="reference external" href="http://docs.neurodata.io/open-connectome/sphinx/console">here</a>
+.. code-block:</p>
+<div class="highlight-python"><div class="highlight"><pre>% Create an OCP Object.  This is the main class used for talking with OCP
+% services. If you want to create an OCP object that will use the
+% distributed semaphore (assuming you&#39;ve set it up) use OCP(&#39;semaphore&#39;)
+% instead.
+oo = OCP();
+
+% Set the server location.  This is the default server and most likely the
+% one you should be using.
+oo.setServerLocation(&#39;http://openconnecto.me/&#39;);
+
+% Set the image token.  This is the database for image data reading.
+oo.setImageToken(&#39;kasthuri11cc&#39;);
+
+% Set the image token.  This is the database for image data reading. You
+% can also read this from a file using setAnnoTokenFile. Also update
+% propagate status to make the annotation project writeable.
+% Note: We do not propagate in the demo script.
+oo.setAnnoToken(&#39;cajal_demo&#39;);
+oo.setAnnoChannel(&#39;anno&#39;);
+
+% Information about the databases are accessible
+oo.annoInfo.DATASET
+oo.annoInfo.DATASET.IMAGE_SIZE(1)
+
+% Set the default resolution.  This is the resolution at which operations
+% should occur unless otherwise specified.
+oo.setDefaultResolution(1);
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-information-about-datasets">
+<h3>Get information about datasets<a class="headerlink" href="#get-information-about-datasets" title="Permalink to this headline">¶</a></h3>
+<p>There are many types of information one can request about available data sets, such as the following examples.</p>
+<div class="highlight-bash"><div class="highlight"><pre>% Information about the specified annotation dataset
+oo.annoInfo.DATASET
+oo.annoInfo.DATASET.IMAGE_SIZE<span class="o">(</span>1<span class="o">)</span>
+
+% Information about available public tokens
+oo.getPublicTokens
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="image-data">
+<h2>Image Data<a class="headerlink" href="#image-data" title="Permalink to this headline">¶</a></h2>
+<p>CAJAL allows users to access image data and corresponding annotation data.</p>
+<div class="section" id="upload-data">
+<h3>Upload Data<a class="headerlink" href="#upload-data" title="Permalink to this headline">¶</a></h3>
+<p>To upload image data, use the following method:</p>
+<div class="highlight-bash"><div class="highlight"><pre>oo.uploadImageData<span class="o">(</span>RAMONVolume<span class="o">)</span>
+</pre></div>
+</div>
+<p>A detailed example can be found in the examples folder <cite>exampleImageUpload.m</cite></p>
+</div>
+<div class="section" id="download-data">
+<h3>Download Data<a class="headerlink" href="#download-data" title="Permalink to this headline">¶</a></h3>
+<p>To download image data, please see the query page.</p>
+</div>
+</div>
+<div class="section" id="annotation-data">
+<h2>Annotation Data<a class="headerlink" href="#annotation-data" title="Permalink to this headline">¶</a></h2>
+<p>CAJAL allows users to access image data and corresponding annotation data.</p>
+<div class="section" id="id1">
+<h3>Upload Data<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>To upload annotation data, users should format their data into the appropriate RAMON datatype and upload using the following command.
+Labels (without a RAMONType) can be uploaded as a RAMON volume.</p>
+<div class="highlight-bash"><div class="highlight"><pre>oo.createAnnotation<span class="o">(</span>RAMONVolume<span class="o">)</span>
+</pre></div>
+</div>
+<p>Many examples for this exist throughout the examples directory.  A helper function called &#8216;packages/cubeUpload/cubeUploadDense.m&#8217; is available to make this process straightforward.</p>
+</div>
+<div class="section" id="id2">
+<h3>Download Data<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>To download annotation data, please see the query page.</p>
+</div>
+</div>
+<div class="section" id="update-annotation">
+<h2>Update Annotation<a class="headerlink" href="#update-annotation" title="Permalink to this headline">¶</a></h2>
+<p>To update existing annotations, users should download the annotation of interest, adjust its properties, and then update with the following command.</p>
+<div class="highlight-bash"><div class="highlight"><pre>oo.updateAnnotation<span class="o">(</span>RAMONVolume<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-annotation">
+<h2>Delete Annotation<a class="headerlink" href="#delete-annotation" title="Permalink to this headline">¶</a></h2>
+<p>To delete existing annotations, users should determine the database id(s) of the objects to delete, and use the following command.</p>
+<div class="highlight-bash"><div class="highlight"><pre>oo.deleteAnnotation<span class="o">(</span>ids<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="query.html" class="btn btn-neutral float-right" title="Querying Data" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../sphinx/faq.html" class="btn btn-neutral" title="Frequently Asked Questions (FAQ)" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NeuroData.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Querying Data &mdash; cajal v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/ocp_favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="cajal v1.0 documentation" href="../index.html"/>
+        <link rel="next" title="RAMON and RAMONifying Data" href="ramonify.html"/>
+        <link rel="prev" title="Accessing Data" href="access.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> cajal
+          
+
+          
+            
+            <img src="../_static/ocp_main.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/local_config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/ocp.html">NeuroData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="access.html">Accessing Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Querying Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#query-setup">Query Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ramonidlist">RAMONIdList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#imagedense">imageDense</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annodense">annoDense</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ramondense">RAMONDense</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ramonvoxellist">RAMONVoxelList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ramonmetaonly">RAMONMetaOnly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-retrieving-centroids">Example Retrieving Centroids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-counting-mitochondria">Example Counting Mitochondria</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ramonify.html">RAMON and RAMONifying Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graphs.html">Generating Graphs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Further Reading</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">Functions and Modules</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal/releases/">Release Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">cajal</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Querying Data</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorials/query.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="querying-data">
+<h1>Querying Data<a class="headerlink" href="#querying-data" title="Permalink to this headline">¶</a></h1>
+<p>CAJAL uses queries to aid users in retrieving data of interest from the database.  Examples of commonly used queries are shown on this page.
+For more detailed examples, please see the examples folder.  One good starting point is the <a class="reference external" href="_static/demoscript/demoScript.html">Getting Started Script</a>.</p>
+<p>Queries are discussed in more data <a class="reference external" href="http://docs.neurodata.io/nddocs/ramonnd.html">here</a>.</p>
+<p>Users should first setup a database endpoint, following the setup instructions in <a class="reference external" href="tutorials/access">Access</a>.
+For testing, the following may be used:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">oo</span> <span class="o">=</span> OCP<span class="o">()</span><span class="p">;</span>
+oo.setServerLocation<span class="o">(</span><span class="s1">&#39;openconnecto.me&#39;</span><span class="o">)</span><span class="p">;</span>
+oo.setDefaultResolution<span class="o">(</span>1<span class="o">)</span><span class="p">;</span>
+oo.setImageToken<span class="o">(</span><span class="s1">&#39;kasthuri11cc&#39;</span><span class="o">)</span><span class="p">;</span>
+oo.setImageChannel<span class="o">(</span><span class="s1">&#39;image&#39;</span><span class="o">)</span><span class="p">;</span>
+oo.setAnnoToken<span class="o">(</span><span class="s1">&#39;test_ramonify_public&#39;</span><span class="o">)</span><span class="p">;</span>
+oo.setAnnoChannel<span class="o">(</span><span class="s1">&#39;synapse&#39;</span><span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="section" id="query-setup">
+<h2>Query Setup<a class="headerlink" href="#query-setup" title="Permalink to this headline">¶</a></h2>
+<p>To define a query, first initialize a query object, using the following command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+</pre></div>
+</div>
+<p>Each query type requires setting various properties to specify the desired data to request from the server.
+To check to see if your query is complete, run the following command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">[</span>valid, error<span class="o">]</span> <span class="o">=</span> q.validate<span class="p">;</span>
+</pre></div>
+</div>
+<p>To run a valid query against a specific server/token/channel, use the following command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">data</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The following are the six most frequently used queries:</p>
+</div>
+<div class="section" id="ramonidlist">
+<h2>RAMONIdList<a class="headerlink" href="#ramonidlist" title="Permalink to this headline">¶</a></h2>
+<p>This returns a list of ids that meet some list of predicates (e.g. type equal to synapse and status equal to unprocessed)</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.RAMONIdList<span class="o">)</span><span class="p">;</span>
+q.setResolution<span class="o">(</span>1<span class="o">)</span><span class="p">;</span>
+<span class="nv">ids</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="imagedense">
+<h2>imageDense<a class="headerlink" href="#imagedense" title="Permalink to this headline">¶</a></h2>
+<p>This returns a RAMONVolume containing a image voxel data in cutout format
+To get slice z only, zStart = z, zStop = z+1;
+.. code-block:: bash</p>
+<blockquote>
+<div>q = OCPQuery;
+q.setType(eOCPQueryType.imageDense);
+% set xStart,xStop,yStart,yStop,zStart,zStop, resolution
+q.setCutoutArgs([4400,5424],[5440,6464],[1100,1120],1);
+im = oo.query(q);</div></blockquote>
+</div>
+<div class="section" id="annodense">
+<h2>annoDense<a class="headerlink" href="#annodense" title="Permalink to this headline">¶</a></h2>
+<p>This returns a RAMONVolume containing a annotation voxel data in cutout format</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.annoDense<span class="o">)</span><span class="p">;</span>
+% <span class="nb">set </span>xStart,xStop,yStart,yStop,zStart,zStop, resolution
+q.setCutoutArgs<span class="o">([</span>4400,5424<span class="o">]</span>,<span class="o">[</span>5440,6464<span class="o">]</span>,<span class="o">[</span>1100,1120<span class="o">]</span>,1<span class="o">)</span><span class="p">;</span>
+<span class="nv">anno</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To visualize progress thus far, CAJAL has a viewer built in:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">h</span> <span class="o">=</span> image<span class="o">(</span>im<span class="o">)</span><span class="p">;</span> h.associate<span class="o">(</span>anno<span class="o">)</span><span class="p">;</span>
+%type the <span class="s1">&#39;a&#39;</span> key to turn on annotations, and scroll with the arrow keys
+</pre></div>
+</div>
+</div>
+<div class="section" id="ramondense">
+<h2>RAMONDense<a class="headerlink" href="#ramondense" title="Permalink to this headline">¶</a></h2>
+<p>This returns a RAMON data type associated with a provided id with the voxel data in cutout form.  If no voxel data a warning is given.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.RAMONDense<span class="o">)</span><span class="p">;</span>
+q.setId<span class="o">(</span>42<span class="o">)</span><span class="p">;</span>
+q.setResolution<span class="o">(</span>1<span class="o">)</span><span class="p">;</span>
+<span class="nv">ramon1</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ramonvoxellist">
+<h2>RAMONVoxelList<a class="headerlink" href="#ramonvoxellist" title="Permalink to this headline">¶</a></h2>
+<p>This returns a RAMON data type associated with a provided id with the voxel data in voxel list form.  If no voxel data a warning is given.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.RAMONVoxelList<span class="o">)</span><span class="p">;</span>
+q.setId<span class="o">(</span>42<span class="o">)</span><span class="p">;</span>
+q.setResolution<span class="o">(</span>1<span class="o">)</span><span class="p">;</span>
+<span class="nv">ramon2</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ramonmetaonly">
+<h2>RAMONMetaOnly<a class="headerlink" href="#ramonmetaonly" title="Permalink to this headline">¶</a></h2>
+<p>This returns a RAMON data type associated with a provided id with only the metadata fields populated</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.RAMONMetaOnly<span class="o">)</span><span class="p">;</span>
+q.setId<span class="o">(</span>42<span class="o">)</span><span class="p">;</span>
+q.setResolution<span class="o">(</span>1<span class="o">)</span><span class="p">;</span>
+<span class="nv">ramon3</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Multiple RAMON Volumes can be retrieved at a time for any of the RAMON queries by passing in an array of IDs, instead of just one.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.RAMONMetaOnly<span class="o">)</span><span class="p">;</span>
+q.setId<span class="o">([</span>42,45,1<span class="o">])</span><span class="p">;</span>
+q.setResolution<span class="o">([</span>1<span class="o">])</span><span class="p">;</span>
+<span class="nv">ramonMulti</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-retrieving-centroids">
+<h2>Example Retrieving Centroids<a class="headerlink" href="#example-retrieving-centroids" title="Permalink to this headline">¶</a></h2>
+<p>To retrieve centroids that have been previously uploaded, users can combine ID queries with RAMONMetaOnly queries.
+There is an advanced mode to retrieve this information using OCPFields, which is not documented here.  This example is in git as <cite>exampleCentroidRetrieval.m</cite>
+This example retrieves centroids for AC4 RAMONSynapses.</p>
+<p>The data upload process is documented in the RAMONify page.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">fileout</span> <span class="o">=</span> <span class="s1">&#39;test.csv&#39;</span><span class="p">;</span>
+<span class="nv">annoToken</span> <span class="o">=</span> <span class="s1">&#39;test_ramonify_public&#39;</span><span class="p">;</span>
+<span class="nv">annoChannel</span> <span class="o">=</span> <span class="s1">&#39;synapse&#39;</span>
+<span class="nv">step</span> <span class="o">=</span> 100<span class="p">;</span> %number of annotations to process at a <span class="nb">time</span>
+<span class="nv">oo</span> <span class="o">=</span> OCP<span class="p">;</span>
+oo.setAnnoToken<span class="o">(</span>annoToken<span class="o">)</span><span class="p">;</span>
+oo.setAnnoChannel<span class="o">(</span>annoChannel<span class="o">)</span><span class="p">;</span>
+
+<span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.RAMONIdList<span class="o">)</span><span class="p">;</span>
+q.validate
+<span class="nv">id</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.RAMONMetaOnly<span class="o">)</span><span class="p">;</span>
+
+<span class="nv">cen</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span>
+<span class="k">for</span> <span class="nv">i</span> <span class="o">=</span> 1:step:length<span class="o">(</span>id<span class="o">)</span>
+    i
+    <span class="nv">endId</span> <span class="o">=</span> min<span class="o">(</span>i + step-1, length<span class="o">(</span>id<span class="o">))</span><span class="p">;</span>
+    q.setId<span class="o">(</span>id<span class="o">(</span>i:1:endId<span class="o">))</span><span class="p">;</span>
+    <span class="nv">c</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+    <span class="k">for</span> <span class="nv">j</span> <span class="o">=</span> 1:length<span class="o">(</span>c<span class="o">)</span>
+        cen<span class="o">(</span>end+1,:<span class="o">)</span> <span class="o">=</span> <span class="o">[</span>c<span class="o">{</span>j<span class="o">}</span>.id,str2num<span class="o">(</span>c<span class="o">{</span>j<span class="o">}</span>.dynamicMetadata<span class="o">(</span><span class="s1">&#39;centroid&#39;</span><span class="o">))]</span><span class="p">;</span>
+    end
+end
+
+% IDs are returned in non-sorted order from OCP
+<span class="o">[</span>~,idx<span class="o">]</span> <span class="o">=</span> sort<span class="o">(</span>cen<span class="o">(</span>:,1<span class="o">)</span>,<span class="s1">&#39;ascend&#39;</span><span class="o">)</span><span class="p">;</span>
+<span class="nv">cen</span> <span class="o">=</span> cen<span class="o">(</span>idx,:<span class="o">)</span><span class="p">;</span>
+
+csvwrite<span class="o">(</span>fileout,cen<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-counting-mitochondria">
+<h2>Example Counting Mitochondria<a class="headerlink" href="#example-counting-mitochondria" title="Permalink to this headline">¶</a></h2>
+<p>The data upload process is documented in the RAMONify page.</p>
+<p>To count objects, users can proceed the classical way and download large data volumes, followed by a connected components process.  However this may require extensive memory and a long period of time to compute!  Instead, using the NeuroData infrastructure and RAMON, we can retrieve this information quickly via a simple ID query.  Here we find 1053 mitochondria in about 0.1 of a second.</p>
+<p>The mitochondria data we count here is part of the Kasthuri2015 Cell paper.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">oo</span> <span class="o">=</span> OCP<span class="p">;</span>
+oo.setAnnoToken<span class="o">(</span><span class="s1">&#39;kasthuri2015_ramon_v1&#39;</span><span class="o">)</span><span class="p">;</span>
+oo.setAnnoChannel<span class="o">(</span><span class="s1">&#39;mitochondria&#39;</span><span class="o">)</span><span class="p">;</span>
+<span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.RAMONIdList<span class="o">)</span><span class="p">;</span>
+q.setResolution<span class="o">(</span>3<span class="o">)</span><span class="p">;</span>
+tic
+<span class="nv">ids</span> <span class="o">=</span> oo.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+sprintf<span class="o">(</span><span class="s1">&#39;The total number of mitochondria are: %d!\n&#39;</span>, length<span class="o">(</span>ids<span class="o">))</span>
+toc
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ramonify.html" class="btn btn-neutral float-right" title="RAMON and RAMONifying Data" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="access.html" class="btn btn-neutral" title="Accessing Data" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NeuroData.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

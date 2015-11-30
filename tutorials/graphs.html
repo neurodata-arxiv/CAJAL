@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Generating Graphs &mdash; cajal v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/ocp_favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="cajal v1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Functions and Modules" href="../api/functions.html"/>
+        <link rel="prev" title="RAMON and RAMONifying Data" href="ramonify.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> cajal
+          
+
+          
+            
+            <img src="../_static/ocp_main.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/local_config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/ocp.html">NeuroData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="access.html">Accessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Querying Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ramonify.html">RAMON and RAMONifying Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Generating Graphs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ac4-graph">AC4 Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kasthuri-cylinder-graph">Kasthuri Cylinder Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#post-processing">Post Processing</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Further Reading</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">Functions and Modules</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal/releases/">Release Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">cajal</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Generating Graphs</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorials/graphs.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="generating-graphs">
+<h1>Generating Graphs<a class="headerlink" href="#generating-graphs" title="Permalink to this headline">¶</a></h1>
+<p>A graph is composed of vertices (neurons), edges (synapses) and their attributes (e.g., weight, direction).
+To construct graphs in the RAMON framework, we associate RAMONSynapses with RAMONSegments.  RAMONSegments are grouped into neurons.</p>
+<p>For automated parsing methods, the synapse-segment links are constructed by determining the two segments with the greatest spatial overlap for each synapse.
+For manual methods, these links are recorded in a table.  Either way, the relationship can be recorded bidirectionally in RAMONSegment.synapse and RAMONSynapse.segment.</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/graph_overview.png"><img alt="../_images/graph_overview.png" src="../_images/graph_overview.png" style="width: 800px;" /></a>
+</div>
+<p>Once the object relationships have been stored in the NeuroData database, a graph can be retrieved by efficiently traversing metadata as depicted in the figure below.  Typically we start at synapses and work up to segments and neurons.
+Users should specify parameters for the following function:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">edgeList</span> <span class="o">=</span> graph_retrieval<span class="o">(</span>synLocation, synToken, synChannel, synResolution, synIdList, neuLocation, neuToken, neuChannel, neuResolution, segGraph<span class="o">)</span>
+</pre></div>
+</div>
+<div class="section" id="ac4-graph">
+<h2>AC4 Graph<a class="headerlink" href="#ac4-graph" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">synLocation</span> <span class="o">=</span> <span class="s1">&#39;openconnecto.me&#39;</span><span class="p">;</span>
+<span class="nv">synToken</span> <span class="o">=</span> <span class="s1">&#39;test_ramonify_public&#39;</span><span class="p">;</span>
+<span class="nv">synChannel</span> <span class="o">=</span> <span class="s1">&#39;synapse&#39;</span><span class="p">;</span>
+<span class="nv">synResolution</span> <span class="o">=</span> 1<span class="p">;</span>
+<span class="nv">synIdList</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span>
+<span class="nv">neuLocation</span> <span class="o">=</span> <span class="s1">&#39;openconnecto.me&#39;</span><span class="p">;</span>
+<span class="nv">neuToken</span> <span class="o">=</span> <span class="s1">&#39;test_ramonify_public&#39;</span><span class="p">;</span>
+<span class="nv">neuChannel</span> <span class="o">=</span> <span class="s1">&#39;neuron&#39;</span><span class="p">;</span>
+<span class="nv">neuResolution</span> <span class="o">=</span> 1<span class="p">;</span>
+<span class="nv">segGraph</span> <span class="o">=</span> 1<span class="p">;</span>
+
+% Retrieve edge list
+<span class="nv">eListOut</span> <span class="o">=</span> graph_retrieval<span class="o">(</span>synLocation, synToken, synChannel, synResolution, synIdList, neuLocation, neuToken, neuChannel, neuResolution, segGraph<span class="o">)</span><span class="p">;</span>
+
+% Make graphs
+<span class="o">[</span>neuGraph, nId, synGraph, synId<span class="o">]</span> <span class="o">=</span> graph_matrix<span class="o">(</span>eListOut<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="kasthuri-cylinder-graph">
+<h2>Kasthuri Cylinder Graph<a class="headerlink" href="#kasthuri-cylinder-graph" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">synLocation</span> <span class="o">=</span> <span class="s1">&#39;openconnecto.me&#39;</span><span class="p">;</span>
+<span class="nv">synToken</span> <span class="o">=</span> uploadToken<span class="p">;</span>
+<span class="nv">synChannel</span> <span class="o">=</span> <span class="s1">&#39;synapses&#39;</span><span class="p">;</span>
+<span class="nv">synResolution</span> <span class="o">=</span> 3<span class="p">;</span>
+<span class="nv">neuLocation</span> <span class="o">=</span> <span class="s1">&#39;openconnecto.me&#39;</span><span class="p">;</span>
+<span class="nv">neuToken</span> <span class="o">=</span> uploadToken<span class="p">;</span>
+<span class="nv">neuChannel</span> <span class="o">=</span> <span class="s1">&#39;neurons&#39;</span><span class="p">;</span>
+<span class="nv">neuResolution</span> <span class="o">=</span> 3<span class="p">;</span>
+<span class="nv">edgeList</span> <span class="o">=</span> graph_retrieval<span class="o">(</span>synLocation, synToken, synChannel, synResolution, <span class="o">[]</span>, neuLocation, neuToken, neuChannel, neuResolution, 0<span class="o">)</span>
+attredgeWriter<span class="o">(</span>edgeList,<span class="s1">&#39;kasthuri_graph_v1.attredge&#39;</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="post-processing">
+<h2>Post Processing<a class="headerlink" href="#post-processing" title="Permalink to this headline">¶</a></h2>
+<p>The output of <cite>graph_retrieval</cite> is an edgeList, which has fields for the ids of two neurons, the corresponding synapse, direction, and synapse correspondence (used for matching with truth).
+These graphs can be visualized using <cite>graph_matrix</cite> or saved using the file <cite>attredgeWriter,</cite> the result of which can be uploaded to <a class="reference external" href="http://openconnecto.me/graph-services/">MROCP</a> to convert to GraphML or other formats.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../api/functions.html" class="btn btn-neutral float-right" title="Functions and Modules" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ramonify.html" class="btn btn-neutral" title="RAMON and RAMONifying Data" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NeuroData.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

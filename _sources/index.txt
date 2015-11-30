@@ -10,7 +10,7 @@
 	<br>
 
 
-The CAJAL toolbox (or API) provides functionality to interact with the Open Connectome Project image and annotation databases, including querying raw image data, annotation data, and RAMON objects. Complex HTTP queries are wrapped in easy to use Matlab code - helper functions and example files are provided.  New users may wish to begin with the `Getting Started Script <_static/demoscript/demoScript.html>`_.
+The CAJAL toolbox (or API) provides functionality to interact with NeuroData image and annotation databases, including querying raw image data, annotation data, and RAMON objects. Complex HTTP queries are wrapped in easy to use Matlab code - helper functions and example files are provided.  New users may wish to begin with the `Getting Started Script <_static/demoscript/demoScript.html>`_.
 
 .. figure:: images/cajal_pipeline.jpg
     :width: 800px
@@ -26,10 +26,12 @@ The CAJAL toolbox (or API) provides functionality to interact with the Open Conn
     <a image="_static/GitHub.png" href="https://github.com/openconnectome/CAJAL/tarball/master">[TAR.GZ] </a></p>
   </div>
 
+Please see the tutorials section for information about getting and putting data, querying for data, RAMONifying your dataset, and generating graphs.
+CAJAL implements the RAMON data standard explained `here <docs.neurodata.io/nddocs/ramon.html>`_ and `here <docs.neurodata.io/nddocs/ramonnd.html>`_.
 
 .. sidebar:: CAJAL Contact Us
 
-   If you have questions about CAJAL, or have data to analyze, let us know:  ocp-support@googlegroups.com
+   If you have questions about CAJAL, or have data to analyze, let us know:  support@neurodata.io
 
 .. toctree::
    :maxdepth: 1
@@ -44,18 +46,15 @@ The CAJAL toolbox (or API) provides functionality to interact with the Open Conn
   :maxdepth: 2
   :caption: Tutorials
 
-  tutorials/basic_usage
-  tutorials/scalable_processing
-  tutorials/advanced_topics
-  tutorials/queries
-  tutorials/cheat_sheet
-  
+  tutorials/access
+  tutorials/query
+  tutorials/ramonify
+  tutorials/graphs
+
 .. toctree::
    :maxdepth: 1
    :caption: Further Reading
 
    api/functions
-   Gitter chatroom <https://gitter.im/openconnectome/cajal>
-   Mailing List <https://groups.google.com/forum/#!forum/ocp-support/>
-   Github repo <https://github.com/openconnectome/cajal>
+   Github repo <https://github.com/openconnectome/CAJAL>
    Release Notes <https://github.com/openconnectome/cajal/releases/>

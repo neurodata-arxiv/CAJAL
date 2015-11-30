@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RAMON and RAMONifying Data &mdash; cajal v1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/ocp_favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="cajal v1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Generating Graphs" href="graphs.html"/>
+        <link rel="prev" title="Querying Data" href="query.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> cajal
+          
+
+          
+            
+            <img src="../_static/ocp_main.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/local_config.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/ocp.html">NeuroData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sphinx/faq.html">Frequently Asked Questions (FAQ)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="access.html">Accessing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Querying Data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">RAMON and RAMONifying Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="graphs.html">Generating Graphs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Further Reading</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/functions.html">Functions and Modules</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/CAJAL">Github repo</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/openconnectome/cajal/releases/">Release Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">cajal</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>RAMON and RAMONifying Data</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorials/ramonify.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ramon-and-ramonifying-data">
+<h1>RAMON and RAMONifying Data<a class="headerlink" href="#ramon-and-ramonifying-data" title="Permalink to this headline">¶</a></h1>
+<p>An overview of the RAMON Data Standard can be found <a class="reference external" href="docs.neurodata.io/nddocs/ramon.html">here</a>.
+For more detailed examples, please see the examples folder.  One good starting point is the <a class="reference external" href="_static/demoscript/demoScript.html">Getting Started Script</a>.
+CAJAL implements the RAMON data standard.  These data types can be seamlessly used with NeuroData/OCP, or as standalone objects.</p>
+<p>To interact with a RAMONObject, first initialize it:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">syn</span> <span class="o">=</span> RAMONSynapse<span class="p">;</span>
+</pre></div>
+</div>
+<p>Fields can be set using setters.  Fields can be retrieved directly (no getters).</p>
+<div class="highlight-bash"><div class="highlight"><pre>syn.setWeight<span class="o">(</span>0.5<span class="o">)</span><span class="p">;</span>
+syn.weight
+</pre></div>
+</div>
+<p>ID is usually set by the database as the primary key; do not set this field as a user unless you have a reason.</p>
+<p>Some fields have enumerated types.  More on these types can be found on the RAMON overview page:</p>
+<div class="highlight-bash"><div class="highlight"><pre>syn.setType<span class="o">(</span>eRAMONSynapseType.excitatory<span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Examples of using RAMON exist throughout the documentation and examples.  One good references is code to RAMONify AC4 (a small EM volume); this procedure uses spatial overlap to infer connections and proceeds based only on raw labels. The code is reproduced here, and can be found in the examples folder (<cite>ramonify_basic.m</cite>)</p>
+<div class="highlight-bash"><div class="highlight"><pre>% RAMONify AC4 and generate a graph
+% Version 1:  Without the algorithms
+% This is essentially a step-by-step method demonstrating the utility of
+% CAJAL, RAMON, and NeuroData.
+
+% Depending on the <span class="k">case</span>, bidirectional links are not required<span class="p">;</span> in practice,
+% the neuron abstraction may be skipped <span class="k">for</span> processing efficiency <span class="k">if</span> all
+% segments are merged via another process.  Here we include both of these
+% steps to demonstrate functionality.
+
+% Prerequisite:  Project and tokens
+% Channels should be neuron, synapse
+
+% This is not cube aligned because AC4 maps to a manually annoted
+% dataset.  We block upload <span class="k">for</span> efficiency.
+
+% Assume that server is openconnecto.me
+
+%
+<span class="nv">token</span> <span class="o">=</span> <span class="s1">&#39;test_ramonify_public&#39;</span><span class="p">;</span>
+%% Setup server connection
+clear SYN SEG NEU
+
+<span class="nv">odown</span> <span class="o">=</span> OCP<span class="o">()</span><span class="p">;</span>
+odown.setImageToken<span class="o">(</span><span class="s1">&#39;kasthuri11cc&#39;</span><span class="o">)</span><span class="p">;</span>
+odown.setAnnoToken<span class="o">(</span><span class="s1">&#39;ac4_raw&#39;</span><span class="o">)</span><span class="p">;</span>
+
+%% Find Synapses
+
+% Here we download from an existing database
+%http://openconnecto.me/ocp/overlay/0.7/openconnecto.me/kasthuri11cc/image/openconnecto.me/ac4_raw/neuron/xy/1/4400,5424/5440,6464/1105/
+odown.setAnnoChannel<span class="o">(</span><span class="s1">&#39;synapse&#39;</span><span class="o">)</span><span class="p">;</span>
+
+<span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.annoDense<span class="o">)</span><span class="p">;</span>
+q.setCutoutArgs<span class="o">([</span>4400,5424<span class="o">]</span>,<span class="o">[</span>5440,6464<span class="o">]</span>,<span class="o">[</span>1100,1200<span class="o">]</span>,1<span class="o">)</span><span class="p">;</span>
+
+<span class="nv">synPaint</span> <span class="o">=</span> odown.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+
+
+%% Find Neuron Segments
+
+% Here we download raw data from an existing database
+odown.setAnnoChannel<span class="o">(</span><span class="s1">&#39;neuron&#39;</span><span class="o">)</span><span class="p">;</span>
+
+<span class="nv">neuPaint</span> <span class="o">=</span> odown.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+
+%% Associate Segments and Synapses
+
+% Simple image processing <span class="k">function</span>
+
+% <span class="o">[</span>seg1, seg2, synapse, direction<span class="o">]</span>
+<span class="nv">eList</span> <span class="o">=</span> neusyn_associate_simple<span class="o">(</span>neuPaint,synPaint<span class="o">)</span><span class="p">;</span>
+
+   <span class="k">for</span> <span class="nv">ii</span> <span class="o">=</span> 1:size<span class="o">(</span>eList,1<span class="o">)</span>
+            <span class="nv">ee</span> <span class="o">=</span> eList<span class="o">(</span>ii,1:2<span class="o">)</span><span class="p">;</span>
+            eList<span class="o">(</span>ii,1<span class="o">)</span> <span class="o">=</span> min<span class="o">(</span>ee<span class="o">)</span><span class="p">;</span>
+            eList<span class="o">(</span>ii,2<span class="o">)</span> <span class="o">=</span> max<span class="o">(</span>ee<span class="o">)</span><span class="p">;</span>
+   end
+
+<span class="nv">usyn</span> <span class="o">=</span> unique<span class="o">(</span>synPaint.data<span class="o">)</span><span class="p">;</span> %unique values, disregard 0
+usyn<span class="o">(</span><span class="nv">usyn</span> <span class="o">==</span> 0<span class="o">)</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span>
+<span class="nv">nsyn</span> <span class="o">=</span> length<span class="o">(</span>usyn<span class="o">)</span><span class="p">;</span>
+
+<span class="nv">uneu</span> <span class="o">=</span> unique<span class="o">(</span>neuPaint.data<span class="o">)</span><span class="p">;</span>
+uneu<span class="o">(</span><span class="nv">uneu</span> <span class="o">==</span> 0<span class="o">)</span> <span class="o">=</span> <span class="o">[]</span><span class="p">;</span>
+<span class="nv">nneu</span> <span class="o">=</span> length<span class="o">(</span>uneu<span class="o">)</span><span class="p">;</span>
+
+<span class="nv">rps</span> <span class="o">=</span> regionprops<span class="o">(</span>synPaint.data,<span class="s1">&#39;Centroid&#39;</span><span class="o">)</span><span class="p">;</span>
+<span class="nv">rpn</span> <span class="o">=</span> regionprops<span class="o">(</span>neuPaint.data,<span class="s1">&#39;Centroid&#39;</span><span class="o">)</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="nv">i</span> <span class="o">=</span> 1:nsyn
+    <span class="nv">syn</span> <span class="o">=</span> RAMONSynapse<span class="o">()</span><span class="p">;</span>
+    syn.setAuthor<span class="o">(</span><span class="s1">&#39;test upload&#39;</span><span class="o">)</span><span class="p">;</span>
+    syn.setId<span class="o">(</span>usyn<span class="o">(</span>i<span class="o">))</span><span class="p">;</span>
+
+    <span class="nv">cVal</span> <span class="o">=</span> round<span class="o">(</span>rps<span class="o">(</span>i<span class="o">)</span>.Centroid+synPaint.xyzOffset<span class="o">)</span>-<span class="o">[</span>1,1,1<span class="o">]</span><span class="p">;</span>
+
+    syn.addDynamicMetadata<span class="o">(</span><span class="s1">&#39;centroid&#39;</span>,cVal<span class="o">)</span><span class="p">;</span>
+
+    <span class="nv">idx</span> <span class="o">=</span> find<span class="o">(</span>eList<span class="o">(</span>:,3<span class="o">)</span> <span class="o">==</span> usyn<span class="o">(</span>i<span class="o">))</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="nv">j</span> <span class="o">=</span> 1:length<span class="o">(</span>idx<span class="o">)</span>
+        <span class="k">if</span> eList<span class="o">(</span>j,1<span class="o">)</span> &gt; 0
+            syn.addSegment<span class="o">(</span>eList<span class="o">(</span>idx<span class="o">(</span>j<span class="o">)</span>,1<span class="o">)</span>, eRAMONFlowDirection.unknown<span class="o">)</span><span class="p">;</span>
+        end
+        <span class="k">if</span> eList<span class="o">(</span>j,2<span class="o">)</span> &gt; 0
+            syn.addSegment<span class="o">(</span>eList<span class="o">(</span>idx<span class="o">(</span>j<span class="o">)</span>,2<span class="o">)</span>, eRAMONFlowDirection.unknown<span class="o">)</span><span class="p">;</span>
+        end
+    end
+    SYN<span class="o">{</span>i<span class="o">}</span> <span class="o">=</span> syn<span class="p">;</span>
+    clear syn
+end
+
+<span class="nv">oup</span> <span class="o">=</span> OCP<span class="o">()</span><span class="p">;</span>
+oup.setImageToken<span class="o">(</span><span class="s1">&#39;kasthuri11cc&#39;</span><span class="o">)</span><span class="p">;</span>
+oup.setAnnoToken<span class="o">(</span>token<span class="o">)</span><span class="p">;</span>
+oup.setAnnoChannel<span class="o">(</span><span class="s1">&#39;synapse&#39;</span><span class="o">)</span><span class="p">;</span>
+
+synPaint.setChannel<span class="o">(</span><span class="s1">&#39;synapse&#39;</span><span class="o">)</span><span class="p">;</span>
+oup.createAnnotation<span class="o">(</span>synPaint<span class="o">)</span><span class="p">;</span>
+
+oup.createAnnotation<span class="o">(</span>SYN<span class="o">)</span><span class="p">;</span>
+
+%% Create segment metadata
+
+<span class="k">for</span> <span class="nv">i</span> <span class="o">=</span> 1:nneu
+    <span class="nv">seg</span> <span class="o">=</span> RAMONSegment<span class="o">()</span><span class="p">;</span>
+    seg.setAuthor<span class="o">(</span><span class="s1">&#39;test upload&#39;</span><span class="o">)</span><span class="p">;</span>
+    seg.setId<span class="o">(</span>uneu<span class="o">(</span>i<span class="o">))</span><span class="p">;</span>
+
+    <span class="nv">idx</span> <span class="o">=</span> find<span class="o">(</span>eList<span class="o">(</span>:,1<span class="o">)</span> <span class="o">==</span> uneu<span class="o">(</span>i<span class="o">))</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="nv">j</span> <span class="o">=</span> 1:length<span class="o">(</span>idx<span class="o">)</span>
+        seg.setSynapses<span class="o">([</span>seg.synapses, eList<span class="o">(</span>idx<span class="o">(</span>j<span class="o">)</span>,3<span class="o">)])</span><span class="p">;</span>
+    end
+
+    <span class="nv">idx</span> <span class="o">=</span> find<span class="o">(</span>eList<span class="o">(</span>:,2<span class="o">)</span> <span class="o">==</span> uneu<span class="o">(</span>i<span class="o">))</span><span class="p">;</span>
+    <span class="k">for</span> <span class="nv">j</span> <span class="o">=</span> 1:length<span class="o">(</span>idx<span class="o">)</span>
+        seg.setSynapses<span class="o">([</span>seg.synapses, eList<span class="o">(</span>idx<span class="o">(</span>j<span class="o">)</span>,3<span class="o">)])</span><span class="p">;</span>
+    end
+
+    SEG<span class="o">{</span>i<span class="o">}</span> <span class="o">=</span> seg<span class="p">;</span>
+    clear seg
+end
+
+<span class="nv">oup</span> <span class="o">=</span> OCP<span class="o">()</span><span class="p">;</span>
+oup.setImageToken<span class="o">(</span><span class="s1">&#39;kasthuri11cc&#39;</span><span class="o">)</span><span class="p">;</span>
+oup.setAnnoToken<span class="o">(</span>token<span class="o">)</span><span class="p">;</span>
+oup.setAnnoChannel<span class="o">(</span><span class="s1">&#39;neuron&#39;</span><span class="o">)</span><span class="p">;</span>
+
+neuPaint.setChannel<span class="o">(</span><span class="s1">&#39;neuron&#39;</span><span class="o">)</span><span class="p">;</span>
+oup.createAnnotation<span class="o">(</span>neuPaint<span class="o">)</span><span class="p">;</span>
+
+oup.createAnnotation<span class="o">(</span>SEG<span class="o">)</span><span class="p">;</span>
+
+
+%% Need to create neurons and assign segments to neurons
+
+% This step is artificial here<span class="p">;</span> we assign neuron <span class="nv">IDs</span> <span class="o">=</span> segID + 100000
+
+<span class="k">for</span> <span class="nv">i</span> <span class="o">=</span> 1:length<span class="o">(</span>SEG<span class="o">)</span>
+    <span class="nv">neu</span> <span class="o">=</span> RAMONNeuron<span class="p">;</span>
+    neu.setId<span class="o">(</span>SEG<span class="o">{</span>i<span class="o">}</span>.id + 100000<span class="o">)</span><span class="p">;</span>
+
+    NEU<span class="o">{</span>i<span class="o">}</span> <span class="o">=</span> neu<span class="p">;</span>
+    clear neu
+end
+
+oup.createAnnotation<span class="o">(</span>NEU<span class="o">)</span><span class="p">;</span>
+
+%% Need to add segments to neurons
+% Could have been <span class="k">done</span> in previous step.  Demonstrating updateAnnotation
+
+<span class="nv">q</span> <span class="o">=</span> OCPQuery<span class="p">;</span>
+q.setType<span class="o">(</span>eOCPQueryType.RAMONMetaOnly<span class="o">)</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="nv">i</span> <span class="o">=</span> 1:length<span class="o">(</span>NEU<span class="o">)</span>
+
+    q.setId<span class="o">(</span>NEU<span class="o">{</span>i<span class="o">}</span>.id<span class="o">)</span><span class="p">;</span>
+    <span class="nv">neu</span> <span class="o">=</span> oup.query<span class="o">(</span>q<span class="o">)</span><span class="p">;</span>
+
+    neu.setSegments<span class="o">([</span>neu.segments, SEG<span class="o">{</span>i<span class="o">}</span>.id<span class="o">])</span><span class="p">;</span> %true by construction
+    oup.updateAnnotation<span class="o">(</span>neu<span class="o">)</span><span class="p">;</span>
+end
+
+%% Need to add neurons to segments
+% Demonstrating OCPFields
+
+<span class="nv">f</span> <span class="o">=</span> OCPFields<span class="o">()</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="nv">i</span> <span class="o">=</span> 1:length<span class="o">(</span>NEU<span class="o">)</span>
+% i
+    <span class="nv">segMap</span> <span class="o">=</span>  oup.getField<span class="o">(</span>NEU<span class="o">{</span>i<span class="o">}</span>.id,f.neuron.segments<span class="o">)</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="nv">j</span> <span class="o">=</span> 1:length<span class="o">(</span>segMap<span class="o">)</span>
+
+        oup.setField<span class="o">(</span>segMap<span class="o">(</span>j<span class="o">)</span>,f.segment.neuron,NEU<span class="o">{</span>i<span class="o">}</span>.id<span class="o">)</span><span class="p">;</span>  %segments belong to only one neuron
+    end
+end
+</pre></div>
+</div>
+<p>A second example is the RAMONification of the Kasthuri2015 cell paper (found here <cite>https://github.com/openconnectome/kasthuri2015/blob/master/ramonify/ramonify_kasthuri.m</cite>).  This is similar in spirit, but leverages manually curated associations and metadata to parse the hierarchy and associate objects.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="graphs.html" class="btn btn-neutral float-right" title="Generating Graphs" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="query.html" class="btn btn-neutral" title="Querying Data" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NeuroData.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
