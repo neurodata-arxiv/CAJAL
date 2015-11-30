@@ -4,7 +4,7 @@ Querying Data
 CAJAL uses queries to aid users in retrieving data of interest from the database.  Examples of commonly used queries are shown on this page.
 For more detailed examples, please see the examples folder.  One good starting point is the `Getting Started Script <_static/demoscript/demoScript.html>`_.
 
-Queries are discussed in more data `here <http://docs.neurodata.io/nddocs/ramonnd.html`_.
+Queries are discussed in more data `here <http://docs.neurodata.io/nddocs/ramonnd.html>`_.
 
 Users should first setup a database endpoint, following the setup instructions in `Access <tutorials/access>`_.
 For testing, the following may be used:
