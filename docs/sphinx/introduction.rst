@@ -6,8 +6,8 @@ CAJAL is a toolbox to interface with the NeuroData image and annotation spatial 
 - Server setup
 - Upload Image Data (if not using an existing data set)
 - Create and Upload Annotation Data
-- Update Annotations
-- Delete Annotations
+- Update Annotations (if needed)
+- Delete Annotations (if needed)
 - Query (Read) Annotations
 
 For most of these usecases, we have created examples, functions, and loni modules to get you started.
@@ -17,4 +17,8 @@ we have provided functions and wrappers to allow most of the database interface
 to happen via simple code reuse and drag-and-drop modules.
 
 CAJAL Leverages RAMON, our flexible data standard to facilitate data exchange and processing.  More details are available
-here:  http://openconnectome.github.io/docs
+here:  http://docs.neurodata.io/nddocs/ramon.html
+
+This website documents the major functionality of CAJAL; for more information, please read through the example scripts and unit tests.
+CAJAL was written to be very verbose; in MATLAB, tab completing is very helpful for enumerations, setting fields, and exploring available options.
+Reading classes (e.g. `edit RAMONSynapse`) may also be of use.

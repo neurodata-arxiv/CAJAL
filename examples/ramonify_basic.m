@@ -17,8 +17,7 @@
 % Assume that server is openconnecto.me
 
 %
-%token = 'test_ramonify_public';
-token = 'test_ramonify2';
+token = 'test_ramonify_public';
 %% Setup server connection
 clear SYN SEG NEU
 
@@ -67,10 +66,18 @@ uneu = unique(neuPaint.data);
 uneu(uneu == 0) = [];
 nneu = length(uneu);
 
+rps = regionprops(synPaint.data,'Centroid');
+rpn = regionprops(neuPaint.data,'Centroid');
+
 for i = 1:nsyn
     syn = RAMONSynapse();
     syn.setAuthor('test upload');
     syn.setId(usyn(i));
+  
+    cVal = round(rps(i).Centroid+synPaint.xyzOffset)-[1,1,1];
+
+    syn.addDynamicMetadata('centroid',cVal);
+    
     idx = find(eList(:,3) == usyn(i));
     
     for j = 1:length(idx)
@@ -192,4 +199,5 @@ eListOut = graph_retrieval(synLocation, synToken, synChannel, synResolution, syn
 
 % Make graphs
 [neuGraph, nId, synGraph, synId] = graph_matrix(eListOut);
+
 %% TODO Check that graph is identical using webservice

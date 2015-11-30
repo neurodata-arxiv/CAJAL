@@ -1,5 +1,6 @@
 % W Gray Roncal - 02.12.2015
 % Demonstrates downloading from the server and uploading from the server (best practices)
+% TODO update channels
 
 %% Download Data
 % View data cuboid here (100 megavoxels)
@@ -75,11 +76,6 @@ fprintf('Block Write Upload: ');
 t(3) = toc
 
 t(4) = sum(t)
-
-
-
-
-
 
 
 tic

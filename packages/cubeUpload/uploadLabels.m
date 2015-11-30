@@ -5,19 +5,26 @@ function uploadLabels(server, token, channel, volume, idFile, probability, doRel
 %
 % **Inputs**
 %
-%	:server: [string]   OCP server name serving as the target for annotations
+% server: (string)
+%   - OCP server name serving as the target for annotations
 %
-%	:token: [string]    OCP token name serving as the target for annotations
+% token: (string)
+%   - OCP token name serving as the target for annotations
 %
-%   :channel: [string]  OCP channel name serving as the target for annotations
+% channel: (string)
+%   - OCP channel name serving as the target for annotations
 %
-%	:volume: [RAMONVolume, string]  RAMONVolume or path and filename of .mat file containing the RAMONVolume to be posted
+% volume: (RAMONVolume, string)
+%   - RAMONVolume or path and filename of .mat file containing the RAMONVolume to be posted
 %
-%	:idFile: [string]   path and filename which will store the posted id
+% idFile: (string)
+%   - path and filename which will store the posted id
 %
-%   :probability: [float][default=0]   flag indicating whether annotation is a probaility map
+% probability: (float)(default=0)
+%   - flag indicating whether annotation is a probaility map
 %
-%	:useSemaphore: [int][default=0]  throttles reading/writing client-side for large batch jobs.  Not needed in single cutout mode
+% useSemaphore: (int)(default=0)
+%   - throttles reading/writing client-side for large batch jobs.  Not needed in single cutout mode
 %
 % **Outputs**
 %
@@ -27,8 +34,8 @@ function uploadLabels(server, token, channel, volume, idFile, probability, doRel
 %
 % **Notes**
 %
-%	Probabilities are uploaded as float32 data, and normal annotations are
-%	uploaded as uint32.
+% Probabilities are uploaded as float32 data, and label annotations are
+% uploaded as uint32.
 
 if nargin > 8
     outFile = varargin{1};
@@ -60,7 +67,7 @@ end
 
 %% Upload to OCP
 tic
-ids = [];
+ids = ();
 
 % relabel Paint
 
@@ -75,42 +82,42 @@ if probability == 1
     oo.createAnnotation(cube);
     fprintf('Block Write Upload: ');
     toc
-    
+
     save(idFile, 'ids');
-    
+
 else %annodata
-    
+
     labels = uint32(cube.data); %TODO - loss of precision if nid > 2^32
-    
+
     if doRelabel
         fprintf('Relabling: ');
-        [zz, n] = relabel_id(labels);
-        
-        
+        (zz, n) = relabel_id(labels);
+
+
         labelOut = zeros(size(zz));
-        
+
         if exist(idFile);
             load(idFile)
         else
             ids = oo.reserve_ids(n);
         end
-        
+
         rp = regionprops(zz,'PixelIdxList');
         for ii = 1:length(rp)
             labelOut(rp(ii).PixelIdxList) = ids(ii);
         end
-        
+
         clear zz
         cube.setCutout(labelOut);
-        
+
         toc
     end
     % Block write paint
     tic
-    
+
     % Reuse object
     cube.setChannel(channel);
-    
+
     cube.setDataType(eRAMONChannelDataType.uint32); %just in case
     cube.setChannelType(eRAMONChannelType.annotation)
     oo.createAnnotation(cube);

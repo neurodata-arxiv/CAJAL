@@ -26,7 +26,6 @@ oo.setImageToken('kasthuri11cc');
 % Note: We do not propagate in the demo script.
 oo.setAnnoToken('cajal_demo');
 oo.setAnnoChannel('anno');
-oo.makeAnnoWritable();
 
 % Information about the databases are accessible
 oo.annoInfo.DATASET
