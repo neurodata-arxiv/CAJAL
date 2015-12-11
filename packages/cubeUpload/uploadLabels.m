@@ -67,7 +67,7 @@ end
 
 %% Upload to OCP
 tic
-ids = ();
+ids = [];
 
 % relabel Paint
 
@@ -91,7 +91,7 @@ else %annodata
 
     if doRelabel
         fprintf('Relabling: ');
-        (zz, n) = relabel_id(labels);
+        [zz, n] = relabel_id(labels);
 
 
         labelOut = zeros(size(zz));

@@ -71,7 +71,7 @@ oo.setImageToken(token);
 oo.setImageChannel(channel);
 oo.imageChanInfo.TYPE
 %  PROJECT.TYPE
-if strcmpi(oo.imageChanInfo.TYPE,'image')
+if strcmpi(oo.imageChanInfo.TYPE,'image') || strcmpi(oo.imageChanInfo.TYPE,'oldchannel')
     query_type = eOCPQueryType.imageDense;
     oo.setImageChannel(channel);
 elseif strcmpi(oo.imageChanInfo.TYPE, 'annotation')
